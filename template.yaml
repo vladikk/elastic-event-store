@@ -5,7 +5,7 @@ Description: >
 
 Globals:
   Function:
-    Timeout: 3
+    Timeout: 60
 
 Parameters:
   Environment:
@@ -32,6 +32,62 @@ Parameters:
     ConstraintDescription: must be between 1 and 10000
 
 Resources:
+  EventStoreTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Join [ '_', ['ees', 'db', !Ref Environment, !Ref InstanceName] ]
+      AttributeDefinitions:
+      - AttributeName: stream_id
+        AttributeType: S
+      - AttributeName: changeset_id
+        AttributeType: N
+      - AttributeName: global_enum_page
+        AttributeType: N
+      - AttributeName: global_enum_item
+        AttributeType: N
+      - AttributeName: first_event
+        AttributeType: N
+      - AttributeName: last_event
+        AttributeType: N
+      KeySchema:
+      - AttributeName: stream_id
+        KeyType: HASH
+      - AttributeName: changeset_id
+        KeyType: RANGE
+      LocalSecondaryIndexes:
+      - IndexName: FirstEventNumber
+        KeySchema:
+        - AttributeName: stream_id
+          KeyType: HASH
+        - AttributeName: first_event
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+      - IndexName: LastEventNumber
+        KeySchema:
+        - AttributeName: stream_id
+          KeyType: HASH
+        - AttributeName: last_event
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+      GlobalSecondaryIndexes:
+      - IndexName: EmumerationIndex
+        KeySchema:
+        - AttributeName: global_enum_page
+          KeyType: HASH
+        - AttributeName: global_enum_item
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: !Ref ReadCapacityUnits
+          WriteCapacityUnits: !Ref WriteCapacityUnits
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref ReadCapacityUnits
+        WriteCapacityUnits: !Ref WriteCapacityUnits
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
