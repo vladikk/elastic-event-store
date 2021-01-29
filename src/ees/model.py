@@ -1,15 +1,15 @@
 from collections import namedtuple
 
-Changeset = namedtuple('Changeset',
-                        ['stream_id',
-                         'changeset_id',
-                         'metadata',
-                         'events',
-                         'first_event_id',
-                         'last_event_id'])
+Commit = namedtuple('Changeset',
+                    ['stream_id',
+                    'changeset_id',
+                    'metadata',
+                    'events',
+                    'first_event_id',
+                    'last_event_id'])
 
-def make_initial_changeset(stream_id, events, metadata={}):
-    return Changeset(
+def make_initial_commit(stream_id, events, metadata={}):
+    return Commit(
         stream_id=stream_id,
         changeset_id=1,
         metadata=metadata,
@@ -18,8 +18,8 @@ def make_initial_changeset(stream_id, events, metadata={}):
         last_event_id=len(events)
     )
 
-def make_next_changeset(prev_changeset, events, metadata={}):
-    return Changeset(
+def make_next_commit(prev_changeset, events, metadata={}):
+    return Commit(
         stream_id=prev_changeset.stream_id,
         changeset_id=prev_changeset.changeset_id + 1,
         metadata=metadata,
