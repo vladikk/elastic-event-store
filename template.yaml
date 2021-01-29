@@ -91,9 +91,16 @@ Resources:
   CommandHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./
-      Handler: ees.app.lambda_handler
+      CodeUri: src
+      Handler: lambdas.request_handler
       Runtime: python3.8
+      Environment:
+        Variables:
+          EventStoreTable: !Ref EventStoreTable
+      Policies:
+        - AWSLambdaDynamoDBExecutionRole
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EventStoreTable
       Events:
         Version:
           Type: Api
@@ -104,7 +111,7 @@ Resources:
           Type: Api
           Properties:
             Path: /commit
-            Method: post
+            Method: post      
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

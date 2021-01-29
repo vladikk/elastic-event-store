@@ -4,8 +4,8 @@ import json
 class Version:
     def execute(self, event, context):
         return {
-            "statusCode": 404,
+            "statusCode": 200,
             "body": json.dumps({
-                "message": "Invalid endpoint"
+                "version": "0.0.1"
             }),
         }
