@@ -3,6 +3,7 @@ from datetime import datetime
 import json
 import os
 
+
 class Commit:
     def execute(self, event, context):
         stream_id = event["queryStringParameters"]["streamId"]
