@@ -88,11 +88,11 @@ Resources:
         WriteCapacityUnits: !Ref WriteCapacityUnits
       StreamSpecification:
         StreamViewType: NEW_IMAGE
-  CommandsFunction:
+  CommandHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ees/
-      Handler: app.lambda_handler
+      CodeUri: ./
+      Handler: ees.app.lambda_handler
       Runtime: python3.8
       Events:
         Version:
@@ -100,6 +100,11 @@ Resources:
           Properties:
             Path: /version
             Method: get
+        Commit:
+          Type: Api
+          Properties:
+            Path: /commit
+            Method: post
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -109,8 +114,8 @@ Outputs:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/version/"
   CommandsFunction:
-    Description: "Commands Lambda Function ARN"
-    Value: !GetAtt CommandsFunction.Arn
+    Description: "Command Handler Lambda Function ARN"
+    Value: !GetAtt CommandHandlerFunction.Arn
   CommandsFunctionIamRole:
-    Description: "Implicit IAM Role created for the commands function"
-    Value: !GetAtt CommandsFunctionRole.Arn
+    Description: "Implicit IAM Role created for the command handler function"
+    Value: !GetAtt CommandHandlerFunctionRole.Arn

@@ -1,7 +1,7 @@
 import json
-
-# import requests
-
+from ees.commands.version import Version
+from ees.commands.commit import Commit
+from ees.commands.invalid import InvalidEndpoint
 
 def lambda_handler(event, context):
     """Sample pure Lambda function
@@ -25,9 +25,22 @@ def lambda_handler(event, context):
         Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
     """
 
-    return {
-        "statusCode": 200,
-        "body": json.dumps({
-            "version": "0.0.1"
-        }),
+    endpoint = route_request(event, context)
+    return endpoint.execute(event, context)
+
+
+def route_request(event, context):
+    handlers = {
+        "/version": Version(),
+        "/version/": Version(),
+        "/commit": Commit(),
+        "/commit/": Commit()
     }
+    
+    path = event["path"].lower()
+    print(f'Requested path: {path}')
+
+    if path in handlers.keys():
+        return handlers[path]
+    else:
+        return InvalidEndpoint()
