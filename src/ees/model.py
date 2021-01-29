@@ -27,3 +27,10 @@ def make_next_commit(prev_commit, events, metadata={}):
         first_event_id=prev_commit.last_event_id + 1,
         last_event_id=prev_commit.last_event_id + len(events)
     )
+
+
+class ConcurrencyException(Exception):
+    def __init__(self, stream_id, changeset_id):
+        self.stream_id = stream_id
+        self.changeset_id = changeset_id
+

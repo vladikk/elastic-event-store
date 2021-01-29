@@ -83,3 +83,30 @@ class TestApiGateway(TestCase):
         response = requests.post(url, json={"events": events, "metadata": metadata})
 
         self.assertDictEqual(response.json(), {"stream-id": stream_id, "changeset-id": 2})
+    
+    # When appending to an existing stream, but the expected version is already overwritten
+    def test_concurrency_exception(self):
+        stream_id = str(uuid.uuid4())
+        url = self.api_endpoint + f'commit?stream_id={stream_id}'
+        metadata = {
+            'timestamp': '123123',
+            'command_id': '456346234',
+            'issued_by': 'test@test.com'
+        }
+        events = [
+            { "type": "init", "foo": "bar" },
+            { "type": "update", "foo": "baz" },
+        ]
+        requests.post(url, json={"events": events, "metadata": metadata})        
+        url = self.api_endpoint + f'commit?stream_id={stream_id}&expected_changeset_id=1'
+        response = requests.post(url, json={"events": events, "metadata": metadata})
+
+        url = self.api_endpoint + f'commit?stream_id={stream_id}&expected_changeset_id=1'
+        response = requests.post(url, json={"events": events, "metadata": metadata})
+
+        assert response.status_code == 409
+        self.assertDictEqual(response.json(), {
+            "stream-id": stream_id,
+            "error": "OPTIMISTIC_CONCURRENCY_EXCEPTION",
+            "message": "The expected changeset (1) is outdated."
+        })

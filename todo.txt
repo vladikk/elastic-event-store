@@ -2,3 +2,6 @@ Implement edge cases:
 * Negative expected changeset id
 * Unexisting expected changeset id
 * Expired changeset id
+* Non numeric expected changeset id
+* No stream id
+* Invalid expected changeset id

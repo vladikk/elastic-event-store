@@ -1,7 +1,8 @@
 import boto3
+import botocore
 from datetime import datetime
 import json
-from ees.model import CommitData
+from ees.model import CommitData, ConcurrencyException
 
 class DynamoDB:
     def __init__(self, events_table):
@@ -9,22 +10,30 @@ class DynamoDB:
         self.dynamodb_ll = boto3.client('dynamodb') 
     
     def append(self, commit):
-        self.dynamodb_ll.put_item(
-            TableName=self.events_table,
-            Item={
-                'stream_id': { "S": commit.stream_id },
-                'changeset_id': { "N": str(commit.changeset_id) },
-                'metadata': { "S": json.dumps(commit.metadata) },
-                'events': { "S": json.dumps(commit.events) },
-                'first_event_id': { "N": str(commit.first_event_id) },
-                'last_event_id': { "N": str(commit.last_event_id) },
-                'timestamp': { "S": self.get_timestamp() }
-            },
-            Expected={
-                'stream_id': { "Exists": False },
-                'changeset_id': { "Exists": False },
-            }
-        )
+        item = {
+            'stream_id': { "S": commit.stream_id },
+            'changeset_id': { "N": str(commit.changeset_id) },
+            'metadata': { "S": json.dumps(commit.metadata) },
+            'events': { "S": json.dumps(commit.events) },
+            'first_event_id': { "N": str(commit.first_event_id) },
+            'last_event_id': { "N": str(commit.last_event_id) },
+            'timestamp': { "S": self.get_timestamp() }
+        }
+
+        condition = {
+            'stream_id': { "Exists": False },
+            'changeset_id': { "Exists": False },
+        }
+
+        try:
+            self.dynamodb_ll.put_item(
+                TableName=self.events_table, Item=item, Expected=condition
+            )
+        except botocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                raise ConcurrencyException(commit.stream_id, commit.changeset_id)
+            else:
+                raise e
     
     def fetch_last_commit(self, stream_id):
         response = self.dynamodb_ll.query(
