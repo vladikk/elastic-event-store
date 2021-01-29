@@ -1,14 +1,35 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  ees
+  Elastic Event Store
 
-  Sample SAM Template for ees
-
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 3
+
+Parameters:
+  Environment:
+    Description: Environment Name
+    Type: String
+    Default: dev
+  InstanceName:
+    Description: Instance Name
+    Type: String
+    Default: eventstore
+  ReadCapacityUnits:
+    Description: Provisioned read throughput
+    Type: Number
+    Default: '1'
+    MinValue: '1'
+    MaxValue: '10000'
+    ConstraintDescription: must be between 1 and 10000
+  WriteCapacityUnits:
+    Description: Provisioned write throughput
+    Type: Number
+    Default: '1'
+    MinValue: '1'
+    MaxValue: '10000'
+    ConstraintDescription: must be between 1 and 10000
 
 Resources:
   HelloWorldFunction:
