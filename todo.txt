@@ -1,2 +1,3 @@
+Encapsulate and unit test parsing of incoming commands
 Query changesets of a stream(from/to)
 Query events of a stream(from/to)
