@@ -1,13 +1,12 @@
-import boto3
-import json
 import os
 from ees.commands.version import Version
-from ees.commands.commit import Commit, DynamoDB
+from ees.commands.commit import Commit
 from ees.commands.invalid import InvalidEndpoint
+from ees.dynamodb import DynamoDB
 
-dynamodb_ll = boto3.client('dynamodb')        
-events_table_name = os.getenv('EventStoreTable')
-db = DynamoDB(events_table_name)
+
+db = DynamoDB(events_table=os.getenv('EventStoreTable'))
+
 
 def route_request(event, context):
     commit = Commit(db)

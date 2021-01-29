@@ -2,7 +2,7 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "ees-python"
+stack_name = "ees-python-tests"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1impwnxeg5k2j"
 s3_prefix = "ees-python"
 region = "us-east-1"

@@ -2,35 +2,7 @@ import boto3
 from datetime import datetime
 import json
 import os
-from ees.model import make_initial_commit
-
-
-class DynamoDB:
-    def __init__(self, events_table):
-        self.events_table = events_table
-        self.dynamodb_ll = boto3.client('dynamodb') 
-    
-    def append(self, commit):
-        self.dynamodb_ll.put_item(
-            TableName=self.events_table,
-            Item={
-                'stream_id': { "S": commit.stream_id },
-                'changeset_id': { "N": str(commit.changeset_id) },
-                'metadata': { "S": json.dumps(commit.metadata) },
-                'events': { "S": json.dumps(commit.events) },
-                'first_event': { "N": str(commit.first_event_id) },
-                'last_event': { "N": str(commit.last_event_id) },
-                'timestamp': { "S": self.get_timestamp() }
-            },
-            Expected={
-                'stream_id': { "Exists": False },
-                'changeset_id': { "Exists": False },
-            }
-        )
-    
-    def get_timestamp(self):
-        return datetime.utcnow().isoformat("T") + "Z"
-
+from ees.model import make_initial_commit, make_next_commit
 
 
 class Commit:
@@ -43,7 +15,11 @@ class Commit:
         metadata = body["metadata"]
         events = body["payload"]
 
-        data = make_initial_commit(stream_id, events, metadata)
+        prev_commit = self.db.fetch_last_commit(stream_id)
+        if prev_commit:
+            data = make_next_commit(prev_commit, events, metadata)
+        else:
+            data = make_initial_commit(stream_id, events, metadata)
 
         self.db.append(data)
 

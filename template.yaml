@@ -45,9 +45,9 @@ Resources:
         AttributeType: N
       - AttributeName: global_enum_item
         AttributeType: N
-      - AttributeName: first_event
+      - AttributeName: first_event_id
         AttributeType: N
-      - AttributeName: last_event
+      - AttributeName: last_event_id
         AttributeType: N
       KeySchema:
       - AttributeName: stream_id
@@ -59,7 +59,7 @@ Resources:
         KeySchema:
         - AttributeName: stream_id
           KeyType: HASH
-        - AttributeName: first_event
+        - AttributeName: first_event_id
           KeyType: RANGE
         Projection:
           ProjectionType: ALL
@@ -67,7 +67,7 @@ Resources:
         KeySchema:
         - AttributeName: stream_id
           KeyType: HASH
-        - AttributeName: last_event
+        - AttributeName: last_event_id
           KeyType: RANGE
         Projection:
           ProjectionType: ALL

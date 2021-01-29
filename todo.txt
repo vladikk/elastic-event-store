@@ -1,0 +1,4 @@
+Implement edge cases:
+* Negative expected changeset id
+* Unexisting expected changeset id
+* Expired changeset id
