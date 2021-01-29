@@ -13,9 +13,9 @@ def test_initial_commit_factory(mocker):
     assert commit.stream_id == stream_id
     assert commit.changeset_id == 1
     assert commit.metadata == "the changeset's metadata"    
-    assert commit.events[0] == { 1: "event1" }
-    assert commit.events[1] == { 2: "event2" }
-    assert commit.events[2] == { 3: "event3" }
+    assert commit.events[0] == "event1"
+    assert commit.events[1] == "event2"
+    assert commit.events[2] == "event3"
     assert commit.first_event_id == 1
     assert commit.last_event_id == 3
 
@@ -36,8 +36,8 @@ def test_next_commit_factory(mocker):
     assert commit.stream_id == 'aaa'
     assert commit.changeset_id == 5
     assert commit.metadata == "the new changeset's metadata"
-    assert commit.events[0] == { 9: "new event 1" }
-    assert commit.events[1] == { 10: "new event 2" }
-    assert commit.events[2] == { 11: "new event 3" }
+    assert commit.events[0] == "new event 1"
+    assert commit.events[1] == "new event 2"
+    assert commit.events[2] == "new event 3"
     assert commit.first_event_id == 9
     assert commit.last_event_id == 11

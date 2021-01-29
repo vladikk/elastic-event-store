@@ -2,6 +2,7 @@ import boto3
 from datetime import datetime
 import json
 import os
+from ees.model import make_initial_commit
 
 
 class DynamoDB:
@@ -16,9 +17,9 @@ class DynamoDB:
                 'stream_id': { "S": commit.stream_id },
                 'changeset_id': { "N": str(commit.changeset_id) },
                 'metadata': { "S": json.dumps(commit.metadata) },
-                'events': { "M": commit.events },
-                'first_event': { "N": str(commit.first_event) },
-                'last_event': { "N": str(commit.last_event) },
+                'events': { "S": json.dumps(commit.events) },
+                'first_event': { "N": str(commit.first_event_id) },
+                'last_event': { "N": str(commit.last_event_id) },
                 'timestamp': { "S": self.get_timestamp() }
             },
             Expected={
@@ -26,48 +27,34 @@ class DynamoDB:
                 'changeset_id': { "Exists": False },
             }
         )
+    
+    def get_timestamp(self):
+        return datetime.utcnow().isoformat("T") + "Z"
 
 
 
 class Commit:
+    def __init__(self, db):
+        self.db = db
+
     def execute(self, event, context):
         stream_id = event["queryStringParameters"]["streamId"]
-        changeset_id = event["queryStringParameters"]["changesetId"]
         body = json.loads(event["body"])
         metadata = body["metadata"]
-        payload = body["payload"]
+        events = body["payload"]
 
-        dynamodb_ll = boto3.client('dynamodb')        
-        eventstore_table_name = os.getenv('EventStoreTable')
+        data = make_initial_commit(stream_id, events, metadata)
 
-        dynamodb_ll.put_item(
-            TableName=eventstore_table_name,
-            Item={
-                'stream_id': { "S": stream_id },
-                'changeset_id': { "N": str(changeset_id) },
-                'metadata': { "S": json.dumps(metadata) },
-                'events': { "SS": [json.dumps(e) for e in payload] },
-                #'first_event': { "N": str(changeset.first_event) },
-                #'last_event': { "N": str(changeset.last_event) },
-                'timestamp': { "S": self.get_timestamp() }
-                
-            },
-            Expected={
-                'stream_id': { "Exists": False },
-                'changeset_id': { "Exists": False },
-            }
-        )
+        self.db.append(data)
 
         return {
             "statusCode": 200,
             "body": json.dumps({
                 "commit": "0.0.1",
-                "stream-id": stream_id,
-                "changeset-id": changeset_id,
-                "metadata": json.dumps(metadata),
-                "payload": json.dumps(payload)
+                "stream-id": data.stream_id,
+                "changeset-id": data.changeset_id,
+                "metadata": json.dumps(data.metadata),
+                "events": json.dumps(data.events)
             })
-        }
+        } 
     
-    def get_timestamp(self):
-        return datetime.utcnow().isoformat("T") + "Z"
