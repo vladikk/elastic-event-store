@@ -158,3 +158,23 @@ class TestApiGateway(TestCase):
             "error": "INVALID_EXPECTED_CHANGESET_ID",
             "message": 'The specified expected change set id("test") is invalid. Expected a positive integer.'
         })
+    
+    def test_no_stream_id(self):
+        metadata = {
+            'timestamp': '123123',
+            'command_id': '456346234',
+            'issued_by': 'test@test.com'
+        }
+        events = [
+            { "type": "init", "foo": "bar" },
+            { "type": "update", "foo": "baz" },
+        ]
+
+        url = self.api_endpoint + f'commit'
+        response = requests.post(url, json={"events": events, "metadata": metadata})
+        
+        assert response.status_code == 400
+        self.assertDictEqual(response.json(), {
+            "error": "MISSING_STREAM_ID",
+            "message": 'stream_id is a required value'
+        })

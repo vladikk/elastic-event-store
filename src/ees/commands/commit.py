@@ -8,10 +8,12 @@ class Commit:
         self.db = db
 
     def execute(self, event, context):
-        stream_id = event["queryStringParameters"]["stream_id"]
-        expected_changeset_id = 0
-        if "expected_changeset_id" in event["queryStringParameters"]:
-            expected_changeset_id = event["queryStringParameters"]["expected_changeset_id"]        
+        query_string = event.get("queryStringParameters") or {}
+        stream_id = query_string.get("stream_id")
+        if not stream_id:
+            return self.missing_stream_id()
+    
+        expected_changeset_id = query_string.get("expected_changeset_id", 0)
         try:
             expected_changeset_id = int(expected_changeset_id)
         except ValueError:
@@ -60,5 +62,14 @@ class Commit:
                 "stream-id": stream_id,
                 "error": "INVALID_EXPECTED_CHANGESET_ID",
                 "message": f'The specified expected change set id("{expected_changeset_id}") is invalid. Expected a positive integer.'
+            })
+        }
+    
+    def missing_stream_id(self):
+        return {
+            "statusCode": 400,
+            "body": json.dumps({
+                "error": "MISSING_STREAM_ID",
+                "message": 'stream_id is a required value'
             })
         }

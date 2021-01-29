@@ -1,5 +1,2 @@
-Implement edge cases:
-* Negative expected changeset id
-* Unexisting expected changeset id
-* Expired changeset id
-* No stream id
+Query changesets of a stream(from/to)
+Query events of a stream(from/to)
