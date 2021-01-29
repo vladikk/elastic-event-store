@@ -11,7 +11,11 @@ class Commit:
         stream_id = event["queryStringParameters"]["stream_id"]
         expected_changeset_id = 0
         if "expected_changeset_id" in event["queryStringParameters"]:
-            expected_changeset_id = int(event["queryStringParameters"]["expected_changeset_id"])
+            expected_changeset_id = event["queryStringParameters"]["expected_changeset_id"]        
+        try:
+            expected_changeset_id = int(expected_changeset_id)
+        except ValueError:
+            return self.invalid_expected_changeset_id(stream_id, expected_changeset_id)
 
         body = json.loads(event["body"])
         metadata = body["metadata"]
@@ -46,5 +50,15 @@ class Commit:
                 "stream-id": stream_id,
                 "error": "OPTIMISTIC_CONCURRENCY_EXCEPTION",
                 "message": f'The expected changeset ({expected_changeset_id}) is outdated.'
+            })
+        }
+    
+    def invalid_expected_changeset_id(self, stream_id, expected_changeset_id):
+        return {
+            "statusCode": 400,
+            "body": json.dumps({
+                "stream-id": stream_id,
+                "error": "INVALID_EXPECTED_CHANGESET_ID",
+                "message": f'The specified expected change set id("{expected_changeset_id}") is invalid. Expected a positive integer.'
             })
         }

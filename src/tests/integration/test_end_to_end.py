@@ -110,3 +110,51 @@ class TestApiGateway(TestCase):
             "error": "OPTIMISTIC_CONCURRENCY_EXCEPTION",
             "message": "The expected changeset (1) is outdated."
         })
+    
+    def test_append_with_invalid_expected_changeset_id(self):
+        stream_id = str(uuid.uuid4())
+        url = self.api_endpoint + f'commit?stream_id={stream_id}'
+        metadata = {
+            'timestamp': '123123',
+            'command_id': '456346234',
+            'issued_by': 'test@test.com'
+        }
+        events = [
+            { "type": "init", "foo": "bar" },
+            { "type": "update", "foo": "baz" },
+        ]
+        requests.post(url, json={"events": events, "metadata": metadata})
+        
+        url = self.api_endpoint + f'commit?stream_id={stream_id}&expected_changeset_id=-1'
+        response = requests.post(url, json={"events": events, "metadata": metadata})
+
+        assert response.status_code == 400
+        self.assertDictEqual(response.json(), {
+            "stream-id": stream_id,
+            "error": "INVALID_EXPECTED_CHANGESET_ID",
+            "message": 'The specified expected change set id("-1") is invalid. Expected a positive integer.'
+        })
+    
+    def test_append_with_invalid_expected_changeset_id(self):
+        stream_id = str(uuid.uuid4())
+        url = self.api_endpoint + f'commit?stream_id={stream_id}'
+        metadata = {
+            'timestamp': '123123',
+            'command_id': '456346234',
+            'issued_by': 'test@test.com'
+        }
+        events = [
+            { "type": "init", "foo": "bar" },
+            { "type": "update", "foo": "baz" },
+        ]
+        requests.post(url, json={"events": events, "metadata": metadata})
+        
+        url = self.api_endpoint + f'commit?stream_id={stream_id}&expected_changeset_id=test'
+        response = requests.post(url, json={"events": events, "metadata": metadata})
+        
+        assert response.status_code == 400
+        self.assertDictEqual(response.json(), {
+            "stream-id": stream_id,
+            "error": "INVALID_EXPECTED_CHANGESET_ID",
+            "message": 'The specified expected change set id("test") is invalid. Expected a positive integer.'
+        })
