@@ -1,7 +1,7 @@
 import json
 
 from .context import ees
-from ees.model import Commit, make_initial_commit, make_next_commit
+from ees.model import CommitData, make_initial_commit, make_next_commit
 
 def test_initial_commit_factory(mocker):
     stream_id = 'aaa'
@@ -20,7 +20,7 @@ def test_initial_commit_factory(mocker):
     assert commit.last_event_id == 3
 
 def test_next_commit_factory(mocker):
-    prev = Commit(
+    prev = CommitData(
         stream_id='aaa',
         changeset_id=4,
         metadata="the previous changeset's metadata",
