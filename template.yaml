@@ -117,12 +117,6 @@ Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/version/"
-  CommandsFunction:
-    Description: "Command Handler Lambda Function ARN"
-    Value: !GetAtt CommandHandlerFunction.Arn
-  CommandsFunctionIamRole:
-    Description: "Implicit IAM Role created for the command handler function"
-    Value: !GetAtt CommandHandlerFunctionRole.Arn
+  ApiEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
