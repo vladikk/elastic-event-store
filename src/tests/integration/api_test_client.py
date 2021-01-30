@@ -58,5 +58,9 @@ class ApiTestClient():
         url = self.api_endpoint + f'changesets?stream_id={stream_id}&from={from_changeset or ""}&to={to_changeset or ""}'
         return requests.get(url)
     
+    def query_events(self, stream_id, from_event=None, to_event=None):
+        url = self.api_endpoint + f'events?stream_id={stream_id}&from={from_event or ""}&to={to_event or ""}'
+        return requests.get(url)
+    
     def version(self):
         return requests.get(self.api_endpoint + "version")

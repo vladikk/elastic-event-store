@@ -5,3 +5,5 @@ Optimize querying metadata of a stream's last commit
 Query events of a stream(from/to)
 Publish committed changesets
 Publish committed events
+Test from=to when querying events
+Unify FirstEventNumber / first_event_id terminology

@@ -5,7 +5,7 @@ from unittest import TestCase
 from tests.integration.api_test_client import ApiTestClient
 
 
-class TestFetchingStream(TestCase):
+class TestFetchingChangesets(TestCase):
     api = ApiTestClient()
 
     def test_fetch_changesets(self):

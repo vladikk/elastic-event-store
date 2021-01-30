@@ -114,6 +114,131 @@ class DynamoDB:
         )
 
         return [self.parse_commit(r) for r in response["Items"]]
+    
+    def fetch_stream_by_events(self, stream_id, from_event=None, to_event=None):
+        if not from_event and not to_event:
+            from_event = 1
+
+        index_name = None
+        range_condition = None
+        column = None
+
+        if from_event and to_event and from_event == to_event:
+            return [self.read_changeset_containing_event(stream_id, from_event)]
+        
+        if from_event and to_event:
+            return self.fetch_changesets_by_events_range(stream_id, from_event, to_event)
+
+        if from_event:
+            index_name = 'LastEventNumber'
+            column = 'last_event_id'
+            range_condition = {
+                'AttributeValueList': [
+                    {
+                        'N': str(from_event)
+                    }
+                ],
+                'ComparisonOperator': 'GE'
+            }
+        elif to_event:
+            index_name = 'FirstEventNumber'
+            column = 'first_event_id'
+            range_condition = {
+                'AttributeValueList': [
+                    {
+                        'N': str(to_event)
+                    }
+                ],
+                'ComparisonOperator': 'LE'
+            }
+
+        response = self.dynamodb_ll.query(
+            TableName=self.events_table,
+            Select='ALL_ATTRIBUTES',
+            IndexName=index_name,
+            ScanIndexForward=True,
+            KeyConditions={
+                'stream_id': {
+                    'AttributeValueList': [
+                        {
+                            'S': stream_id
+                        },
+                    ],
+                    'ComparisonOperator': 'EQ'
+                },
+                column: range_condition
+            }
+        )
+
+        return [self.parse_commit(r) for r in response["Items"]]
+
+    def fetch_changesets_by_events_range(self, stream_id, from_event, to_event):
+        first_changeset = self.read_changeset_containing_event(stream_id, from_event)
+        if not first_changeset:
+            return None
+        
+        if first_changeset.last_event_id >= to_event:
+            return [first_changeset]
+
+        response = self.dynamodb_ll.query(
+            TableName=self.events_table,
+            Select='ALL_ATTRIBUTES',
+            IndexName="FirstEventNumber",
+            ScanIndexForward=True,
+            KeyConditions={
+                'stream_id': {
+                    'AttributeValueList': [
+                        {
+                            'S': stream_id
+                        },
+                    ],
+                    'ComparisonOperator': 'EQ'
+                },
+                "first_event_id": {
+                    'AttributeValueList': [
+                        {
+                            'N': str(from_event)
+                        },
+                        {
+                            'N': str(to_event)
+                        },
+                    ],
+                    'ComparisonOperator': 'BETWEEN'
+                }
+            }
+        )
+
+        return [first_changeset] + [self.parse_commit(r) for r in response["Items"]]
+
+    def read_changeset_containing_event(self, stream_id, event_id):
+        response = self.dynamodb_ll.query(
+            TableName=self.events_table,
+            Select='ALL_ATTRIBUTES',
+            IndexName='LastEventNumber',
+            ScanIndexForward=True,
+            Limit=1,
+            KeyConditions={
+                'stream_id': {
+                    'AttributeValueList': [
+                        {
+                            'S': stream_id
+                        },
+                    ],
+                    'ComparisonOperator': 'EQ'
+                },
+                'last_event_id': {
+                    'AttributeValueList': [
+                        {
+                            'N': str(event_id)
+                        }
+                    ],
+                    'ComparisonOperator': 'GE'
+                }
+            }
+        )
+
+        changesets = [self.parse_commit(r) for r in response["Items"]]
+        return changesets[0] if changesets else None
 
     def parse_commit(self, record):
         stream_id = record["stream_id"]["S"]

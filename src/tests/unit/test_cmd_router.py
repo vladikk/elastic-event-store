@@ -33,6 +33,16 @@ def test_fetch_changesets2(mocker):
     cmd = app.route_request(event, "")    
     assert isinstance(cmd, app.FetchChangesets)
 
+def test_fetch_events1(mocker):
+    event = { "path": "/events" }
+    cmd = app.route_request(event, "")    
+    assert isinstance(cmd, app.FetchEvents)
+
+def test_fetch_events2(mocker):
+    event = { "path": "/events/" }
+    cmd = app.route_request(event, "")    
+    assert isinstance(cmd, app.FetchEvents)
+
 def test_invalid_endpoint(mocker):
     event = { "path": "/invalid_blah" }
     cmd = app.route_request(event, "")    
