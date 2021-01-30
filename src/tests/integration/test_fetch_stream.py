@@ -196,4 +196,38 @@ class TestFetchingStream(ApiGatewayTest):
             "message": 'stream_id is a required value'
         })
     
+    def test_fetching_unexisting_stream(self):
+
+        response = self.query_changesets("abcd")
+        
+        assert response.status_code == 404
+        self.assertDictEqual(response.json(), {
+            "stream_id": "abcd",
+            "error": "STREAM_NOT_FOUND",
+            "message": f'The specified stream(abcd) doesn\'t exist'
+        })
+    
+    def test_fetch_changesets(self):
+        stream_id = str(uuid.uuid4())
+
+        self.commit(
+            stream_id=stream_id,
+            changeset_id=1,
+            metadata={
+                'timestamp': '123123',
+                'command_id': '456346234',
+                'issued_by': 'test@test.com'
+            },
+            events=[
+                { "type": "init", "foo": "bar" },
+                { "type": "update", "foo": "baz" },
+            ]
+        )
+
+        response = self.query_changesets(stream_id, from_changeset=2)
+        
+        self.assertDictEqual(response.json(), {
+            "stream_id": stream_id,
+            "changesets": [ ]
+        })
     

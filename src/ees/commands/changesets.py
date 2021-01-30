@@ -37,6 +37,11 @@ class FetchChangesets:
                         "events": c.events,
                         "metadata": c.metadata } for c in changesets]
         
+        if not changesets:
+            last_commit = self.db.fetch_last_commit(stream_id)
+            if not last_commit:
+                return self.stream_not_found(stream_id)
+        
         return {
             "statusCode": 200,
             "body": json.dumps({
@@ -71,5 +76,15 @@ class FetchChangesets:
             "body": json.dumps({
                 "error": "MISSING_STREAM_ID",
                 "message": 'stream_id is a required value'
+            })
+        }
+    
+    def stream_not_found(self, stream_id):
+        return {
+            "statusCode": 404,
+            "body": json.dumps({
+                "stream_id": stream_id,
+                "error": "STREAM_NOT_FOUND",
+                "message": f'The specified stream({stream_id}) doesn\'t exist'
             })
         }
