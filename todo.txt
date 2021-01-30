@@ -1,5 +1,7 @@
 Encapsulate and unit test parsing of incoming commands
 Encapsulate integration with API Gateway and Lambda
-Query events of a stream(from/to)
 RESTify the API (stream/[id])
 Optimize querying metadata of a stream's last commit
+Query events of a stream(from/to)
+Publish committed changesets
+Publish committed events
