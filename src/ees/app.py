@@ -1,9 +1,9 @@
 import os
-from ees.commands.version import Version
-from ees.commands.commit import Commit
-from ees.commands.invalid import InvalidEndpoint
-from ees.commands.changesets import FetchChangesets
-from ees.commands.events import FetchEvents
+from ees.handlers.version import Version
+from ees.handlers.commit import Commit
+from ees.handlers.invalid import InvalidEndpoint
+from ees.handlers.changesets import FetchChangesets
+from ees.handlers.events import FetchEvents
 from ees.dynamodb import DynamoDB
 
 

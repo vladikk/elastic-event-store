@@ -1,8 +1,9 @@
 Encapsulate and unit test parsing of incoming commands
 Encapsulate integration with API Gateway and Lambda
-RESTify the API (stream/[id])
 Optimize querying metadata of a stream's last commit
 Publish committed changesets
 Publish committed events
 Unify FirstEventNumber / first_event_id terminology
 Modify commit - when no expected version is supplied, just append
+GlobalIndexer process
+Logging

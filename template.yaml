@@ -3,10 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   Elastic Event Store
 
-Globals:
-  Function:
-    Timeout: 60
-
 Parameters:
   Environment:
     Description: Environment Name
@@ -87,13 +83,14 @@ Resources:
         ReadCapacityUnits: !Ref ReadCapacityUnits
         WriteCapacityUnits: !Ref WriteCapacityUnits
       StreamSpecification:
-        StreamViewType: NEW_IMAGE
+        StreamViewType: KEYS_ONLY
   CommandHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: src
       Handler: lambdas.request_handler
       Runtime: python3.8
+      Timeout: 60
       Environment:
         Variables:
           EventStoreTable: !Ref EventStoreTable
@@ -122,6 +119,35 @@ Resources:
           Properties:
             Path: /streams/{stream_id}/events
             Method: get
+  ProcessDynamoDBStream:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src
+      Handler: lambdas.indexer
+      Runtime: python3.8
+      Timeout: 60
+      Environment:
+        Variables:
+          EventStoreTable: !Ref EventStoreTable
+      Policies:
+        - AWSLambdaDynamoDBExecutionRole
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EventStoreTable
+      Events:
+        Stream:
+          Type: DynamoDB
+          Properties:
+            Stream: !GetAtt EventStoreTable.StreamArn
+            BatchSize: 10
+            StartingPosition: TRIM_HORIZON
+            MaximumBatchingWindowInSeconds: 1
+            Enabled: true
+            ParallelizationFactor: 1
+            MaximumRetryAttempts: 1000
+            #DestinationConfig:
+            #  OnFailure:
+            #    Type: SQS
+            #    Destination: !GetAtt MySqsQueue.Arn
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
