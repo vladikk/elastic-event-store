@@ -1,10 +1,22 @@
 import boto3
 import os
+import requests
 from unittest import TestCase
 
 
 class ApiGatewayTest(TestCase):
     api_endpoint: str
+    
+    some_metadata = {
+        'timestamp': '123123',
+        'command_id': '456346234',
+        'issued_by': 'test@test.com'
+    }
+
+    some_events = [
+        { "type": "init", "foo": "bar" },
+        { "type": "update", "foo": "baz" },
+    ]
 
     @classmethod
     def get_stack_name(cls) -> str:
@@ -40,3 +52,13 @@ class ApiGatewayTest(TestCase):
         self.assertTrue(api_outputs, f"Cannot find output ApiEndpoint in stack {stack_name}")
 
         self.api_endpoint = api_outputs[0]["OutputValue"]
+    
+    def commit(self, stream_id, changeset_id, events, metadata):
+        try:
+            expected = int(changeset_id) - 1
+        except ValueError:
+            expected = changeset_id
+
+        url = self.api_endpoint + f'commit?stream_id={stream_id}&expected_changeset_id={expected}'
+        print(url)
+        return requests.post(url, json={"events": events, "metadata": metadata})       
