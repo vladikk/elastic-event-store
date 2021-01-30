@@ -2,43 +2,31 @@ import os
 import requests
 import uuid
 from unittest import TestCase
-from tests.integration.apigateway_level_tests import ApiGatewayTest
+from tests.integration.api_test_client import ApiTestClient
 
 
-class TestFetchingStream(ApiGatewayTest):
+class TestFetchingStream(TestCase):
+    api = ApiTestClient()
+
     def test_fetch_changesets(self):
         stream_id = str(uuid.uuid4())
 
-        self.commit(
+        self.api.commit(
             stream_id=stream_id,
             changeset_id=1,
-            metadata={
-                'timestamp': '123123',
-                'command_id': '456346234',
-                'issued_by': 'test@test.com'
-            },
-            events=[
-                { "type": "init", "foo": "bar" },
-                { "type": "update", "foo": "baz" },
-            ]
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
         )
 
-        response = self.query_changesets(stream_id)
+        response = self.api.query_changesets(stream_id)
         
         self.assertDictEqual(response.json(), {
             "stream_id": stream_id,
             "changesets": [
                 {
                     "changeset_id": 1,
-                    "metadata": {
-                        'timestamp': '123123',
-                        'command_id': '456346234',
-                        'issued_by': 'test@test.com'
-                    },
-                    "events": [
-                        { "type": "init", "foo": "bar" },
-                        { "type": "update", "foo": "baz" },
-                    ]
+                    "metadata": self.api.some_metadata,
+                    "events": self.api.some_events
                 }
             ]
         })
@@ -46,21 +34,21 @@ class TestFetchingStream(ApiGatewayTest):
     def test_fetch_from_specic_changeset(self):
         stream_id = str(uuid.uuid4())
 
-        self.commit(
+        self.api.commit(
             stream_id=stream_id,
             changeset_id=1,
             metadata={ "metadata": "goes here" },
             events=[ { "type": "init" }, { "type": "update" } ]
         )
 
-        self.commit(
+        self.api.commit(
             stream_id=stream_id,
             changeset_id=2,
             metadata={ "metadata": "goes here 2" },
             events=[ { "type": "update2" }, { "type": "delete" } ]
         )
 
-        response = self.query_changesets(stream_id, from_changeset=2)
+        response = self.api.query_changesets(stream_id, from_changeset=2)
         
         self.assertDictEqual(response.json(), {
             "stream_id": stream_id,
@@ -76,21 +64,21 @@ class TestFetchingStream(ApiGatewayTest):
     def test_fetch_to_specic_changeset(self):
         stream_id = str(uuid.uuid4())
 
-        self.commit(
+        self.api.commit(
             stream_id=stream_id,
             changeset_id=1,
             metadata={ "metadata": "goes here" },
             events=[ { "type": "init" }, { "type": "update" } ]
         )
 
-        self.commit(
+        self.api.commit(
             stream_id=stream_id,
             changeset_id=1,
             metadata={ "metadata": "goes here 2" },
             events=[ { "type": "update2" }, { "type": "delete" } ]
         )
 
-        response = self.query_changesets(stream_id, to_changeset=1)
+        response = self.api.query_changesets(stream_id, to_changeset=1)
         
         self.assertDictEqual(response.json(), {
             "stream_id": stream_id,
@@ -106,35 +94,35 @@ class TestFetchingStream(ApiGatewayTest):
     def test_fetch_from_and_to_specic_changesets(self):
         stream_id = str(uuid.uuid4())
 
-        self.commit(
+        self.api.commit(
             stream_id=stream_id,
             changeset_id=1,
             metadata={ "metadata": "goes here" },
             events=[ { "type": "init" }, { "type": "update" } ]
         )
 
-        self.commit(
+        self.api.commit(
             stream_id=stream_id,
             changeset_id=2,
             metadata={ "metadata": "goes here 2" },
             events=[ { "type": "update2" } ]
         )
 
-        self.commit(
+        self.api.commit(
             stream_id=stream_id,
             changeset_id=3,
             metadata={ "metadata": "goes here 3" },
             events=[ { "type": "update3" } ]
         )
 
-        self.commit(
+        self.api.commit(
             stream_id=stream_id,
             changeset_id=4,
             metadata={ "metadata": "goes here 4" },
             events=[ { "type": "update4" } ]
         )        
 
-        response = self.query_changesets(stream_id, from_changeset=2, to_changeset=3)
+        response = self.api.query_changesets(stream_id, from_changeset=2, to_changeset=3)
         
         self.assertDictEqual(response.json(), {
             "stream_id": stream_id,
@@ -154,7 +142,7 @@ class TestFetchingStream(ApiGatewayTest):
     def test_invalid_querying_params1(self):
         stream_id = str(uuid.uuid4())
 
-        response = self.query_changesets(stream_id, from_changeset=3, to_changeset=2)
+        response = self.api.query_changesets(stream_id, from_changeset=3, to_changeset=2)
         
         assert response.status_code == 400
         self.assertDictEqual(response.json(), {
@@ -166,7 +154,7 @@ class TestFetchingStream(ApiGatewayTest):
     def test_invalid_querying_params2(self):
         stream_id = str(uuid.uuid4())
 
-        response = self.query_changesets(stream_id, from_changeset="test")
+        response = self.api.query_changesets(stream_id, from_changeset="test")
         
         assert response.status_code == 400
         self.assertDictEqual(response.json(), {
@@ -178,7 +166,7 @@ class TestFetchingStream(ApiGatewayTest):
     def test_invalid_querying_params3(self):
         stream_id = str(uuid.uuid4())
 
-        response = self.query_changesets(stream_id, to_changeset="test")
+        response = self.api.query_changesets(stream_id, to_changeset="test")
         
         assert response.status_code == 400
         self.assertDictEqual(response.json(), {
@@ -188,7 +176,7 @@ class TestFetchingStream(ApiGatewayTest):
         })
     
     def test_no_stream_id(self):
-        response = self.query_changesets("")
+        response = self.api.query_changesets("")
 
         assert response.status_code == 400
         self.assertDictEqual(response.json(), {
@@ -198,7 +186,7 @@ class TestFetchingStream(ApiGatewayTest):
     
     def test_fetching_unexisting_stream(self):
 
-        response = self.query_changesets("abcd")
+        response = self.api.query_changesets("abcd")
         
         assert response.status_code == 404
         self.assertDictEqual(response.json(), {
@@ -210,21 +198,14 @@ class TestFetchingStream(ApiGatewayTest):
     def test_fetch_changesets(self):
         stream_id = str(uuid.uuid4())
 
-        self.commit(
+        self.api.commit(
             stream_id=stream_id,
             changeset_id=1,
-            metadata={
-                'timestamp': '123123',
-                'command_id': '456346234',
-                'issued_by': 'test@test.com'
-            },
-            events=[
-                { "type": "init", "foo": "bar" },
-                { "type": "update", "foo": "baz" },
-            ]
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
         )
 
-        response = self.query_changesets(stream_id, from_changeset=2)
+        response = self.api.query_changesets(stream_id, from_changeset=2)
         
         self.assertDictEqual(response.json(), {
             "stream_id": stream_id,

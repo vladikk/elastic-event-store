@@ -2,22 +2,24 @@ import os
 import requests
 import uuid
 from unittest import TestCase
-from tests.integration.apigateway_level_tests import ApiGatewayTest
+from tests.integration.api_test_client import ApiTestClient
 
 
-class TestCommittingChangesets(ApiGatewayTest):
+class TestCommittingChangesets(TestCase):
+    api = ApiTestClient()
+
     def test_version(self):
-        response = requests.get(self.api_endpoint + "version")
+        response = self.api.version()
         self.assertDictEqual(response.json(), {"version": "0.0.1"})
     
     def test_new_stream(self):
         stream_id = str(uuid.uuid4())
 
-        response = self.commit(
+        response = self.api.commit(
             stream_id=stream_id,
             changeset_id=1,
-            metadata=self.some_metadata,
-            events=self.some_events
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
         )
         
         self.assertDictEqual(response.json(), {"stream-id": stream_id, "changeset-id": 1})
@@ -25,18 +27,18 @@ class TestCommittingChangesets(ApiGatewayTest):
     def test_append_to_existing_stream(self):
         stream_id = str(uuid.uuid4())
 
-        self.commit(
+        self.api.commit(
             stream_id=stream_id,
             changeset_id=1,
-            metadata=self.some_metadata,
-            events=self.some_events
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
         )
 
-        response = self.commit(
+        response = self.api.commit(
             stream_id=stream_id,
             changeset_id=2,
-            metadata=self.some_metadata,
-            events=self.some_events
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
         )
 
         self.assertDictEqual(response.json(), {"stream-id": stream_id, "changeset-id": 2})
@@ -45,25 +47,25 @@ class TestCommittingChangesets(ApiGatewayTest):
     def test_concurrency_exception(self):
         stream_id = str(uuid.uuid4())
 
-        self.commit(
+        self.api.commit(
             stream_id=stream_id,
             changeset_id=1,
-            metadata=self.some_metadata,
-            events=self.some_events
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
         )
 
-        self.commit(
+        self.api.commit(
             stream_id=stream_id,
             changeset_id=2,
-            metadata=self.some_metadata,
-            events=self.some_events
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
         )
 
-        response = self.commit(
+        response = self.api.commit(
             stream_id=stream_id,
             changeset_id=2,
-            metadata=self.some_metadata,
-            events=self.some_events
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
         )
 
         assert response.status_code == 409
@@ -76,11 +78,11 @@ class TestCommittingChangesets(ApiGatewayTest):
     def test_append_with_invalid_expected_changeset_id(self):
         stream_id = str(uuid.uuid4())
 
-        response = self.commit(
+        response = self.api.commit(
             stream_id=stream_id,
             changeset_id=-1,
-            metadata=self.some_metadata,
-            events=self.some_events
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
         )
 
         assert response.status_code == 400
@@ -93,11 +95,11 @@ class TestCommittingChangesets(ApiGatewayTest):
     def test_append_with_invalid_expected_changeset_id(self):
         stream_id = str(uuid.uuid4())
         
-        response = self.commit(
+        response = self.api.commit(
             stream_id=stream_id,
             changeset_id="test",
-            metadata=self.some_metadata,
-            events=self.some_events
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
         )
         
         assert response.status_code == 400
@@ -108,11 +110,11 @@ class TestCommittingChangesets(ApiGatewayTest):
         })
     
     def test_no_stream_id(self):
-        response = self.commit(
+        response = self.api.commit(
             stream_id="",
             changeset_id=1,
-            metadata=self.some_metadata,
-            events=self.some_events
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
         )
 
         assert response.status_code == 400
