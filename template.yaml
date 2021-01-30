@@ -110,22 +110,17 @@ Resources:
         Commit:
           Type: Api
           Properties:
-            Path: /commit
+            Path: /streams/{stream_id}
             Method: post
         Changesets:
           Type: Api
           Properties:
-            Path: /changesets
+            Path: /streams/{stream_id}/changesets
             Method: get
         Events:
           Type: Api
           Properties:
-            Path: /events
-            Method: get
-        Test:
-          Type: Api
-          Properties:
-            Path: /items/{id}/info
+            Path: /streams/{stream_id}/events
             Method: get
 
 Outputs:

@@ -9,7 +9,7 @@ class Commit:
 
     def execute(self, event, context):
         query_string = event.get("queryStringParameters") or {}
-        stream_id = query_string.get("stream_id")
+        stream_id = event["pathParameters"].get("stream_id")
         if not stream_id:
             return self.missing_stream_id()
     

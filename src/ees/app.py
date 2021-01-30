@@ -19,16 +19,12 @@ def route_request(event, context):
 
     handlers = {
         "/version": version,
-        "/version/": version,
-        "/commit": commit,
-        "/commit/": commit,
-        "/changesets": changesets,
-        "/changesets/": changesets,
-        "/events": events,
-        "/events/": events
+        "/streams/{stream_id}": commit,
+        "/streams/{stream_id}/changesets": changesets,
+        "/streams/{stream_id}/events": events
     }
     
-    path = event["path"].lower()
+    path = event["requestContext"]["resourcePath"].lower()
 
     if path in handlers.keys():
         return handlers[path]

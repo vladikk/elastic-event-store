@@ -108,17 +108,3 @@ class TestCommittingChangesets(TestCase):
             "error": "INVALID_EXPECTED_CHANGESET_ID",
             "message": 'The specified expected change set id("test") is invalid. Expected a positive integer.'
         })
-    
-    def test_no_stream_id(self):
-        response = self.api.commit(
-            stream_id="",
-            changeset_id=1,
-            metadata=self.api.some_metadata,
-            events=self.api.some_events
-        )
-
-        assert response.status_code == 400
-        self.assertDictEqual(response.json(), {
-            "error": "MISSING_STREAM_ID",
-            "message": 'stream_id is a required value'
-        })

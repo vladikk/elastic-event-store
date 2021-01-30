@@ -51,15 +51,15 @@ class ApiTestClient():
         except ValueError:
             expected = changeset_id
 
-        url = self.api_endpoint + f'commit?stream_id={stream_id}&expected_changeset_id={expected}'
+        url = self.api_endpoint + f'streams/{stream_id}?expected_changeset_id={expected}'
         return requests.post(url, json={"events": events, "metadata": metadata})
     
     def query_changesets(self, stream_id, from_changeset=None, to_changeset=None):
-        url = self.api_endpoint + f'changesets?stream_id={stream_id}&from={from_changeset or ""}&to={to_changeset or ""}'
+        url = self.api_endpoint + f'streams/{stream_id}/changesets?&from={from_changeset or ""}&to={to_changeset or ""}'
         return requests.get(url)
     
     def query_events(self, stream_id, from_event=None, to_event=None):
-        url = self.api_endpoint + f'events?stream_id={stream_id}&from={from_event or ""}&to={to_event or ""}'
+        url = self.api_endpoint + f'streams/{stream_id}/events?&from={from_event or ""}&to={to_event or ""}'
         return requests.get(url)
     
     def version(self):
