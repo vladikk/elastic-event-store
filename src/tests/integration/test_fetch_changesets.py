@@ -195,7 +195,7 @@ class TestFetchingChangesets(TestCase):
             "message": f'The specified stream(abcd) doesn\'t exist'
         })
     
-    def test_fetch_changesets(self):
+    def test_fetch_nonexisting_changesets_in_existing_stream(self):
         stream_id = str(uuid.uuid4())
 
         self.api.commit(

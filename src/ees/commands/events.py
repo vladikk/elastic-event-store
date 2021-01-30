@@ -63,18 +63,18 @@ class FetchEvents:
             "statusCode": 400,
             "body": json.dumps({
                 "stream_id": stream_id,
-                "error": "INVALID_CHANGESET_FILTERING_PARAMS",
+                "error": "INVALID_EVENT_FILTERING_PARAMS",
                 "message": 'The filtering params(from_changeset, to_changeset) have to be integer values'
             })
         }
     
-    def invalid_filtering_values(self, stream_id, from_changeset, to_changeset):
+    def invalid_filtering_values(self, stream_id, from_event, to_event):
         return {
             "statusCode": 400,
             "body": json.dumps({
                 "stream_id": stream_id,
-                "error": "INVALID_CHANGESET_FILTERING_PARAMS",
-                "message": f'The higher boundary cannot be lower than the lower boundary: {from_changeset}(from) > {to_changeset}(to)'
+                "error": "INVALID_EVENT_FILTERING_PARAMS",
+                "message": f'The higher boundary cannot be lower than the lower boundary: {from_event}(from) > {to_event}(to)'
             })
         }
     
