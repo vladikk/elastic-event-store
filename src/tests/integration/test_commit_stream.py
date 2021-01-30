@@ -1,14 +1,11 @@
 import os
+import requests
+import uuid
 from unittest import TestCase
 from tests.integration.apigateway_level_tests import ApiGatewayTest
 
-import boto3
-import pytest
-import requests
-import uuid
 
-
-class TestApiGateway(ApiGatewayTest):
+class TestCommittingChangesets(ApiGatewayTest):
     def test_version(self):
         response = requests.get(self.api_endpoint + "version")
         self.assertDictEqual(response.json(), {"version": "0.0.1"})

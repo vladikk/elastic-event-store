@@ -111,7 +111,12 @@ Resources:
           Type: Api
           Properties:
             Path: /commit
-            Method: post      
+            Method: post
+        Changesets:
+          Type: Api
+          Properties:
+            Path: /changesets
+            Method: get
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

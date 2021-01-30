@@ -34,7 +34,7 @@ class DynamoDB:
                 raise ConcurrencyException(commit.stream_id, commit.changeset_id)
             else:
                 raise e
-    
+        
     def fetch_last_commit(self, stream_id):
         response = self.dynamodb_ll.query(
             TableName=self.events_table,
@@ -56,7 +56,65 @@ class DynamoDB:
             return None
 
         return self.parse_commit(response["Items"][0])
-    
+
+    def fetch_stream_changesets(self,
+                                stream_id,
+                                from_changeset=None,
+                                to_changeset=None):
+        if not from_changeset and not to_changeset:
+            from_changeset = 1
+
+        range_condition = None
+        if from_changeset and to_changeset:
+            range_condition = {
+                'AttributeValueList': [
+                    {
+                        'N': str(from_changeset)
+                    },
+                    {
+                        'N': str(to_changeset)
+                    }
+                ],
+                'ComparisonOperator': 'BETWEEN'
+            }
+        elif from_changeset:
+            range_condition = {
+                'AttributeValueList': [
+                    {
+                        'N': str(from_changeset)
+                    }
+                ],
+                'ComparisonOperator': 'GE'
+            }
+        elif to_changeset:
+            range_condition = {
+                'AttributeValueList': [
+                    {
+                        'N': str(to_changeset)
+                    }
+                ],
+                'ComparisonOperator': 'LE'
+            }
+
+        response = self.dynamodb_ll.query(
+            TableName=self.events_table,
+            Select='ALL_ATTRIBUTES',
+            ScanIndexForward=True,
+            KeyConditions={
+                'stream_id': {
+                    'AttributeValueList': [
+                        {
+                            'S': stream_id
+                        },
+                    ],
+                    'ComparisonOperator': 'EQ'
+                },
+                'changeset_id': range_condition
+            }
+        )
+
+        return [self.parse_commit(r) for r in response["Items"]]
+
     def parse_commit(self, record):
         stream_id = record["stream_id"]["S"]
         changeset_id = int(record["changeset_id"]["N"])

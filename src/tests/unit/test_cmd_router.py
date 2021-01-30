@@ -23,6 +23,16 @@ def test_commit2(mocker):
     cmd = app.route_request(event, "")    
     assert isinstance(cmd, app.Commit)
 
+def test_fetch_changesets1(mocker):
+    event = { "path": "/changesets" }
+    cmd = app.route_request(event, "")    
+    assert isinstance(cmd, app.FetchChangesets)
+
+def test_fetch_changesets2(mocker):
+    event = { "path": "/changesets/" }
+    cmd = app.route_request(event, "")    
+    assert isinstance(cmd, app.FetchChangesets)
+
 def test_invalid_endpoint(mocker):
     event = { "path": "/invalid_blah" }
     cmd = app.route_request(event, "")    
