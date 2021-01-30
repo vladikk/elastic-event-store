@@ -8,6 +8,18 @@ CommitData = namedtuple('CommitData',
                         'first_event_id',
                         'last_event_id'])
 
+GlobalCounter = namedtuple('GlobalCounter',
+                           ['page',
+                            'page_item',
+                            'prev_stream_id',
+                            'prev_changeset_id'])
+
+GlobalIndex = namedtuple('GlobalIndex',
+                         ['stream_id',
+                          'changeset_id',
+                          'page',
+                          'page_item'])
+
 def make_initial_commit(stream_id, events, metadata={}):
     return CommitData(
         stream_id=stream_id,

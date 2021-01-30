@@ -2,9 +2,12 @@ import boto3
 import botocore
 from datetime import datetime
 import json
-from ees.model import CommitData, ConcurrencyException
+from ees.model import CommitData, ConcurrencyException, GlobalCounter, GlobalIndex
 
 class DynamoDB:
+    global_counter_key = '!!!RESERVED:GLOBAL-COUNTER!!'
+    global_counter_range = 0
+
     def __init__(self, events_table):
         self.events_table = events_table
         self.dynamodb_ll = boto3.client('dynamodb') 
@@ -255,3 +258,160 @@ class DynamoDB:
 
     def get_timestamp(self):
         return datetime.utcnow().isoformat("T") + "Z"
+    
+    def get_global_counter(self):
+        counter = self.__get_global_counter()
+        if not counter:
+            self.init_global_counter()
+            counter = self.__get_global_counter()
+        return counter
+
+    def __get_global_counter(self):
+        response = self.dynamodb_ll.query(
+            TableName=self.events_table,
+            ProjectionExpression='page,page_item,prev_stream_id,prev_changeset_id',
+            Limit=1,
+            ScanIndexForward=False,
+            KeyConditions={
+                'stream_id': {
+                    'AttributeValueList': [
+                        {
+                            'S': self.global_counter_key
+                        },
+                    ],
+                    'ComparisonOperator': 'EQ'
+                },
+                'changeset_id': {
+                    'AttributeValueList': [
+                        {
+                            'N': str(self.global_counter_range)
+                        },
+                    ],
+                    'ComparisonOperator': 'EQ'
+                }
+            }
+        )
+        if response["Count"] == 0:
+            return None
+        
+        data = response["Items"][0]
+        return GlobalCounter(int(data["page"]["N"]),
+                             int(data["page_item"]["N"]),
+                             data["prev_stream_id"]["S"],
+                             int(data["prev_changeset_id"]["N"]))
+    
+    def init_global_counter(self):
+        item = {
+            'stream_id': { "S": self.global_counter_key },
+            'changeset_id': { "N": str(self.global_counter_range) },
+            'page': { "N": str(0) },
+            'page_item': { "N": str(-1) },
+            'prev_stream_id': { "S": "" },
+            'prev_changeset_id': { "N": str(0) }
+        }
+
+        condition = {
+            'stream_id': { "Exists": False },
+            'changeset_id': { "Exists": False },
+        }
+
+        try:
+            self.dynamodb_ll.put_item(
+                TableName=self.events_table, Item=item, Expected=condition
+            )
+        except botocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                return
+            else:
+                raise e
+    
+    def update_global_counter(self, prev_value, new_value):
+        try:
+            self.dynamodb_ll.update_item(
+                TableName=self.events_table,
+                Key={
+                    'stream_id': { "S": self.global_counter_key },
+                    'changeset_id': { "N": str(self.global_counter_range) }
+                },
+                AttributeUpdates={
+                    'page': { "Value": { "N": str(new_value.page) } },
+                    'page_item': { "Value": { "N": str(new_value.page_item) } },
+                    'prev_stream_id': { "Value": { "S": new_value.prev_stream_id } },
+                    'prev_stream_changeset_id': { "Value": { "N": str(new_value.prev_changeset_id) } }
+                },
+                Expected={
+                    'page': { "Value": { "N": str(prev_value.page) } },
+                    'page_item': { "Value": { "N": str(prev_value.page_item) } }
+                }
+            )
+        except botocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                raise ConcurrencyException(self.global_counter_key, self.global_counter_range)
+            else:
+                raise e
+    
+    def get_global_index_value(self, stream_id, changeset_id):
+        response = self.dynamodb_ll.query(
+            TableName=self.events_table,
+            ProjectionExpression='page,page_item',
+            Limit=1,
+            ScanIndexForward=False,
+            KeyConditions={
+                'stream_id': {
+                    'AttributeValueList': [
+                        {
+                            'S': stream_id
+                        },
+                    ],
+                    'ComparisonOperator': 'EQ'
+                },
+                'changeset_id': {
+                    'AttributeValueList': [
+                        {
+                            'N': str(changeset_id)
+                        },
+                    ],
+                    'ComparisonOperator': 'EQ'
+                }
+            }
+        )
+        if response["Count"] == 0:
+            return None
+        
+        data = response["Items"][0]
+        page = data.get("page")
+        page_item = data.get("page_item")
+        if page:
+            page = int(page["N"])
+        if page_item:
+            page_item = int(page_item["N"])
+
+        return GlobalIndex(stream_id, changeset_id, page, page_item)
+
+    def set_global_index(self, global_index):
+        stream_id = global_index.stream_id
+        changeset_id = global_index.changeset_id
+        page = global_index.page
+        page_item = global_index.page_item
+
+        try:
+            self.dynamodb_ll.update_item(
+                TableName=self.events_table,
+                Key={
+                    'stream_id': { "S": stream_id },
+                    'changeset_id': { "N": str(changeset_id) }
+                },
+                AttributeUpdates={
+                    'page': { "Value": { "N": str(page) } },
+                    'page_item': { "Value": { "N": str(page_item) } }
+                },
+                Expected={
+                    'page': { "Exists": False },
+                    'item': { "Exists": False }
+                }
+            )
+        except botocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                raise ConcurrencyException(self.global_counter_key, self.global_counter_range)
+            else:
+                raise e

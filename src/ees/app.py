@@ -10,7 +10,6 @@ from ees.dynamodb import DynamoDB
 db = DynamoDB(events_table=os.getenv('EventStoreTable'))
 
 
-# This crap is temporary
 def route_request(event, context):
     commit = Commit(db)
     version = Version()
