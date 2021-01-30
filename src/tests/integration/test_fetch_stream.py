@@ -187,4 +187,13 @@ class TestFetchingStream(ApiGatewayTest):
             "message": 'The filtering params(from_changeset, to_changeset) have to be integer values'
         })
     
+    def test_no_stream_id(self):
+        response = self.query_changesets("")
+
+        assert response.status_code == 400
+        self.assertDictEqual(response.json(), {
+            "error": "MISSING_STREAM_ID",
+            "message": 'stream_id is a required value'
+        })
+    
     

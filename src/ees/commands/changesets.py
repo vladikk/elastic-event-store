@@ -8,6 +8,8 @@ class FetchChangesets:
     def execute(self, event, context):
         query_string = event.get("queryStringParameters") or {}
         stream_id = query_string.get("stream_id")
+        if not stream_id:
+            return self.missing_stream_id()
         to_changeset = query_string.get("to")
         from_changeset = query_string.get("from")
 
@@ -60,5 +62,14 @@ class FetchChangesets:
                 "stream_id": stream_id,
                 "error": "INVALID_CHANGESET_FILTERING_PARAMS",
                 "message": f'The higher boundary cannot be lower than the lower boundary: {from_changeset}(from) > {to_changeset}(to)'
+            })
+        }
+    
+    def missing_stream_id(self):
+        return {
+            "statusCode": 400,
+            "body": json.dumps({
+                "error": "MISSING_STREAM_ID",
+                "message": 'stream_id is a required value'
             })
         }
