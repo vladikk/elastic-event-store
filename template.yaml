@@ -122,6 +122,11 @@ Resources:
           Properties:
             Path: /events
             Method: get
+        Test:
+          Type: Api
+          Properties:
+            Path: /items/{id}/info
+            Method: get
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
