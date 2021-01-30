@@ -5,5 +5,5 @@ Publish committed changesets
 Publish committed events
 Unify FirstEventNumber / first_event_id terminology
 Modify commit - when no expected version is supplied, just append
-GlobalIndexer process
 Logging
+Enumerate changesets/events using global index

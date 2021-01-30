@@ -5,7 +5,7 @@ import json
 from ees.model import CommitData, ConcurrencyException, GlobalCounter, GlobalIndex
 
 class DynamoDB:
-    global_counter_key = '!!!RESERVED:GLOBAL-COUNTER!!'
+    global_counter_key = '!!!RESERVED:GLOBAL-COUNTER!!!'
     global_counter_range = 0
 
     def __init__(self, events_table):
