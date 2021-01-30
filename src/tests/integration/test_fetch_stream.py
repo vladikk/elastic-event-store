@@ -23,8 +23,7 @@ class TestFetchingStream(ApiGatewayTest):
             ]
         )
 
-        url = self.api_endpoint + f'changesets?stream_id={stream_id}'
-        response = requests.get(url)
+        response = self.query_changesets(stream_id)
         
         self.assertDictEqual(response.json(), {
             "stream_id": stream_id,
@@ -61,8 +60,7 @@ class TestFetchingStream(ApiGatewayTest):
             events=[ { "type": "update2" }, { "type": "delete" } ]
         )
 
-        url = self.api_endpoint + f'changesets?stream_id={stream_id}&from=2'
-        response = requests.get(url)
+        response = self.query_changesets(stream_id, from_changeset=2)
         
         self.assertDictEqual(response.json(), {
             "stream_id": stream_id,
@@ -92,8 +90,7 @@ class TestFetchingStream(ApiGatewayTest):
             events=[ { "type": "update2" }, { "type": "delete" } ]
         )
 
-        url = self.api_endpoint + f'changesets?stream_id={stream_id}&to=1'
-        response = requests.get(url)
+        response = self.query_changesets(stream_id, to_changeset=1)
         
         self.assertDictEqual(response.json(), {
             "stream_id": stream_id,
@@ -137,8 +134,7 @@ class TestFetchingStream(ApiGatewayTest):
             events=[ { "type": "update4" } ]
         )        
 
-        url = self.api_endpoint + f'changesets?stream_id={stream_id}&from=2&to=3'
-        response = requests.get(url)
+        response = self.query_changesets(stream_id, from_changeset=2, to_changeset=3)
         
         self.assertDictEqual(response.json(), {
             "stream_id": stream_id,
@@ -154,3 +150,41 @@ class TestFetchingStream(ApiGatewayTest):
                 }
             ]
         })
+    
+    def test_invalid_querying_params1(self):
+        stream_id = str(uuid.uuid4())
+
+        response = self.query_changesets(stream_id, from_changeset=3, to_changeset=2)
+        
+        assert response.status_code == 400
+        self.assertDictEqual(response.json(), {
+            "stream_id": stream_id,
+            "error": "INVALID_CHANGESET_FILTERING_PARAMS",
+            "message": 'The higher boundary cannot be lower than the lower boundary: 3(from) > 2(to)'
+        })
+    
+    def test_invalid_querying_params2(self):
+        stream_id = str(uuid.uuid4())
+
+        response = self.query_changesets(stream_id, from_changeset="test")
+        
+        assert response.status_code == 400
+        self.assertDictEqual(response.json(), {
+            "stream_id": stream_id,
+            "error": "INVALID_CHANGESET_FILTERING_PARAMS",
+            "message": 'The filtering params(from_changeset, to_changeset) have to be integer values'
+        })
+    
+    def test_invalid_querying_params3(self):
+        stream_id = str(uuid.uuid4())
+
+        response = self.query_changesets(stream_id, to_changeset="test")
+        
+        assert response.status_code == 400
+        self.assertDictEqual(response.json(), {
+            "stream_id": stream_id,
+            "error": "INVALID_CHANGESET_FILTERING_PARAMS",
+            "message": 'The filtering params(from_changeset, to_changeset) have to be integer values'
+        })
+    
+    

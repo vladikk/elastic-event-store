@@ -60,5 +60,8 @@ class ApiGatewayTest(TestCase):
             expected = changeset_id
 
         url = self.api_endpoint + f'commit?stream_id={stream_id}&expected_changeset_id={expected}'
-        print(url)
-        return requests.post(url, json={"events": events, "metadata": metadata})       
+        return requests.post(url, json={"events": events, "metadata": metadata})
+    
+    def query_changesets(self, stream_id, from_changeset=None, to_changeset=None):
+        url = self.api_endpoint + f'changesets?stream_id={stream_id}&from={from_changeset or ""}&to={to_changeset or ""}'
+        return requests.get(url)
