@@ -1,13 +1,19 @@
-Encapsulate and unit test parsing of incoming commands
+/events?checkpoint=? endpoint
+
 Encapsulate integration with API Gateway and Lambda
+Encapsulate and unit test parsing of incoming commands
+Add ubiquitous "pretty print json" parameter
+
+Unify FirstEventNumber / first_event_id terminology
 Optimize querying metadata of a stream's last commit
+
 Publish committed changesets
 Publish committed events
-Unify FirstEventNumber / first_event_id terminology
-Modify commit - when no expected version is supplied, just append
-Logging
-/changesets?checkpoint=? endpoint
-/events?checkpoint=? endpoint
+
 Commit: change the parameter to expected_last_changeset?
 Commit: enable optimistic concurrency control using events (in addition to changesets)
+Modify commit - when no expected version is supplied, just append
+
+Logging
+
 EES Analysis: Calculated statistics using CQRS
