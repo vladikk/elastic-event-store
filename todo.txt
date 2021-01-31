@@ -10,3 +10,4 @@ Logging
 /events?checkpoint=? endpoint
 Commit: change the parameter to expected_last_changeset?
 Commit: enable optimistic concurrency control using events (in addition to changesets)
+EES Analysis: Calculated statistics using CQRS
