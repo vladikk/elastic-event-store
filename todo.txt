@@ -6,4 +6,7 @@ Publish committed events
 Unify FirstEventNumber / first_event_id terminology
 Modify commit - when no expected version is supplied, just append
 Logging
-Enumerate changesets/events using global index
+/changesets?checkpoint=? endpoint
+/events?checkpoint=? endpoint
+Commit: change the parameter to expected_last_changeset?
+Commit: enable optimistic concurrency control using events (in addition to changesets)
