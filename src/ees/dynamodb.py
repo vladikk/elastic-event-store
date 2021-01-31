@@ -252,9 +252,16 @@ class DynamoDB:
         metadata = json.loads(metadata_json)
         first_event_id = int(record["first_event_id"]["N"])
         last_event_id = int(record["last_event_id"]["N"])
+        
+        page = None
+        page_item = None
+        
+        if "page" in record.keys():
+            page = int(record["page"]["N"])
+            page_item = int(record["page_item"]["N"])
 
         return CommitData(stream_id, changeset_id, metadata, events,
-                          first_event_id, last_event_id)
+                          first_event_id, last_event_id, page, page_item)
 
     def get_timestamp(self):
         return datetime.utcnow().isoformat("T") + "Z"
@@ -415,3 +422,58 @@ class DynamoDB:
                 raise ConcurrencyException(self.global_counter_key, self.global_counter_range)
             else:
                 raise e
+
+    def fetch_global_changesets(self, checkpoint, limit):
+        def fetch_batch(page, since_item, limit):
+            response = self.dynamodb_ll.query(
+                TableName=self.events_table,
+                Select='ALL_ATTRIBUTES',
+                IndexName='EmumerationIndex',
+                ScanIndexForward=True,
+                Limit=limit,
+                KeyConditions={
+                    'page': {
+                        'AttributeValueList': [
+                            {
+                                'N': str(page)
+                            },
+                        ],
+                        'ComparisonOperator': 'EQ'
+                    },
+                    'page_item': {
+                        'AttributeValueList': [
+                            {
+                                'N': str(since_item)
+                            }
+                        ],
+                        'ComparisonOperator': 'GE'
+                    }
+                }
+            )
+            return [self.parse_raw_changeset(r) for r in response["Items"] if r["stream_id"]["S"] != self.global_counter_key]
+
+        page = checkpoint // page_size
+        page_item = checkpoint % page_size
+
+
+        (page, item) = [int(x) for x in since_checkpoint.split('.')]
+        changesets_left = changesets_limit
+        last_batch = None
+        result = []
+        while True:
+            last_batch = fetch_batch(page, item, changesets_left)
+            if len(last_batch) > 0:
+                result.extend(last_batch)
+                item = max([c.seq_item for c in last_batch]) + 1
+                if changesets_limit:
+                    changesets_left = changesets_left - len(last_batch)
+            elif item != 0:
+                item = 0
+                page += 1
+            else:
+                break
+
+            if changesets_left <= 0 and changesets_limit:
+                break
+
+        return result

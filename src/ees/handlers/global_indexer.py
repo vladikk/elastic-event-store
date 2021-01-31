@@ -1,4 +1,4 @@
-from ees.model import ConcurrencyException, GlobalCounter, GlobalIndex
+from ees.model import ConcurrencyException, GlobalCounter, GlobalIndex, CheckmarkCalc
 import logging
 
 
@@ -18,13 +18,9 @@ logger.setLevel(logging.DEBUG)
 
 
 class GlobalIndexer:
-    # The value is hardcoded because it's not meant to be changed
-    # a change in the page size requires rebuilding the index for
-    # the whole table. Currently not implemented.
-    page_size = 1000 
-
     def __init__(self, db):
         self.db = db
+        self.checkmark_calc = CheckmarkCalc()
 
     def execute(self, stream_id, changeset_id):
         logger.info(f"Assign global index to {stream_id}/{changeset_id}")
@@ -73,14 +69,9 @@ class GlobalIndexer:
             self.db.set_global_index(fixed_index)
 
     def increment_counter(self, stream_id, changeset_id, prev_counter):
-        prev_page = prev_counter.page
-        prev_page_item = prev_counter.page_item
-        new_page = prev_page
-        new_page_item = prev_page_item + 1
-        if new_page_item > self.page_size:
-            new_page += 1
-            new_page_item = 0
-        new_counter = GlobalCounter(new_page, new_page_item, stream_id, changeset_id)
+        (p, i) = self.checkmark_calc.next_page_and_item(prev_counter.page,
+                                                        prev_counter.page_item)
+        new_counter = GlobalCounter(p, i, stream_id, changeset_id)
         self.db.update_global_counter(prev_counter, new_counter)
         logger.debug(f"Counter increased from {prev_counter} to {new_counter}")
         return new_counter

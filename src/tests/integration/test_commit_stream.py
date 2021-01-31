@@ -1,10 +1,10 @@
-import os
-import requests
+import pytest
 import uuid
 from unittest import TestCase
 from tests.integration.api_test_client import ApiTestClient
 
 
+@pytest.mark.slow
 class TestCommittingChangesets(TestCase):
     api = ApiTestClient()
 

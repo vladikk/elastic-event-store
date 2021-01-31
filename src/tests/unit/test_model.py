@@ -26,7 +26,9 @@ def test_next_commit_factory(mocker):
         metadata="the previous changeset's metadata",
         events=[ "old event 1", "old event 2", "old event 3"],
         first_event_id=5,
-        last_event_id=8
+        last_event_id=8,
+        page=None,
+        page_item=None
     )
     metadata = "the new changeset's metadata"
     events = [ "new event 1", "new event 2", "new event 3" ]

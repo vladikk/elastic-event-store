@@ -84,6 +84,7 @@ Resources:
         WriteCapacityUnits: !Ref WriteCapacityUnits
       StreamSpecification:
         StreamViewType: NEW_IMAGE
+
   CommandHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -109,16 +110,22 @@ Resources:
           Properties:
             Path: /streams/{stream_id}
             Method: post
-        Changesets:
+        StreamChangesets:
           Type: Api
           Properties:
             Path: /streams/{stream_id}/changesets
             Method: get
-        Events:
+        StreamEvents:
           Type: Api
           Properties:
             Path: /streams/{stream_id}/events
             Method: get
+        GlobalChangesets:
+          Type: Api
+          Properties:
+            Path: /changesets
+            Method: get
+        
   GlobalIndexerFunction:
     Type: AWS::Serverless::Function
     Properties:
