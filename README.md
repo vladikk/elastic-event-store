@@ -6,8 +6,14 @@ A serverless implementation of the storage mechanism for event sourcing-based sy
 
 ## What is Event Store?
 
-## Usage
+## Getting Started
+
+## Push Subscriptions
+
+## Pull/Catchup Subscriptions
 
 ## Architecture
 
 ## Data Model
+
+## Ordering Guarantees
