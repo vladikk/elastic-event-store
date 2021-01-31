@@ -37,13 +37,13 @@ Resources:
         AttributeType: S
       - AttributeName: changeset_id
         AttributeType: N
-      - AttributeName: global_enum_page
-        AttributeType: N
-      - AttributeName: global_enum_item
-        AttributeType: N
       - AttributeName: first_event_id
         AttributeType: N
       - AttributeName: last_event_id
+        AttributeType: N
+      - AttributeName: page
+        AttributeType: N
+      - AttributeName: page_item
         AttributeType: N
       KeySchema:
       - AttributeName: stream_id
@@ -70,9 +70,9 @@ Resources:
       GlobalSecondaryIndexes:
       - IndexName: EmumerationIndex
         KeySchema:
-        - AttributeName: global_enum_page
+        - AttributeName: page
           KeyType: HASH
-        - AttributeName: global_enum_item
+        - AttributeName: page_item
           KeyType: RANGE
         Projection:
           ProjectionType: ALL

@@ -1,4 +1,4 @@
-from ees.model import ConcurrencyException, GlobalCounter, GlobalIndex, CheckmarkCalc
+from ees.model import ConcurrencyException, GlobalCounter, GlobalIndex, CheckpointCalc
 import logging
 
 
@@ -20,7 +20,7 @@ logger.setLevel(logging.DEBUG)
 class GlobalIndexer:
     def __init__(self, db):
         self.db = db
-        self.checkmark_calc = CheckmarkCalc()
+        self.checkpoint_calc = CheckpointCalc()
 
     def execute(self, stream_id, changeset_id):
         logger.info(f"Assign global index to {stream_id}/{changeset_id}")
@@ -69,7 +69,7 @@ class GlobalIndexer:
             self.db.set_global_index(fixed_index)
 
     def increment_counter(self, stream_id, changeset_id, prev_counter):
-        (p, i) = self.checkmark_calc.next_page_and_item(prev_counter.page,
+        (p, i) = self.checkpoint_calc.next_page_and_item(prev_counter.page,
                                                         prev_counter.page_item)
         new_counter = GlobalCounter(p, i, stream_id, changeset_id)
         self.db.update_global_counter(prev_counter, new_counter)

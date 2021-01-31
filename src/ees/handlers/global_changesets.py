@@ -1,9 +1,10 @@
 import json
-
+from ees.model import CheckpointCalc
 
 class FetchGlobalChangesets:
     def __init__(self, db):
         self.db = db
+        self.checkpoint_calc = CheckpointCalc()
 
     def execute(self, event, context, default_limit=10):
         query_string = event.get("queryStringParameters") or { }
@@ -12,15 +13,18 @@ class FetchGlobalChangesets:
 
         changesets = self.db.fetch_global_changesets(checkpoint, limit)
 
-        changesets = [{ "stream_id": c.stream_id,
-                        "changeset_id": c.changeset_id,
-                        "events": c.events,
-                        "metadata": c.metadata,
-                        "checkpoint": c.checkpoint } for c in changesets]
+        changesets = [{
+               "stream_id": c.stream_id,
+               "changeset_id": c.changeset_id,
+               "events": c.events,
+               "metadata": c.metadata,
+               "checkpoint":
+                    self.checkpoint_calc.to_checkpoint(c.page, c.page_item)
+                } for c in changesets]
         
         next_checkpoint = checkpoint
         if changesets:
-            next_checkpoint = max([c.checkpoint for c in changesets]) + 1
+            next_checkpoint = max([c["checkpoint"] for c in changesets]) + 1
 
         return {
             "statusCode": 200,

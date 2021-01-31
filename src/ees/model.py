@@ -53,7 +53,7 @@ class ConcurrencyException(Exception):
         self.changeset_id = changeset_id
 
 
-class CheckmarkCalc(object):
+class CheckpointCalc(object):
     # The value is hardcoded because it's not meant to be changed
     # a change in the page size requires rebuilding the index for
     # the whole table. Currently not implemented.
@@ -69,11 +69,11 @@ class CheckmarkCalc(object):
             new_page_item = 0
         return (new_page, new_page_item)
     
-    def to_checkmark(self, page, page_item):
+    def to_checkpoint(self, page, page_item):
         return page * self.page_size + page_item
     
-    def to_page_item(self, checkmark):
-        p = checkmark // self.page_size
-        i = checkmark % self.page_size
+    def to_page_item(self, checkpoint):
+        p = checkpoint // self.page_size
+        i = checkpoint % self.page_size
         return (p, i)
 

@@ -2,7 +2,7 @@ import boto3
 import botocore
 from datetime import datetime
 import json
-from ees.model import CommitData, ConcurrencyException, GlobalCounter, GlobalIndex
+from ees.model import CommitData, ConcurrencyException, GlobalCounter, GlobalIndex, CheckpointCalc
 
 class DynamoDB:
     global_counter_key = '!!!RESERVED:GLOBAL-COUNTER!!!'
@@ -11,6 +11,7 @@ class DynamoDB:
     def __init__(self, events_table):
         self.events_table = events_table
         self.dynamodb_ll = boto3.client('dynamodb') 
+        self.checkpoint_calc = CheckpointCalc()
     
     def append(self, commit):
         item = {
@@ -450,30 +451,23 @@ class DynamoDB:
                     }
                 }
             )
-            return [self.parse_raw_changeset(r) for r in response["Items"] if r["stream_id"]["S"] != self.global_counter_key]
+            return [self.parse_commit(r) for r in response["Items"] if r["stream_id"]["S"] != self.global_counter_key]
 
-        page = checkpoint // page_size
-        page_item = checkpoint % page_size
+        (page, page_item) = self.checkpoint_calc.to_page_item(checkpoint)
 
-
-        (page, item) = [int(x) for x in since_checkpoint.split('.')]
-        changesets_left = changesets_limit
+        changesets_left = limit
         last_batch = None
         result = []
         while True:
-            last_batch = fetch_batch(page, item, changesets_left)
+            last_batch = fetch_batch(page, page_item, changesets_left)
             if len(last_batch) > 0:
                 result.extend(last_batch)
-                item = max([c.seq_item for c in last_batch]) + 1
-                if changesets_limit:
-                    changesets_left = changesets_left - len(last_batch)
-            elif item != 0:
-                item = 0
-                page += 1
+                (page, page_item) = self.checkpoint_calc.next_page_and_item(page, page_item)
+                changesets_left = changesets_left - len(last_batch)
             else:
                 break
 
-            if changesets_left <= 0 and changesets_limit:
+            if changesets_left <= 0:
                 break
 
         return result

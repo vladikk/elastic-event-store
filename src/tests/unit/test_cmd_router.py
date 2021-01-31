@@ -39,6 +39,15 @@ def test_fetch_events1(mocker):
     cmd = app.route_request(event, "")    
     assert isinstance(cmd, app.FetchEvents)
 
+def test_fetch_global_changesets(mocker):
+    event = {
+        "requestContext": {
+            "resourcePath": "/changesets"
+        }
+    }
+    cmd = app.route_request(event, "")    
+    assert isinstance(cmd, app.FetchGlobalChangesets)
+
 def test_invalid_endpoint(mocker):
     event = {
         "requestContext": {
