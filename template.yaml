@@ -83,7 +83,7 @@ Resources:
         ReadCapacityUnits: !Ref ReadCapacityUnits
         WriteCapacityUnits: !Ref WriteCapacityUnits
       StreamSpecification:
-        StreamViewType: KEYS_ONLY
+        StreamViewType: NEW_IMAGE
   CommandHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -119,7 +119,7 @@ Resources:
           Properties:
             Path: /streams/{stream_id}/events
             Method: get
-  ProcessDynamoDBStream:
+  GlobalIndexerFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: src
