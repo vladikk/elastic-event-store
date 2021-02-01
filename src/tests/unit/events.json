@@ -1,0 +1,962 @@
+{
+    "Version": {
+        "resource": "/version",
+        "path": "/version",
+        "httpMethod": "GET",
+        "headers": {
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "CloudFront-Forwarded-Proto": "https",
+            "CloudFront-Is-Desktop-Viewer": "true",
+            "CloudFront-Is-Mobile-Viewer": "false",
+            "CloudFront-Is-SmartTV-Viewer": "false",
+            "CloudFront-Is-Tablet-Viewer": "false",
+            "CloudFront-Viewer-Country": "IL",
+            "Host": "varta1icqe.execute-api.us-east-1.amazonaws.com",
+            "User-Agent": "python-requests/2.25.1",
+            "Via": "1.1 d4e2a230c602065d2e7043c30b343ff6.cloudfront.net (CloudFront)",
+            "X-Amz-Cf-Id": "NQpkeUf1r6tdyMWGlFptxKrai3jIOzNPhyyW8A780XZ-Cs16YhXk7w==",
+            "X-Amzn-Trace-Id": "Root=1-6017cc0b-4b8789ee08ca022346f60bde",
+            "X-Forwarded-For": "79.178.12.16, 130.176.1.147",
+            "X-Forwarded-Port": "443",
+            "X-Forwarded-Proto": "https"
+        },
+        "multiValueHeaders": {
+            "Accept": [
+                "*/*"
+            ],
+            "Accept-Encoding": [
+                "gzip, deflate"
+            ],
+            "CloudFront-Forwarded-Proto": [
+                "https"
+            ],
+            "CloudFront-Is-Desktop-Viewer": [
+                "true"
+            ],
+            "CloudFront-Is-Mobile-Viewer": [
+                "false"
+            ],
+            "CloudFront-Is-SmartTV-Viewer": [
+                "false"
+            ],
+            "CloudFront-Is-Tablet-Viewer": [
+                "false"
+            ],
+            "CloudFront-Viewer-Country": [
+                "IL"
+            ],
+            "Host": [
+                "varta1icqe.execute-api.us-east-1.amazonaws.com"
+            ],
+            "User-Agent": [
+                "python-requests/2.25.1"
+            ],
+            "Via": [
+                "1.1 d4e2a230c602065d2e7043c30b343ff6.cloudfront.net (CloudFront)"
+            ],
+            "X-Amz-Cf-Id": [
+                "NQpkeUf1r6tdyMWGlFptxKrai3jIOzNPhyyW8A780XZ-Cs16YhXk7w=="
+            ],
+            "X-Amzn-Trace-Id": [
+                "Root=1-6017cc0b-4b8789ee08ca022346f60bde"
+            ],
+            "X-Forwarded-For": [
+                "79.178.12.16, 130.176.1.147"
+            ],
+            "X-Forwarded-Port": [
+                "443"
+            ],
+            "X-Forwarded-Proto": [
+                "https"
+            ]
+        },
+        "queryStringParameters": null,
+        "multiValueQueryStringParameters": null,
+        "pathParameters": null,
+        "stageVariables": null,
+        "requestContext": {
+            "resourceId": "00dbnb",
+            "resourcePath": "/version",
+            "httpMethod": "GET",
+            "extendedRequestId": "aDzRxG99IAMF1nA=",
+            "requestTime": "01/Feb/2021:09:38:19 +0000",
+            "path": "/Prod/version",
+            "accountId": "139683429663",
+            "protocol": "HTTP/1.1",
+            "stage": "Prod",
+            "domainPrefix": "varta1icqe",
+            "requestTimeEpoch": 1612172299274,
+            "requestId": "047a23b4-d94d-458c-84d6-5575e0d2fcf7",
+            "identity": {
+                "cognitoIdentityPoolId": null,
+                "accountId": null,
+                "cognitoIdentityId": null,
+                "caller": null,
+                "sourceIp": "79.178.12.16",
+                "principalOrgId": null,
+                "accessKey": null,
+                "cognitoAuthenticationType": null,
+                "cognitoAuthenticationProvider": null,
+                "userArn": null,
+                "userAgent": "python-requests/2.25.1",
+                "user": null
+            },
+            "domainName": "varta1icqe.execute-api.us-east-1.amazonaws.com",
+            "apiId": "varta1icqe"
+        },
+        "body": null,
+        "isBase64Encoded": false
+    },
+    "Commit": {
+        "resource": "/streams/{stream_id}",
+        "path": "/streams/7ef3c378-8c97-49fe-97ba-f5afe719ea1c",
+        "httpMethod": "POST",
+        "headers": {
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "CloudFront-Forwarded-Proto": "https",
+            "CloudFront-Is-Desktop-Viewer": "true",
+            "CloudFront-Is-Mobile-Viewer": "false",
+            "CloudFront-Is-SmartTV-Viewer": "false",
+            "CloudFront-Is-Tablet-Viewer": "false",
+            "CloudFront-Viewer-Country": "IL",
+            "Content-Type": "application/json",
+            "Host": "varta1icqe.execute-api.us-east-1.amazonaws.com",
+            "User-Agent": "python-requests/2.25.1",
+            "Via": "1.1 6c2d36902aa2beb329c88167d0ba006d.cloudfront.net (CloudFront)",
+            "X-Amz-Cf-Id": "SkXu7r5WGv7iPmQJXv3bONnvJiBOSBRcaMGbSvIMkjTahV2-NUYAkA==",
+            "X-Amzn-Trace-Id": "Root=1-6017cc06-0d02233a465ff990113a6fde",
+            "X-Forwarded-For": "79.178.12.16, 130.176.1.157",
+            "X-Forwarded-Port": "443",
+            "X-Forwarded-Proto": "https"
+        },
+        "multiValueHeaders": {
+            "Accept": [
+                "*/*"
+            ],
+            "Accept-Encoding": [
+                "gzip, deflate"
+            ],
+            "CloudFront-Forwarded-Proto": [
+                "https"
+            ],
+            "CloudFront-Is-Desktop-Viewer": [
+                "true"
+            ],
+            "CloudFront-Is-Mobile-Viewer": [
+                "false"
+            ],
+            "CloudFront-Is-SmartTV-Viewer": [
+                "false"
+            ],
+            "CloudFront-Is-Tablet-Viewer": [
+                "false"
+            ],
+            "CloudFront-Viewer-Country": [
+                "IL"
+            ],
+            "Content-Type": [
+                "application/json"
+            ],
+            "Host": [
+                "varta1icqe.execute-api.us-east-1.amazonaws.com"
+            ],
+            "User-Agent": [
+                "python-requests/2.25.1"
+            ],
+            "Via": [
+                "1.1 6c2d36902aa2beb329c88167d0ba006d.cloudfront.net (CloudFront)"
+            ],
+            "X-Amz-Cf-Id": [
+                "SkXu7r5WGv7iPmQJXv3bONnvJiBOSBRcaMGbSvIMkjTahV2-NUYAkA=="
+            ],
+            "X-Amzn-Trace-Id": [
+                "Root=1-6017cc06-0d02233a465ff990113a6fde"
+            ],
+            "X-Forwarded-For": [
+                "79.178.12.16, 130.176.1.157"
+            ],
+            "X-Forwarded-Port": [
+                "443"
+            ],
+            "X-Forwarded-Proto": [
+                "https"
+            ]
+        },
+        "queryStringParameters": {
+            "expected_changeset_id": "7"
+        },
+        "multiValueQueryStringParameters": {
+            "expected_changeset_id": [
+                "0"
+            ]
+        },
+        "pathParameters": {
+            "stream_id": "7ef3c378-8c97-49fe-97ba-f5afe719ea1c"
+        },
+        "stageVariables": null,
+        "requestContext": {
+            "resourceId": "4tkg6b",
+            "resourcePath": "/streams/{stream_id}",
+            "httpMethod": "POST",
+            "extendedRequestId": "aDzRGFhAoAMFlPg=",
+            "requestTime": "01/Feb/2021:09:38:14 +0000",
+            "path": "/Prod/streams/7ef3c378-8c97-49fe-97ba-f5afe719ea1c",
+            "accountId": "139683429663",
+            "protocol": "HTTP/1.1",
+            "stage": "Prod",
+            "domainPrefix": "varta1icqe",
+            "requestTimeEpoch": 1612172294983,
+            "requestId": "432aaec4-def7-4091-a580-918332dccf31",
+            "identity": {
+                "cognitoIdentityPoolId": null,
+                "accountId": null,
+                "cognitoIdentityId": null,
+                "caller": null,
+                "sourceIp": "79.178.12.16",
+                "principalOrgId": null,
+                "accessKey": null,
+                "cognitoAuthenticationType": null,
+                "cognitoAuthenticationProvider": null,
+                "userArn": null,
+                "userAgent": "python-requests/2.25.1",
+                "user": null
+            },
+            "domainName": "varta1icqe.execute-api.us-east-1.amazonaws.com",
+            "apiId": "varta1icqe"
+        },
+        "body": "{\"events\": [{\"type\": \"init\", \"foo\": \"bar\"}, {\"type\": \"update\", \"foo\": \"baz\"}], \"metadata\": {\"timestamp\": \"123123\", \"command_id\": \"456346234\", \"issued_by\": \"test@test.com\"}}",
+        "isBase64Encoded": false
+    },
+    "StreamChangesets": {
+        "resource": "/streams/{stream_id}/changesets",
+        "path": "/streams/fe80eaef-90c3-41be-9bc0-3f85458b9a8e/changesets",
+        "httpMethod": "GET",
+        "headers": {
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "CloudFront-Forwarded-Proto": "https",
+            "CloudFront-Is-Desktop-Viewer": "true",
+            "CloudFront-Is-Mobile-Viewer": "false",
+            "CloudFront-Is-SmartTV-Viewer": "false",
+            "CloudFront-Is-Tablet-Viewer": "false",
+            "CloudFront-Viewer-Country": "IL",
+            "Host": "varta1icqe.execute-api.us-east-1.amazonaws.com",
+            "User-Agent": "python-requests/2.25.1",
+            "Via": "1.1 d5d5fbb221d1e1e64574f5113ce6ed5c.cloudfront.net (CloudFront)",
+            "X-Amz-Cf-Id": "kdTnHPsARMLeiSPzqFv0vwy4d3HFx7GDlvy-nQL4m1ImRftnVfRgFQ==",
+            "X-Amzn-Trace-Id": "Root=1-6017cc0b-62a374ef408dfc0672b9509d",
+            "X-Forwarded-For": "79.178.12.16, 130.176.1.89",
+            "X-Forwarded-Port": "443",
+            "X-Forwarded-Proto": "https"
+        },
+        "multiValueHeaders": {
+            "Accept": [
+                "*/*"
+            ],
+            "Accept-Encoding": [
+                "gzip, deflate"
+            ],
+            "CloudFront-Forwarded-Proto": [
+                "https"
+            ],
+            "CloudFront-Is-Desktop-Viewer": [
+                "true"
+            ],
+            "CloudFront-Is-Mobile-Viewer": [
+                "false"
+            ],
+            "CloudFront-Is-SmartTV-Viewer": [
+                "false"
+            ],
+            "CloudFront-Is-Tablet-Viewer": [
+                "false"
+            ],
+            "CloudFront-Viewer-Country": [
+                "IL"
+            ],
+            "Host": [
+                "varta1icqe.execute-api.us-east-1.amazonaws.com"
+            ],
+            "User-Agent": [
+                "python-requests/2.25.1"
+            ],
+            "Via": [
+                "1.1 d5d5fbb221d1e1e64574f5113ce6ed5c.cloudfront.net (CloudFront)"
+            ],
+            "X-Amz-Cf-Id": [
+                "kdTnHPsARMLeiSPzqFv0vwy4d3HFx7GDlvy-nQL4m1ImRftnVfRgFQ=="
+            ],
+            "X-Amzn-Trace-Id": [
+                "Root=1-6017cc0b-62a374ef408dfc0672b9509d"
+            ],
+            "X-Forwarded-For": [
+                "79.178.12.16, 130.176.1.89"
+            ],
+            "X-Forwarded-Port": [
+                "443"
+            ],
+            "X-Forwarded-Proto": [
+                "https"
+            ]
+        },
+        "queryStringParameters": {
+            "from": "",
+            "to": ""
+        },
+        "multiValueQueryStringParameters": {
+            "from": [
+                ""
+            ],
+            "to": [
+                ""
+            ]
+        },
+        "pathParameters": {
+            "stream_id": "fe80eaef-90c3-41be-9bc0-3f85458b9a8e"
+        },
+        "stageVariables": null,
+        "requestContext": {
+            "resourceId": "s0drj9",
+            "resourcePath": "/streams/{stream_id}/changesets",
+            "httpMethod": "GET",
+            "extendedRequestId": "aDzR4HzyIAMF2hg=",
+            "requestTime": "01/Feb/2021:09:38:19 +0000",
+            "path": "/Prod/streams/fe80eaef-90c3-41be-9bc0-3f85458b9a8e/changesets",
+            "accountId": "139683429663",
+            "protocol": "HTTP/1.1",
+            "stage": "Prod",
+            "domainPrefix": "varta1icqe",
+            "requestTimeEpoch": 1612172299987,
+            "requestId": "6b2de894-8e38-43d2-8125-931fd4711e6f",
+            "identity": {
+                "cognitoIdentityPoolId": null,
+                "accountId": null,
+                "cognitoIdentityId": null,
+                "caller": null,
+                "sourceIp": "79.178.12.16",
+                "principalOrgId": null,
+                "accessKey": null,
+                "cognitoAuthenticationType": null,
+                "cognitoAuthenticationProvider": null,
+                "userArn": null,
+                "userAgent": "python-requests/2.25.1",
+                "user": null
+            },
+            "domainName": "varta1icqe.execute-api.us-east-1.amazonaws.com",
+            "apiId": "varta1icqe"
+        },
+        "body": null,
+        "isBase64Encoded": false
+    },
+    "StreamEvents": {
+        "resource": "/streams/{stream_id}/events",
+        "path": "/streams/d2333e6b-65a7-4a10-9886-2dd2fe873bed/events",
+        "httpMethod": "GET",
+        "headers": {
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate",
+            "CloudFront-Forwarded-Proto": "https",
+            "CloudFront-Is-Desktop-Viewer": "true",
+            "CloudFront-Is-Mobile-Viewer": "false",
+            "CloudFront-Is-SmartTV-Viewer": "false",
+            "CloudFront-Is-Tablet-Viewer": "false",
+            "CloudFront-Viewer-Country": "IL",
+            "Host": "varta1icqe.execute-api.us-east-1.amazonaws.com",
+            "User-Agent": "python-requests/2.25.1",
+            "Via": "1.1 9b3a0b2647b64bb06aa470977314bbb3.cloudfront.net (CloudFront)",
+            "X-Amz-Cf-Id": "sKFw51rlf3H8dC7rDPabSsuS7EZOq8eiCPP_qn3ACjCVLkawH-quCw==",
+            "X-Amzn-Trace-Id": "Root=1-6017cc12-6273e2734ad6ecbb59bfbd76",
+            "X-Forwarded-For": "79.178.12.16, 130.176.1.73",
+            "X-Forwarded-Port": "443",
+            "X-Forwarded-Proto": "https"
+        },
+        "multiValueHeaders": {
+            "Accept": [
+                "*/*"
+            ],
+            "Accept-Encoding": [
+                "gzip, deflate"
+            ],
+            "CloudFront-Forwarded-Proto": [
+                "https"
+            ],
+            "CloudFront-Is-Desktop-Viewer": [
+                "true"
+            ],
+            "CloudFront-Is-Mobile-Viewer": [
+                "false"
+            ],
+            "CloudFront-Is-SmartTV-Viewer": [
+                "false"
+            ],
+            "CloudFront-Is-Tablet-Viewer": [
+                "false"
+            ],
+            "CloudFront-Viewer-Country": [
+                "IL"
+            ],
+            "Host": [
+                "varta1icqe.execute-api.us-east-1.amazonaws.com"
+            ],
+            "User-Agent": [
+                "python-requests/2.25.1"
+            ],
+            "Via": [
+                "1.1 9b3a0b2647b64bb06aa470977314bbb3.cloudfront.net (CloudFront)"
+            ],
+            "X-Amz-Cf-Id": [
+                "sKFw51rlf3H8dC7rDPabSsuS7EZOq8eiCPP_qn3ACjCVLkawH-quCw=="
+            ],
+            "X-Amzn-Trace-Id": [
+                "Root=1-6017cc12-6273e2734ad6ecbb59bfbd76"
+            ],
+            "X-Forwarded-For": [
+                "79.178.12.16, 130.176.1.73"
+            ],
+            "X-Forwarded-Port": [
+                "443"
+            ],
+            "X-Forwarded-Proto": [
+                "https"
+            ]
+        },
+        "queryStringParameters": {
+            "from": "",
+            "to": ""
+        },
+        "multiValueQueryStringParameters": {
+            "from": [
+                ""
+            ],
+            "to": [
+                ""
+            ]
+        },
+        "pathParameters": {
+            "stream_id": "d2333e6b-65a7-4a10-9886-2dd2fe873bed"
+        },
+        "stageVariables": null,
+        "requestContext": {
+            "resourceId": "9vyo5s",
+            "resourcePath": "/streams/{stream_id}/events",
+            "httpMethod": "GET",
+            "extendedRequestId": "aDzS5FePoAMF05A=",
+            "requestTime": "01/Feb/2021:09:38:26 +0000",
+            "path": "/Prod/streams/d2333e6b-65a7-4a10-9886-2dd2fe873bed/events",
+            "accountId": "139683429663",
+            "protocol": "HTTP/1.1",
+            "stage": "Prod",
+            "domainPrefix": "varta1icqe",
+            "requestTimeEpoch": 1612172306464,
+            "requestId": "85182715-5139-4452-b09a-d155ce29321c",
+            "identity": {
+                "cognitoIdentityPoolId": null,
+                "accountId": null,
+                "cognitoIdentityId": null,
+                "caller": null,
+                "sourceIp": "79.178.12.16",
+                "principalOrgId": null,
+                "accessKey": null,
+                "cognitoAuthenticationType": null,
+                "cognitoAuthenticationProvider": null,
+                "userArn": null,
+                "userAgent": "python-requests/2.25.1",
+                "user": null
+            },
+            "domainName": "varta1icqe.execute-api.us-east-1.amazonaws.com",
+            "apiId": "varta1icqe"
+        },
+        "body": null,
+        "isBase64Encoded": false
+    },
+    "GlobalChangesets": {
+        "resource": "/changesets",
+        "path": "/changesets",
+        "httpMethod": "GET",
+        "headers": {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8,he;q=0.7,ru;q=0.6",
+            "cache-control": "max-age=0",
+            "CloudFront-Forwarded-Proto": "https",
+            "CloudFront-Is-Desktop-Viewer": "true",
+            "CloudFront-Is-Mobile-Viewer": "false",
+            "CloudFront-Is-SmartTV-Viewer": "false",
+            "CloudFront-Is-Tablet-Viewer": "false",
+            "CloudFront-Viewer-Country": "IL",
+            "Host": "varta1icqe.execute-api.us-east-1.amazonaws.com",
+            "sec-ch-ua": "\"Chromium\";v=\"88\", \"Google Chrome\";v=\"88\", \";Not A Brand\";v=\"99\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-fetch-dest": "document",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-site": "none",
+            "sec-fetch-user": "?1",
+            "upgrade-insecure-requests": "1",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36",
+            "Via": "2.0 93a53b2e958fc95f0ea2869862c37e58.cloudfront.net (CloudFront)",
+            "X-Amz-Cf-Id": "GCxa_knyfy4m50_U60PgK93uqFzRPTjocpGCR_5m1TSltAL-c-1c1Q==",
+            "X-Amzn-Trace-Id": "Root=1-6017d00f-15062c722a883a612f60c1cb",
+            "X-Forwarded-For": "79.178.12.16, 130.176.1.140",
+            "X-Forwarded-Port": "443",
+            "X-Forwarded-Proto": "https"
+        },
+        "multiValueHeaders": {
+            "Accept": [
+                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+            ],
+            "Accept-Encoding": [
+                "gzip, deflate, br"
+            ],
+            "Accept-Language": [
+                "en-GB,en-US;q=0.9,en;q=0.8,he;q=0.7,ru;q=0.6"
+            ],
+            "cache-control": [
+                "max-age=0"
+            ],
+            "CloudFront-Forwarded-Proto": [
+                "https"
+            ],
+            "CloudFront-Is-Desktop-Viewer": [
+                "true"
+            ],
+            "CloudFront-Is-Mobile-Viewer": [
+                "false"
+            ],
+            "CloudFront-Is-SmartTV-Viewer": [
+                "false"
+            ],
+            "CloudFront-Is-Tablet-Viewer": [
+                "false"
+            ],
+            "CloudFront-Viewer-Country": [
+                "IL"
+            ],
+            "Host": [
+                "varta1icqe.execute-api.us-east-1.amazonaws.com"
+            ],
+            "sec-ch-ua": [
+                "\"Chromium\";v=\"88\", \"Google Chrome\";v=\"88\", \";Not A Brand\";v=\"99\""
+            ],
+            "sec-ch-ua-mobile": [
+                "?0"
+            ],
+            "sec-fetch-dest": [
+                "document"
+            ],
+            "sec-fetch-mode": [
+                "navigate"
+            ],
+            "sec-fetch-site": [
+                "none"
+            ],
+            "sec-fetch-user": [
+                "?1"
+            ],
+            "upgrade-insecure-requests": [
+                "1"
+            ],
+            "User-Agent": [
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"
+            ],
+            "Via": [
+                "2.0 93a53b2e958fc95f0ea2869862c37e58.cloudfront.net (CloudFront)"
+            ],
+            "X-Amz-Cf-Id": [
+                "GCxa_knyfy4m50_U60PgK93uqFzRPTjocpGCR_5m1TSltAL-c-1c1Q=="
+            ],
+            "X-Amzn-Trace-Id": [
+                "Root=1-6017d00f-15062c722a883a612f60c1cb"
+            ],
+            "X-Forwarded-For": [
+                "79.178.12.16, 130.176.1.140"
+            ],
+            "X-Forwarded-Port": [
+                "443"
+            ],
+            "X-Forwarded-Proto": [
+                "https"
+            ]
+        },
+        "queryStringParameters": {
+            "checkpoint": "44"
+        },
+        "multiValueQueryStringParameters": {
+            "checkpoint": [
+                "44"
+            ]
+        },
+        "pathParameters": null,
+        "stageVariables": null,
+        "requestContext": {
+            "resourceId": "cw7vp2",
+            "resourcePath": "/changesets",
+            "httpMethod": "GET",
+            "extendedRequestId": "aD1ygHNToAMFjcw=",
+            "requestTime": "01/Feb/2021:09:55:27 +0000",
+            "path": "/Prod/changesets",
+            "accountId": "139683429663",
+            "protocol": "HTTP/1.1",
+            "stage": "Prod",
+            "domainPrefix": "varta1icqe",
+            "requestTimeEpoch": 1612173327956,
+            "requestId": "eb5ba836-e3d4-440b-a044-ee51dbeb58e2",
+            "identity": {
+                "cognitoIdentityPoolId": null,
+                "accountId": null,
+                "cognitoIdentityId": null,
+                "caller": null,
+                "sourceIp": "79.178.12.16",
+                "principalOrgId": null,
+                "accessKey": null,
+                "cognitoAuthenticationType": null,
+                "cognitoAuthenticationProvider": null,
+                "userArn": null,
+                "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36",
+                "user": null
+            },
+            "domainName": "varta1icqe.execute-api.us-east-1.amazonaws.com",
+            "apiId": "varta1icqe"
+        },
+        "body": null,
+        "isBase64Encoded": false
+    },
+    "Indexer": {
+        "Records": [
+            {
+                "eventID": "ba015b129643176b8d3daf022527ee91",
+                "eventName": "MODIFY",
+                "eventVersion": "1.1",
+                "eventSource": "aws:dynamodb",
+                "awsRegion": "us-east-1",
+                "dynamodb": {
+                    "ApproximateCreationDateTime": 1612172303,
+                    "Keys": {
+                        "changeset_id": {
+                            "N": "0"
+                        },
+                        "stream_id": {
+                            "S": "!!!RESERVED:GLOBAL-COUNTER!!!"
+                        }
+                    },
+                    "NewImage": {
+                        "changeset_id": {
+                            "N": "0"
+                        },
+                        "stream_id": {
+                            "S": "!!!RESERVED:GLOBAL-COUNTER!!!"
+                        },
+                        "page_item": {
+                            "N": "76"
+                        },
+                        "page": {
+                            "N": "0"
+                        },
+                        "prev_stream_id": {
+                            "S": "a98663d9-9927-49a3-a7c0-23cd91a2d1bc"
+                        },
+                        "prev_changeset_id": {
+                            "N": "0"
+                        },
+                        "prev_stream_changeset_id": {
+                            "N": "1"
+                        }
+                    },
+                    "SequenceNumber": "2371800000000033050948264",
+                    "SizeBytes": 212,
+                    "StreamViewType": "NEW_IMAGE"
+                },
+                "eventSourceARN": "arn:aws:dynamodb:us-east-1:139683429663:table/ees_db_dev_eventstore/stream/2021-01-31T18:10:36.698"
+            },
+            {
+                "eventID": "6777d5478b055c2b5dd699fa74808a42",
+                "eventName": "MODIFY",
+                "eventVersion": "1.1",
+                "eventSource": "aws:dynamodb",
+                "awsRegion": "us-east-1",
+                "dynamodb": {
+                    "ApproximateCreationDateTime": 1612172303,
+                    "Keys": {
+                        "changeset_id": {
+                            "N": "1"
+                        },
+                        "stream_id": {
+                            "S": "a98663d9-9927-49a3-a7c0-23cd91a2d1bc"
+                        }
+                    },
+                    "NewImage": {
+                        "changeset_id": {
+                            "N": "1"
+                        },
+                        "metadata": {
+                            "S": "{\"metadata\": \"goes here\"}"
+                        },
+                        "stream_id": {
+                            "S": "a98663d9-9927-49a3-a7c0-23cd91a2d1bc"
+                        },
+                        "page_item": {
+                            "N": "76"
+                        },
+                        "first_event_id": {
+                            "N": "1"
+                        },
+                        "last_event_id": {
+                            "N": "2"
+                        },
+                        "page": {
+                            "N": "0"
+                        },
+                        "events": {
+                            "S": "[{\"type\": \"init\"}, {\"type\": \"update\"}]"
+                        },
+                        "timestamp": {
+                            "S": "2021-02-01T09:38:21.882911Z"
+                        }
+                    },
+                    "SequenceNumber": "2371900000000033050948265",
+                    "SizeBytes": 278,
+                    "StreamViewType": "NEW_IMAGE"
+                },
+                "eventSourceARN": "arn:aws:dynamodb:us-east-1:139683429663:table/ees_db_dev_eventstore/stream/2021-01-31T18:10:36.698"
+            },
+            {
+                "eventID": "7de65620722282f83dbf1ee6f0cefec6",
+                "eventName": "INSERT",
+                "eventVersion": "1.1",
+                "eventSource": "aws:dynamodb",
+                "awsRegion": "us-east-1",
+                "dynamodb": {
+                    "ApproximateCreationDateTime": 1612172303,
+                    "Keys": {
+                        "changeset_id": {
+                            "N": "1"
+                        },
+                        "stream_id": {
+                            "S": "96167a05-0c84-439f-84cd-df1dea34fad1"
+                        }
+                    },
+                    "NewImage": {
+                        "changeset_id": {
+                            "N": "1"
+                        },
+                        "metadata": {
+                            "S": "{\"metadata\": \"goes here\"}"
+                        },
+                        "stream_id": {
+                            "S": "96167a05-0c84-439f-84cd-df1dea34fad1"
+                        },
+                        "first_event_id": {
+                            "N": "1"
+                        },
+                        "last_event_id": {
+                            "N": "2"
+                        },
+                        "events": {
+                            "S": "[{\"type\": \"init\"}, {\"type\": \"update\"}]"
+                        },
+                        "timestamp": {
+                            "S": "2021-02-01T09:38:23.811180Z"
+                        }
+                    },
+                    "SequenceNumber": "2372000000000033050948308",
+                    "SizeBytes": 262,
+                    "StreamViewType": "NEW_IMAGE"
+                },
+                "eventSourceARN": "arn:aws:dynamodb:us-east-1:139683429663:table/ees_db_dev_eventstore/stream/2021-01-31T18:10:36.698"
+            },
+            {
+                "eventID": "7b8bdfff78a604828bf4a4dc597e9f20",
+                "eventName": "MODIFY",
+                "eventVersion": "1.1",
+                "eventSource": "aws:dynamodb",
+                "awsRegion": "us-east-1",
+                "dynamodb": {
+                    "ApproximateCreationDateTime": 1612172304,
+                    "Keys": {
+                        "changeset_id": {
+                            "N": "0"
+                        },
+                        "stream_id": {
+                            "S": "!!!RESERVED:GLOBAL-COUNTER!!!"
+                        }
+                    },
+                    "NewImage": {
+                        "changeset_id": {
+                            "N": "0"
+                        },
+                        "stream_id": {
+                            "S": "!!!RESERVED:GLOBAL-COUNTER!!!"
+                        },
+                        "page_item": {
+                            "N": "77"
+                        },
+                        "page": {
+                            "N": "0"
+                        },
+                        "prev_stream_id": {
+                            "S": "a98663d9-9927-49a3-a7c0-23cd91a2d1bc"
+                        },
+                        "prev_changeset_id": {
+                            "N": "0"
+                        },
+                        "prev_stream_changeset_id": {
+                            "N": "2"
+                        }
+                    },
+                    "SequenceNumber": "2372100000000033050948406",
+                    "SizeBytes": 212,
+                    "StreamViewType": "NEW_IMAGE"
+                },
+                "eventSourceARN": "arn:aws:dynamodb:us-east-1:139683429663:table/ees_db_dev_eventstore/stream/2021-01-31T18:10:36.698"
+            },
+            {
+                "eventID": "e50596a66c4ee43a4e84b03b87aaa875",
+                "eventName": "MODIFY",
+                "eventVersion": "1.1",
+                "eventSource": "aws:dynamodb",
+                "awsRegion": "us-east-1",
+                "dynamodb": {
+                    "ApproximateCreationDateTime": 1612172304,
+                    "Keys": {
+                        "changeset_id": {
+                            "N": "2"
+                        },
+                        "stream_id": {
+                            "S": "a98663d9-9927-49a3-a7c0-23cd91a2d1bc"
+                        }
+                    },
+                    "NewImage": {
+                        "changeset_id": {
+                            "N": "2"
+                        },
+                        "metadata": {
+                            "S": "{\"metadata\": \"goes here 2\"}"
+                        },
+                        "stream_id": {
+                            "S": "a98663d9-9927-49a3-a7c0-23cd91a2d1bc"
+                        },
+                        "page_item": {
+                            "N": "77"
+                        },
+                        "first_event_id": {
+                            "N": "3"
+                        },
+                        "last_event_id": {
+                            "N": "4"
+                        },
+                        "page": {
+                            "N": "0"
+                        },
+                        "events": {
+                            "S": "[{\"type\": \"update2\"}, {\"type\": \"delete\"}]"
+                        },
+                        "timestamp": {
+                            "S": "2021-02-01T09:38:22.525914Z"
+                        }
+                    },
+                    "SequenceNumber": "2372200000000033050948407",
+                    "SizeBytes": 283,
+                    "StreamViewType": "NEW_IMAGE"
+                },
+                "eventSourceARN": "arn:aws:dynamodb:us-east-1:139683429663:table/ees_db_dev_eventstore/stream/2021-01-31T18:10:36.698"
+            },
+            {
+                "eventID": "15bbf8b7a05a78637f6ac09abb0b35ce",
+                "eventName": "MODIFY",
+                "eventVersion": "1.1",
+                "eventSource": "aws:dynamodb",
+                "awsRegion": "us-east-1",
+                "dynamodb": {
+                    "ApproximateCreationDateTime": 1612172304,
+                    "Keys": {
+                        "changeset_id": {
+                            "N": "0"
+                        },
+                        "stream_id": {
+                            "S": "!!!RESERVED:GLOBAL-COUNTER!!!"
+                        }
+                    },
+                    "NewImage": {
+                        "changeset_id": {
+                            "N": "0"
+                        },
+                        "stream_id": {
+                            "S": "!!!RESERVED:GLOBAL-COUNTER!!!"
+                        },
+                        "page_item": {
+                            "N": "78"
+                        },
+                        "page": {
+                            "N": "0"
+                        },
+                        "prev_stream_id": {
+                            "S": "7caf0438-c1f3-4ec8-bdfb-246bd2af85c5"
+                        },
+                        "prev_changeset_id": {
+                            "N": "0"
+                        },
+                        "prev_stream_changeset_id": {
+                            "N": "1"
+                        }
+                    },
+                    "SequenceNumber": "2372300000000033050948553",
+                    "SizeBytes": 212,
+                    "StreamViewType": "NEW_IMAGE"
+                },
+                "eventSourceARN": "arn:aws:dynamodb:us-east-1:139683429663:table/ees_db_dev_eventstore/stream/2021-01-31T18:10:36.698"
+            },
+            {
+                "eventID": "d5490fdf45a47a3c88b197e3a893196d",
+                "eventName": "MODIFY",
+                "eventVersion": "1.1",
+                "eventSource": "aws:dynamodb",
+                "awsRegion": "us-east-1",
+                "dynamodb": {
+                    "ApproximateCreationDateTime": 1612172304,
+                    "Keys": {
+                        "changeset_id": {
+                            "N": "1"
+                        },
+                        "stream_id": {
+                            "S": "7caf0438-c1f3-4ec8-bdfb-246bd2af85c5"
+                        }
+                    },
+                    "NewImage": {
+                        "changeset_id": {
+                            "N": "1"
+                        },
+                        "metadata": {
+                            "S": "{\"timestamp\": \"123123\", \"command_id\": \"456346234\", \"issued_by\": \"test@test.com\"}"
+                        },
+                        "stream_id": {
+                            "S": "7caf0438-c1f3-4ec8-bdfb-246bd2af85c5"
+                        },
+                        "page_item": {
+                            "N": "78"
+                        },
+                        "first_event_id": {
+                            "N": "1"
+                        },
+                        "last_event_id": {
+                            "N": "2"
+                        },
+                        "page": {
+                            "N": "0"
+                        },
+                        "events": {
+                            "S": "[{\"type\": \"init\", \"foo\": \"bar\"}, {\"type\": \"update\", \"foo\": \"baz\"}]"
+                        },
+                        "timestamp": {
+                            "S": "2021-02-01T09:38:23.035535Z"
+                        }
+                    },
+                    "SequenceNumber": "2372400000000033050948554",
+                    "SizeBytes": 361,
+                    "StreamViewType": "NEW_IMAGE"
+                },
+                "eventSourceARN": "arn:aws:dynamodb:us-east-1:139683429663:table/ees_db_dev_eventstore/stream/2021-01-31T18:10:36.698"
+            }
+        ]
+    }
+}

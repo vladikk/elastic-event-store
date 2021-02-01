@@ -1,26 +1,34 @@
 from collections import namedtuple
 
-CommitData = namedtuple('CommitData',
-                        ['stream_id',
-                        'changeset_id',
-                        'metadata',
-                        'events',
-                        'first_event_id',
-                        'last_event_id',
-                        'page',
-                        'page_item'])
+CommitData = namedtuple(
+    'CommitData',
+    ['stream_id',
+    'changeset_id',
+    'metadata',
+    'events',
+    'first_event_id',
+    'last_event_id',
+    'page',
+    'page_item'])
 
-GlobalCounter = namedtuple('GlobalCounter',
-                           ['page',
-                            'page_item',
-                            'prev_stream_id',
-                            'prev_changeset_id'])
+GlobalCounter = namedtuple(
+    'GlobalCounter',
+    ['page',
+    'page_item',
+    'prev_stream_id',
+    'prev_changeset_id'])
 
-GlobalIndex = namedtuple('GlobalIndex',
-                         ['stream_id',
-                          'changeset_id',
-                          'page',
-                          'page_item'])
+GlobalIndex = namedtuple(
+    'GlobalIndex',
+    ['stream_id',
+    'changeset_id',
+    'page',
+    'page_item'])
+
+Error = namedtuple(
+    'Error',
+    ['http_status',
+     'body'])
 
 def make_initial_commit(stream_id, events, metadata={}):
     return CommitData(
