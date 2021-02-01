@@ -4,7 +4,7 @@ from unittest import TestCase
 from .context import ees
 from ees.infrastructure.aws_lambda import event_to_command
 from ees.commands import *
-from ees.model import Error
+from ees.model import Response
 
 class TestParsingLambdaEvents(TestCase):
     def __init__(self, x):
@@ -42,7 +42,7 @@ class TestParsingLambdaEvents(TestCase):
         
         err = event_to_command(event)
         
-        assert isinstance(err, Error)
+        assert isinstance(err, Response)
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "error": "MISSING_STREAM_ID",
@@ -55,7 +55,7 @@ class TestParsingLambdaEvents(TestCase):
         
         err = event_to_command(event)
         
-        assert isinstance(err, Error)        
+        assert isinstance(err, Response)        
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "stream-id": "7ef3c378-8c97-49fe-97ba-f5afe719ea1c",
@@ -69,7 +69,7 @@ class TestParsingLambdaEvents(TestCase):
         
         err = event_to_command(event)
         
-        assert isinstance(err, Error)        
+        assert isinstance(err, Response)        
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "stream-id": "7ef3c378-8c97-49fe-97ba-f5afe719ea1c",
@@ -91,7 +91,7 @@ class TestParsingLambdaEvents(TestCase):
         
         err = event_to_command(event)
         
-        assert isinstance(err, Error)
+        assert isinstance(err, Response)
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "error": "MISSING_STREAM_ID",
@@ -122,7 +122,7 @@ class TestParsingLambdaEvents(TestCase):
         
         err = event_to_command(event)
         
-        assert isinstance(err, Error)        
+        assert isinstance(err, Response)        
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "stream_id": "fe80eaef-90c3-41be-9bc0-3f85458b9a8e",
@@ -136,7 +136,7 @@ class TestParsingLambdaEvents(TestCase):
         
         err = event_to_command(event)
         
-        assert isinstance(err, Error)        
+        assert isinstance(err, Response)        
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "stream_id": "fe80eaef-90c3-41be-9bc0-3f85458b9a8e",
@@ -151,7 +151,7 @@ class TestParsingLambdaEvents(TestCase):
         
         err = event_to_command(event)
         
-        assert isinstance(err, Error)        
+        assert isinstance(err, Response)        
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "stream_id": "fe80eaef-90c3-41be-9bc0-3f85458b9a8e",
@@ -173,7 +173,7 @@ class TestParsingLambdaEvents(TestCase):
         
         err = event_to_command(event)
         
-        assert isinstance(err, Error)
+        assert isinstance(err, Response)
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "error": "MISSING_STREAM_ID",
@@ -204,7 +204,7 @@ class TestParsingLambdaEvents(TestCase):
         
         err = event_to_command(event)
         
-        assert isinstance(err, Error)        
+        assert isinstance(err, Response)        
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "stream_id": "d2333e6b-65a7-4a10-9886-2dd2fe873bed",
@@ -218,7 +218,7 @@ class TestParsingLambdaEvents(TestCase):
         
         err = event_to_command(event)
         
-        assert isinstance(err, Error)        
+        assert isinstance(err, Response)        
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "stream_id": "d2333e6b-65a7-4a10-9886-2dd2fe873bed",
@@ -233,7 +233,7 @@ class TestParsingLambdaEvents(TestCase):
         
         err = event_to_command(event)
         
-        assert isinstance(err, Error)        
+        assert isinstance(err, Response)        
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "stream_id": "d2333e6b-65a7-4a10-9886-2dd2fe873bed",
@@ -269,7 +269,7 @@ class TestParsingLambdaEvents(TestCase):
         event = self.load_event("GlobalChangesets")
         event["queryStringParameters"]["checkpoint"] = "test"
         err = event_to_command(event)                
-        assert isinstance(err, Error)
+        assert isinstance(err, Response)
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "error": "INVALID_CHECKPOINT",
@@ -280,7 +280,7 @@ class TestParsingLambdaEvents(TestCase):
         event = self.load_event("GlobalChangesets")
         event["queryStringParameters"]["checkpoint"] = "-2"
         err = event_to_command(event)                
-        assert isinstance(err, Error)
+        assert isinstance(err, Response)
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "error": "INVALID_CHECKPOINT",
@@ -291,7 +291,7 @@ class TestParsingLambdaEvents(TestCase):
         event = self.load_event("GlobalChangesets")
         event["queryStringParameters"]["limit"] = "test"
         err = event_to_command(event)                
-        assert isinstance(err, Error)
+        assert isinstance(err, Response)
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "error": "INVALID_LIMIT",
@@ -302,7 +302,7 @@ class TestParsingLambdaEvents(TestCase):
         event = self.load_event("GlobalChangesets")
         event["queryStringParameters"]["limit"] = "-2"
         err = event_to_command(event)                
-        assert isinstance(err, Error)
+        assert isinstance(err, Response)
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "error": "INVALID_LIMIT",
@@ -313,7 +313,7 @@ class TestParsingLambdaEvents(TestCase):
         event = self.load_event("GlobalChangesets")
         event["queryStringParameters"]["limit"] = "0"
         err = event_to_command(event)                
-        assert isinstance(err, Error)
+        assert isinstance(err, Response)
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
             "error": "INVALID_LIMIT",

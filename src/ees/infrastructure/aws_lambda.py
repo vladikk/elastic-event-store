@@ -1,5 +1,5 @@
 import json
-from ees.model import Error
+from ees.model import Response
 from ees.commands import *
 
 def event_to_command(event, context={}):
@@ -83,7 +83,7 @@ def parse_stream_events_request(event, context):
     return FetchStreamEvents(stream_id, from_event, to_event)
 
 def missing_stream_id():
-    return Error(
+    return Response(
         http_status=400,
         body = {
             "error": "MISSING_STREAM_ID",
@@ -116,7 +116,7 @@ def parse_global_changesets_request(event, context):
     return FetchGlobalChangesets(checkpoint, limit)
 
 def invalid_expected_changeset_id(stream_id, expected_changeset_id):
-    return Error(
+    return Response(
         http_status=400,
         body={
             "stream-id": stream_id,
@@ -125,7 +125,7 @@ def invalid_expected_changeset_id(stream_id, expected_changeset_id):
         })
 
 def invalid_filtering_values_type(stream_id, filter_type):
-    return Error(
+    return Response(
         http_status=400, 
         body={
             "stream_id": stream_id,
@@ -134,7 +134,7 @@ def invalid_filtering_values_type(stream_id, filter_type):
         })
 
 def invalid_filtering_values(stream_id, from_changeset, to_changeset, filter_type):
-    return Error(
+    return Response(
         http_status=400,
         body={
             "stream_id": stream_id,
@@ -143,7 +143,7 @@ def invalid_filtering_values(stream_id, from_changeset, to_changeset, filter_typ
         })
 
 def invalid_checkpoint_value(checkpoint):
-    return Error(
+    return Response(
         http_status=400,
         body={
             "error": "INVALID_CHECKPOINT",
@@ -151,7 +151,7 @@ def invalid_checkpoint_value(checkpoint):
         })
 
 def invalid_limit_value(limit):
-    return Error(
+    return Response(
         http_status=400,
         body={
             "error": "INVALID_LIMIT",

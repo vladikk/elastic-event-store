@@ -25,8 +25,8 @@ GlobalIndex = namedtuple(
     'page',
     'page_item'])
 
-Error = namedtuple(
-    'Error',
+Response = namedtuple(
+    'Response',
     ['http_status',
      'body'])
 
