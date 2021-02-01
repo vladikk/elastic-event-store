@@ -147,19 +147,6 @@ class TestCommittingChangesets(TestCase):
         
         self.assertDictEqual(response.json(), {"stream_id": stream_id, "changeset_id": 1})
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     def test_append_to_existing_stream_with_expected_last_event(self):
         stream_id = str(uuid.uuid4())
 

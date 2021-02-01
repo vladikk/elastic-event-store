@@ -63,7 +63,7 @@ class DynamoDB:
         if response["Count"] == 0:
             return None
 
-        return self.parse_commit(response["Items"][0])
+        return DynamoDB.parse_commit(response["Items"][0])
 
     def fetch_stream_changesets(self,
                                 stream_id,
@@ -121,7 +121,7 @@ class DynamoDB:
             }
         )
 
-        return [self.parse_commit(r) for r in response["Items"]]
+        return [DynamoDB.parse_commit(r) for r in response["Items"]]
     
     def fetch_stream_by_events(self, stream_id, from_event=None, to_event=None):
         if not from_event and not to_event:
@@ -178,7 +178,7 @@ class DynamoDB:
             }
         )
 
-        return [self.parse_commit(r) for r in response["Items"]]
+        return [DynamoDB.parse_commit(r) for r in response["Items"]]
 
     def fetch_changesets_by_events_range(self, stream_id, from_event, to_event):
         first_changeset = self.read_changeset_containing_event(stream_id, from_event)
@@ -216,7 +216,7 @@ class DynamoDB:
             }
         )
 
-        return [first_changeset] + [self.parse_commit(r) for r in response["Items"]]
+        return [first_changeset] + [DynamoDB.parse_commit(r) for r in response["Items"]]
 
     def read_changeset_containing_event(self, stream_id, event_id):
         response = self.dynamodb_ll.query(
@@ -245,10 +245,11 @@ class DynamoDB:
             }
         )
 
-        changesets = [self.parse_commit(r) for r in response["Items"]]
+        changesets = [DynamoDB.parse_commit(r) for r in response["Items"]]
         return changesets[0] if changesets else None
 
-    def parse_commit(self, record):
+    @classmethod
+    def parse_commit(cls, record):
         stream_id = record["stream_id"]["S"]
         changeset_id = int(record["changeset_id"]["N"])
         first_event_id = int(record["first_event_id"]["N"])
@@ -460,7 +461,7 @@ class DynamoDB:
                     }
                 }
             )
-            return [self.parse_commit(r) for r in response["Items"] if r["stream_id"]["S"] != self.global_counter_key]
+            return [DynamoDB.parse_commit(r) for r in response["Items"] if r["stream_id"]["S"] != self.global_counter_key]
 
         (page, page_item) = self.checkpoint_calc.to_page_item(checkpoint)
 

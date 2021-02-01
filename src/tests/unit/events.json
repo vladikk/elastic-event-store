@@ -1054,6 +1054,51 @@
                     "StreamViewType": "NEW_IMAGE"
                 },
                 "eventSourceARN": "arn:aws:dynamodb:us-east-1:139683429663:table/ees_db_dev_eventstore/stream/2021-01-31T18:10:36.698"
+            },
+            {
+                "eventID": "7f3725dcace56f6848802c05e6a4e989",
+                "eventName": "MODIFY",
+                "eventVersion": "1.1",
+                "eventSource": "aws:dynamodb",
+                "awsRegion": "us-east-1",
+                "dynamodb": {
+                    "ApproximateCreationDateTime": 1612188486,
+                    "Keys": {
+                        "changeset_id": {
+                            "N": "3"
+                        },
+                        "stream_id": {
+                            "S": "990389a3-e620-444d-9033-4128254f0cbd"
+                        }
+                    },
+                    "NewImage": {
+                        "changeset_id": {
+                            "N": "3"
+                        },
+                        "metadata": {
+                            "S": "{\"timestamp\": \"123123\", \"command_id\": \"456346234\", \"issued_by\": \"test@test.com\"}"
+                        },
+                        "stream_id": {
+                            "S": "990389a3-e620-444d-9033-4128254f0cbd"
+                        },
+                        "first_event_id": {
+                            "N": "3"
+                        },
+                        "last_event_id": {
+                            "N": "4"
+                        },
+                        "events": {
+                            "S": "[{\"type\": \"init\", \"foo\": \"bar\"}, {\"type\": \"update\", \"foo\": \"baz\"}]"
+                        },
+                        "timestamp": {
+                            "S": "2021-02-01T14:08:06.368556Z"
+                        }
+                    },
+                    "SequenceNumber": "3254400000000008621225018",
+                    "SizeBytes": 345,
+                    "StreamViewType": "NEW_IMAGE"
+                },
+                "eventSourceARN": "arn:aws:dynamodb:us-east-1:139683429663:table/ees_db_dev_eventstore/stream/2021-01-31T18:10:36.698"
             }
         ]
     }

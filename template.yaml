@@ -183,6 +183,7 @@ Resources:
           ChangesetsTopic: !Ref ChangesetsTopic
           EventsTopic: !Ref EventsTopic
       Policies:
+        - AmazonSNSFullAccess
         - SNSPublishMessagePolicy:
             TopicName: !Ref ChangesetsTopic
         - SNSPublishMessagePolicy:

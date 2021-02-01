@@ -27,7 +27,6 @@ def parse_dynamodb_event(event, context):
             })
     return AssignGlobalIndexes(changesets)
 
-
 def parse_version_request(event, context):
     return Version()
 
@@ -219,6 +218,16 @@ def invalid_limit_value(limit):
             "error": "INVALID_LIMIT",
             "message": f'"{limit}" is an invalid limit value. Expected an integer value greater than 0.'
         })
+
+def parse_dynamodb_new_records(event, context):
+    changesets = []
+    for e in event["Records"]:
+        keys = e["dynamodb"]["Keys"]
+        stream_id = keys["stream_id"]["S"]
+        if stream_id != DynamoDB.global_counter_key and e['eventName'] == "INSERT":
+            c = DynamoDB.parse_commit(e["dynamodb"]["NewImage"])
+            changesets.append(c)
+    return changesets
 
 parsers = {
     "/version": parse_version_request,

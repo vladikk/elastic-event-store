@@ -2,9 +2,9 @@ import json
 from unittest import TestCase
 
 from .context import ees
-from ees.infrastructure.aws_lambda import event_to_command
+from ees.infrastructure.aws_lambda import event_to_command, parse_dynamodb_new_records
 from ees.commands import *
-from ees.model import Response
+from ees.model import Response, CommitData
 
 class TestParsingLambdaEvents(TestCase):
     def __init__(self, x):
@@ -77,19 +77,6 @@ class TestParsingLambdaEvents(TestCase):
             "message": f'The specified expected changeset id("-1") is invalid. Expected a positive integer.'
         })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     def test_commit_with_both_expected_event_and_changeset(self):        
         event = self.load_event("Commit")
         event["queryStringParameters"]["expected_last_event"] = "0"
@@ -155,40 +142,6 @@ class TestParsingLambdaEvents(TestCase):
             "message": f'The specified expected event id("-1") is invalid. Expected a positive integer.'
         })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     def test_fetch_stream_changesets(self):
         event = self.load_event("StreamChangesets")
         cmd = event_to_command(event)
@@ -440,6 +393,18 @@ class TestParsingLambdaEvents(TestCase):
             { "stream_id": "99038933-e620-444d-9033-4128254f0cbd", "changeset_id": 2 },
             { "stream_id": "206bc1ed-8e67-4a64-a596-8b32c0c20a97", "changeset_id": 1 }
         ])
+    
+    def test_new_dynamodb_records(self):
+        self.maxDiff = None
+        event = self.load_event("AssignGlobalIndex")
+        changesets = parse_dynamodb_new_records(event, None)
+        self.assertListEqual(
+            changesets,
+            [
+                CommitData(stream_id='99038933-e620-444d-9033-4128254f0cbd', changeset_id=2, metadata={'timestamp': '123123', 'command_id': '456346234', 'issued_by': 'test@test.com'}, events=[{'type': 'init', 'foo': 'bar'}, {'type': 'update', 'foo': 'baz'}], first_event_id=3, last_event_id=4, page=None, page_item=None),
+                CommitData(stream_id='206bc1ed-8e67-4a64-a596-8b32c0c20a97', changeset_id=1, metadata={'timestamp': '123123', 'command_id': '456346234', 'issued_by': 'test@test.com'}, events=[{'type': 'init', 'foo': 'bar'}, {'type': 'update', 'foo': 'baz'}], first_event_id=1, last_event_id=2, page=None, page_item=None)
+            ]
+        )
     
     def load_event(self, name):
         return self.sample_events[name]

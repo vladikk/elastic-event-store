@@ -2,7 +2,9 @@ import json
 import os
 import logging
 from ees.app import route_request
-from ees.infrastructure.aws_lambda import event_to_command
+from ees.handlers.publisher import Publisher
+from ees.infrastructure.aws_lambda import event_to_command, parse_dynamodb_new_records
+from ees.infrastructure.sns import SNS
 from ees.model import Response
 from ees.app import route_request
 from ees.handlers.global_indexer import GlobalIndexer
@@ -42,4 +44,15 @@ def indexer(event, context):
     handler.execute(parsed_event)
 
 def publisher(event, context):
-    pass
+    logger.info(f"Processing incoming event: {event}")
+    changesets = parse_dynamodb_new_records(event, context)
+    logger.debug(f"Event was parsed to: {changesets}")
+
+    changesets_topic_arn = os.getenv('ChangesetsTopic')
+    events_topic_arn = os.getenv('EventsTopic')
+    changesets_topic = SNS(changesets_topic_arn)
+    events_topic = SNS(events_topic_arn)
+    p = Publisher(changesets_topic, events_topic)
+    p.publish(changesets)
+
+    

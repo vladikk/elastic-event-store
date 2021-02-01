@@ -3,7 +3,6 @@ import logging
 
 
 logger = logging.getLogger("ees.handlers.global_indexer")
-logger.setLevel(logging.DEBUG)
 
 # The algorithm:
 # R   assign global index to changeset:
