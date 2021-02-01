@@ -40,3 +40,6 @@ def indexer(event, context):
     logger.debug(f"Event was parsed to: {parsed_event}")
     handler = route_request(parsed_event)
     handler.execute(parsed_event)
+
+def publisher(event, context):
+    pass

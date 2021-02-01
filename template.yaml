@@ -170,6 +170,39 @@ Resources:
             #    Type: SQS
             #    Destination: !GetAtt MySqsQueue.Arn
 
+  PublisherFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src
+      Handler: lambda_entrypoint.publisher
+      Runtime: python3.8
+      Timeout: 60
+      Environment:
+        Variables:
+          EventStoreTable: !Ref EventStoreTable
+          ChangesetsTopic: !Ref ChangesetsTopic
+          EventsTopic: !Ref EventsTopic
+      Policies:
+        - SNSPublishMessagePolicy:
+            TopicName: !Ref ChangesetsTopic
+        - SNSPublishMessagePolicy:
+            TopicName: !Ref EventsTopic
+      Events:
+        Stream:
+          Type: DynamoDB
+          Properties:
+            Stream: !GetAtt EventStoreTable.StreamArn
+            BatchSize: 10
+            StartingPosition: TRIM_HORIZON
+            MaximumBatchingWindowInSeconds: 1
+            Enabled: true
+            ParallelizationFactor: 1
+            MaximumRetryAttempts: 1000
+            #DestinationConfig:
+            #  OnFailure:
+            #    Type: SQS
+            #    Destination: !GetAtt MySqsQueue.Arn
+
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM

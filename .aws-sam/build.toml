@@ -6,6 +6,6 @@ codeuri = "src"
 runtime = "python3.8"
 source_md5 = ""
 packagetype = "Zip"
-functions = ["CommandHandlerFunction", "GlobalIndexerFunction"]
+functions = ["CommandHandlerFunction", "GlobalIndexerFunction", "PublisherFunction"]
 
 [layer_build_definitions]
