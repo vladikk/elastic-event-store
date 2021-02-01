@@ -37,19 +37,19 @@ def parse_commit_request(event, context):
     if not stream_id:
         return missing_stream_id()     
 
-    expected_changeset_id = query_string.get("expected_changeset_id", 0)
+    expected_last_changeset = query_string.get("expected_last_changeset", 0)
     try:
-        expected_changeset_id = int(expected_changeset_id)
+        expected_last_changeset = int(expected_last_changeset)
     except ValueError:
-        return invalid_expected_changeset_id(stream_id, expected_changeset_id)
-    if expected_changeset_id < 0:
-        return invalid_expected_changeset_id(stream_id, expected_changeset_id)
+        return invalid_expected_changeset_id(stream_id, expected_last_changeset)
+    if expected_last_changeset < 0:
+        return invalid_expected_changeset_id(stream_id, expected_last_changeset)
 
     body = json.loads(event["body"])
     metadata = body["metadata"]
     events = body["events"]
     
-    return Commit(stream_id, expected_changeset_id, events, metadata)
+    return Commit(stream_id, expected_last_changeset, events, metadata)
 
 def parse_stream_changesets_request(event, context):
     query_string = event.get("queryStringParameters") or { }
@@ -136,13 +136,13 @@ def parse_global_changesets_request(event, context):
     
     return FetchGlobalChangesets(checkpoint, limit)
 
-def invalid_expected_changeset_id(stream_id, expected_changeset_id):
+def invalid_expected_changeset_id(stream_id, expected_last_changeset_id):
     return Response(
         http_status=400,
         body={
             "stream-id": stream_id,
             "error": "INVALID_EXPECTED_CHANGESET_ID",
-            "message": f'The specified expected change set id("{expected_changeset_id}") is invalid. Expected a positive integer.'
+            "message": f'The specified expected changeset id("{expected_last_changeset_id}") is invalid. Expected a positive integer.'
         })
 
 def invalid_filtering_values_type(stream_id, filter_type):

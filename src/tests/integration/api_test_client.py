@@ -51,7 +51,7 @@ class ApiTestClient():
         except ValueError:
             expected = changeset_id
 
-        url = self.api_endpoint + f'streams/{stream_id}?expected_changeset_id={expected}'
+        url = self.api_endpoint + f'streams/{stream_id}?expected_last_changeset={expected}'
         return requests.post(url, json={"events": events, "metadata": metadata})
     
     def query_changesets(self, stream_id, from_changeset=None, to_changeset=None):

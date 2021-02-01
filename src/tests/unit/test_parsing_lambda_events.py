@@ -28,7 +28,7 @@ class TestParsingLambdaEvents(TestCase):
     
     def test_commit_with_implicit_expected_changeset(self):
         event = self.load_event("Commit")
-        del event["queryStringParameters"]["expected_changeset_id"]
+        del event["queryStringParameters"]["expected_last_changeset"]
         cmd = event_to_command(event)
         assert isinstance(cmd, Commit)
         assert cmd.stream_id == "7ef3c378-8c97-49fe-97ba-f5afe719ea1c"
@@ -51,7 +51,7 @@ class TestParsingLambdaEvents(TestCase):
     
     def test_commit_with_invalid_expected_changeset(self):
         event = self.load_event("Commit")
-        event["queryStringParameters"]["expected_changeset_id"] = "test"
+        event["queryStringParameters"]["expected_last_changeset"] = "test"
         
         err = event_to_command(event)
         
@@ -60,12 +60,12 @@ class TestParsingLambdaEvents(TestCase):
         self.assertDictEqual(err.body, {
             "stream-id": "7ef3c378-8c97-49fe-97ba-f5afe719ea1c",
             "error": "INVALID_EXPECTED_CHANGESET_ID",
-            "message": f'The specified expected change set id("test") is invalid. Expected a positive integer.'
+            "message": f'The specified expected changeset id("test") is invalid. Expected a positive integer.'
         })
     
     def test_commit_with_negative_expected_changeset(self):
         event = self.load_event("Commit")
-        event["queryStringParameters"]["expected_changeset_id"] = -1
+        event["queryStringParameters"]["expected_last_changeset"] = -1
         
         err = event_to_command(event)
         
@@ -74,7 +74,7 @@ class TestParsingLambdaEvents(TestCase):
         self.assertDictEqual(err.body, {
             "stream-id": "7ef3c378-8c97-49fe-97ba-f5afe719ea1c",
             "error": "INVALID_EXPECTED_CHANGESET_ID",
-            "message": f'The specified expected change set id("-1") is invalid. Expected a positive integer.'
+            "message": f'The specified expected changeset id("-1") is invalid. Expected a positive integer.'
         })
     
     def test_fetch_stream_changesets(self):

@@ -72,7 +72,7 @@ class TestCommittingChangesets(TestCase):
         self.assertDictEqual(response.json(), {
             "stream-id": stream_id,
             "error": "OPTIMISTIC_CONCURRENCY_EXCEPTION",
-            "message": "The expected changeset (1) is outdated."
+            "message": "The expected last changeset (1) is outdated, review the changeset(s) appended after it."
         })
     
     def test_append_with_invalid_expected_changeset_id(self):
@@ -89,7 +89,7 @@ class TestCommittingChangesets(TestCase):
         self.assertDictEqual(response.json(), {
             "stream-id": stream_id,
             "error": "INVALID_EXPECTED_CHANGESET_ID",
-            "message": 'The specified expected change set id("-1") is invalid. Expected a positive integer.'
+            "message": 'The specified expected changeset id("-1") is invalid. Expected a positive integer.'
         })
     
     def test_append_with_invalid_expected_changeset_id(self):
@@ -106,5 +106,5 @@ class TestCommittingChangesets(TestCase):
         self.assertDictEqual(response.json(), {
             "stream-id": stream_id,
             "error": "INVALID_EXPECTED_CHANGESET_ID",
-            "message": 'The specified expected change set id("test") is invalid. Expected a positive integer.'
+            "message": 'The specified expected changeset id("test") is invalid. Expected a positive integer.'
         })

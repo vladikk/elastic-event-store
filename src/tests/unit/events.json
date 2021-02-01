@@ -185,11 +185,11 @@
             ]
         },
         "queryStringParameters": {
-            "expected_changeset_id": "7"
+            "expected_last_changeset": "7"
         },
         "multiValueQueryStringParameters": {
-            "expected_changeset_id": [
-                "0"
+            "expected_last_changeset": [
+                "7"
             ]
         },
         "pathParameters": {

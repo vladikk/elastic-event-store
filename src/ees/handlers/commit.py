@@ -1,13 +1,15 @@
-from datetime import datetime
-import json
+import logging
 from ees.model import make_initial_commit, make_next_commit, ConcurrencyException, Response
+
+logger = logging.getLogger("ees.handlers.commit")
+
 
 class CommitHandler:
     def __init__(self, db):
         self.db = db
 
     def execute(self, cmd):
-        print(f'expected changeset id {cmd.expected_last_changeset}')
+        logger.debug(f'expected last changeset id {cmd.expected_last_changeset}')
         if cmd.expected_last_changeset > 0:
             prev_commit = self.db.fetch_last_commit(cmd.stream_id)
             if prev_commit.changeset_id != cmd.expected_last_changeset:
@@ -28,11 +30,11 @@ class CommitHandler:
                 "changeset-id": commit.changeset_id
             }) 
     
-    def concurrency_exception(self, stream_id, expected_changeset_id):
+    def concurrency_exception(self, stream_id, expected_last_changeset):
         return Response(
             http_status=409,
             body={
                 "stream-id": stream_id,
                 "error": "OPTIMISTIC_CONCURRENCY_EXCEPTION",
-                "message": f'The expected changeset ({expected_changeset_id}) is outdated.'
+                "message": f'The expected last changeset ({expected_last_changeset}) is outdated, review the changeset(s) appended after it.'
             })
