@@ -77,5 +77,248 @@ class TestParsingLambdaEvents(TestCase):
             "message": f'The specified expected change set id("-1") is invalid. Expected a positive integer.'
         })
     
+    def test_fetch_stream_changesets(self):
+        event = self.load_event("StreamChangesets")
+        cmd = event_to_command(event)
+        assert isinstance(cmd, FetchStreamChangesets)
+        assert cmd.stream_id == "fe80eaef-90c3-41be-9bc0-3f85458b9a8e"
+        assert cmd.from_changeset == 1
+        assert cmd.to_changeset == 5
+    
+    def test_fetch_stream_changesets_without_stream_id(self):
+        event = self.load_event("StreamChangesets")
+        del event["pathParameters"]["stream_id"]
+        
+        err = event_to_command(event)
+        
+        assert isinstance(err, Error)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "error": "MISSING_STREAM_ID",
+            "message": 'stream_id is a required value'
+        })
+    
+    def test_fetch_stream_changesets_without_from(self):
+        event = self.load_event("StreamChangesets")
+        del event["queryStringParameters"]["from"]
+        cmd = event_to_command(event)
+        assert isinstance(cmd, FetchStreamChangesets)
+        assert cmd.stream_id == "fe80eaef-90c3-41be-9bc0-3f85458b9a8e"
+        assert cmd.from_changeset == None
+        assert cmd.to_changeset == 5
+    
+    def test_fetch_stream_changesets_without_to(self):
+        event = self.load_event("StreamChangesets")
+        del event["queryStringParameters"]["to"]
+        cmd = event_to_command(event)
+        assert isinstance(cmd, FetchStreamChangesets)
+        assert cmd.stream_id == "fe80eaef-90c3-41be-9bc0-3f85458b9a8e"
+        assert cmd.from_changeset == 1
+        assert cmd.to_changeset == None
+    
+    def test_fetch_stream_changesets_invalid_to(self):
+        event = self.load_event("StreamChangesets")
+        event["queryStringParameters"]["to"] = "test"
+        
+        err = event_to_command(event)
+        
+        assert isinstance(err, Error)        
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "stream_id": "fe80eaef-90c3-41be-9bc0-3f85458b9a8e",
+            "error": "INVALID_CHANGESET_FILTERING_PARAMS",
+            "message": 'The filtering params(from, to) have to be positive integer values'
+        })
+    
+    def test_fetch_stream_changesets_invalid_from(self):
+        event = self.load_event("StreamChangesets")
+        event["queryStringParameters"]["from"] = "test"
+        
+        err = event_to_command(event)
+        
+        assert isinstance(err, Error)        
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "stream_id": "fe80eaef-90c3-41be-9bc0-3f85458b9a8e",
+            "error": "INVALID_CHANGESET_FILTERING_PARAMS",
+            "message": 'The filtering params(from, to) have to be positive integer values'
+        })
+    
+    def test_fetch_stream_changesets_wrong_order_of_from_and_to(self):
+        event = self.load_event("StreamChangesets")
+        event["queryStringParameters"]["from"] = "7"
+        event["queryStringParameters"]["to"] = "1"
+        
+        err = event_to_command(event)
+        
+        assert isinstance(err, Error)        
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "stream_id": "fe80eaef-90c3-41be-9bc0-3f85458b9a8e",
+            "error": "INVALID_CHANGESET_FILTERING_PARAMS",
+            "message": f'The higher boundary cannot be lower than the lower boundary: 7(from) > 1(to)'
+        })
+
+    def test_fetch_stream_events(self):
+        event = self.load_event("StreamEvents")
+        cmd = event_to_command(event)
+        assert isinstance(cmd, FetchStreamEvents)
+        assert cmd.stream_id == "d2333e6b-65a7-4a10-9886-2dd2fe873bed"
+        assert cmd.from_event == 1
+        assert cmd.to_event == 5
+    
+    def test_fetch_stream_events_without_stream_id(self):
+        event = self.load_event("StreamEvents")
+        del event["pathParameters"]["stream_id"]
+        
+        err = event_to_command(event)
+        
+        assert isinstance(err, Error)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "error": "MISSING_STREAM_ID",
+            "message": 'stream_id is a required value'
+        })
+    
+    def test_fetch_stream_events_without_from(self):
+        event = self.load_event("StreamEvents")
+        del event["queryStringParameters"]["from"]
+        cmd = event_to_command(event)
+        assert isinstance(cmd, FetchStreamEvents)
+        assert cmd.stream_id == "d2333e6b-65a7-4a10-9886-2dd2fe873bed"
+        assert cmd.from_event == None
+        assert cmd.to_event == 5
+    
+    def test_fetch_stream_events_without_to(self):
+        event = self.load_event("StreamEvents")
+        del event["queryStringParameters"]["to"]
+        cmd = event_to_command(event)
+        assert isinstance(cmd, FetchStreamEvents)
+        assert cmd.stream_id == "d2333e6b-65a7-4a10-9886-2dd2fe873bed"
+        assert cmd.from_event == 1
+        assert cmd.to_event == None
+    
+    def test_fetch_stream_events_invalid_to(self):
+        event = self.load_event("StreamEvents")
+        event["queryStringParameters"]["to"] = "test"
+        
+        err = event_to_command(event)
+        
+        assert isinstance(err, Error)        
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "stream_id": "d2333e6b-65a7-4a10-9886-2dd2fe873bed",
+            "error": "INVALID_EVENT_FILTERING_PARAMS",
+            "message": 'The filtering params(from, to) have to be positive integer values'
+        })
+    
+    def test_fetch_stream_events_invalid_from(self):
+        event = self.load_event("StreamEvents")
+        event["queryStringParameters"]["from"] = "test"
+        
+        err = event_to_command(event)
+        
+        assert isinstance(err, Error)        
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "stream_id": "d2333e6b-65a7-4a10-9886-2dd2fe873bed",
+            "error": "INVALID_EVENT_FILTERING_PARAMS",
+            "message": 'The filtering params(from, to) have to be positive integer values'
+        })
+    
+    def test_fetch_stream_events_wrong_order_of_from_and_to(self):
+        event = self.load_event("StreamEvents")
+        event["queryStringParameters"]["from"] = "7"
+        event["queryStringParameters"]["to"] = "1"
+        
+        err = event_to_command(event)
+        
+        assert isinstance(err, Error)        
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "stream_id": "d2333e6b-65a7-4a10-9886-2dd2fe873bed",
+            "error": "INVALID_EVENT_FILTERING_PARAMS",
+            "message": f'The higher boundary cannot be lower than the lower boundary: 7(from) > 1(to)'
+        })
+    
+    def test_global_changesets(self):
+        event = self.load_event("GlobalChangesets")
+        cmd = event_to_command(event)
+        assert isinstance(cmd, FetchGlobalChangesets)
+        assert cmd.checkpoint == 44
+        assert cmd.limit == 120
+    
+    def test_global_changesets_without_explicit_limit(self):
+        event = self.load_event("GlobalChangesets")
+        del event["queryStringParameters"]["limit"]
+        cmd = event_to_command(event)
+        assert isinstance(cmd, FetchGlobalChangesets)
+        assert cmd.checkpoint == 44
+        assert cmd.limit == None
+    
+    def test_global_changesets_without_explicit_checkpoint(self):
+        event = self.load_event("GlobalChangesets")
+        del event["queryStringParameters"]["checkpoint"]
+        del event["queryStringParameters"]["limit"]        
+        cmd = event_to_command(event)
+        assert isinstance(cmd, FetchGlobalChangesets)
+        assert cmd.checkpoint == 0
+        assert cmd.limit == None
+    
+    def test_global_changesets_with_invalid_checkpoint(self):
+        event = self.load_event("GlobalChangesets")
+        event["queryStringParameters"]["checkpoint"] = "test"
+        err = event_to_command(event)                
+        assert isinstance(err, Error)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "error": "INVALID_CHECKPOINT",
+            "message": '"test" is an invalid checkpoint value. Expected a positive integer value.'
+        })
+    
+    def test_global_changesets_with_invalid_checkpoint2(self):
+        event = self.load_event("GlobalChangesets")
+        event["queryStringParameters"]["checkpoint"] = "-2"
+        err = event_to_command(event)                
+        assert isinstance(err, Error)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "error": "INVALID_CHECKPOINT",
+            "message": '"-2" is an invalid checkpoint value. Expected a positive integer value.'
+        })
+    
+    def test_global_changesets_with_invalid_limit(self):
+        event = self.load_event("GlobalChangesets")
+        event["queryStringParameters"]["limit"] = "test"
+        err = event_to_command(event)                
+        assert isinstance(err, Error)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "error": "INVALID_LIMIT",
+            "message": '"test" is an invalid limit value. Expected an integer value greater than 0.'
+        })
+    
+    def test_global_changesets_with_invalid_limit2(self):
+        event = self.load_event("GlobalChangesets")
+        event["queryStringParameters"]["limit"] = "-2"
+        err = event_to_command(event)                
+        assert isinstance(err, Error)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "error": "INVALID_LIMIT",
+            "message": '"-2" is an invalid limit value. Expected an integer value greater than 0.'
+        })
+    
+    def test_global_changesets_with_invalid_limit2(self):
+        event = self.load_event("GlobalChangesets")
+        event["queryStringParameters"]["limit"] = "0"
+        err = event_to_command(event)                
+        assert isinstance(err, Error)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "error": "INVALID_LIMIT",
+            "message": '"0" is an invalid limit value. Expected an integer value greater than 0.'
+        })
+    
     def load_event(self, name):
         return self.sample_events[name]
