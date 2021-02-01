@@ -139,6 +139,11 @@ Resources:
           Properties:
             Path: /changesets
             Method: get
+        GlobalEvents:
+          Type: Api
+          Properties:
+            Path: /events
+            Method: get
         
   GlobalIndexerFunction:
     Type: AWS::Serverless::Function

@@ -384,6 +384,121 @@ class TestParsingLambdaEvents(TestCase):
             "error": "INVALID_LIMIT",
             "message": '"0" is an invalid limit value. Expected an integer value greater than 0.'
         })
+
+
+
+
+
+
+
+
+
+
+
+    def test_global_events(self):
+        event = self.load_event("GlobalEvents")
+        cmd = event_to_command(event)
+        assert isinstance(cmd, FetchGlobalEvents)
+        assert cmd.checkpoint == 44
+        assert cmd.event_in_checkpoint == 2
+        assert cmd.limit == 120
+    
+    def test_global_events_without_explicit_limit(self):
+        event = self.load_event("GlobalEvents")
+        del event["queryStringParameters"]["limit"]
+        cmd = event_to_command(event)
+        assert isinstance(cmd, FetchGlobalEvents)
+        assert cmd.checkpoint == 44
+        assert cmd.event_in_checkpoint == 2
+        assert cmd.limit == None
+    
+    def test_global_events_without_explicit_checkpoint(self):
+        event = self.load_event("GlobalEvents")
+        del event["queryStringParameters"]["checkpoint"]
+        del event["queryStringParameters"]["limit"]        
+        cmd = event_to_command(event)
+        assert isinstance(cmd, FetchGlobalEvents)
+        assert cmd.checkpoint == 0
+        assert cmd.event_in_checkpoint == 0
+        assert cmd.limit == None
+    
+    def test_global_events_with_invalid_checkpoint(self):
+        event = self.load_event("GlobalEvents")
+        event["queryStringParameters"]["checkpoint"] = "test"
+        err = event_to_command(event)                
+        assert isinstance(err, Response)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "error": "INVALID_CHECKPOINT",
+            "message": '"test" is an invalid checkpoint value. Set a valid checkpoint(e.g. "42.1").'
+        })
+    
+    def test_global_events_with_invalid_checkpoint2(self):
+        event = self.load_event("GlobalEvents")
+        event["queryStringParameters"]["checkpoint"] = "-2"
+        err = event_to_command(event)                
+        assert isinstance(err, Response)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "error": "INVALID_CHECKPOINT",
+            "message": '"-2" is an invalid checkpoint value. Set a valid checkpoint(e.g. "42.1").'
+        })
+    
+    def test_global_events_with_invalid_checkpoint3(self):
+        event = self.load_event("GlobalEvents")
+        event["queryStringParameters"]["checkpoint"] = "2"
+        err = event_to_command(event)                
+        assert isinstance(err, Response)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "error": "INVALID_CHECKPOINT",
+            "message": '"2" is an invalid checkpoint value. Set a valid checkpoint(e.g. "42.1").'
+        })
+    
+    def test_global_events_with_invalid_limit(self):
+        event = self.load_event("GlobalEvents")
+        event["queryStringParameters"]["limit"] = "test"
+        err = event_to_command(event)                
+        assert isinstance(err, Response)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "error": "INVALID_LIMIT",
+            "message": '"test" is an invalid limit value. Expected an integer value greater than 0.'
+        })
+    
+    def test_global_events_with_invalid_limit2(self):
+        event = self.load_event("GlobalEvents")
+        event["queryStringParameters"]["limit"] = "-2"
+        err = event_to_command(event)                
+        assert isinstance(err, Response)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "error": "INVALID_LIMIT",
+            "message": '"-2" is an invalid limit value. Expected an integer value greater than 0.'
+        })
+    
+    def test_global_events_with_invalid_limit2(self):
+        event = self.load_event("GlobalEvents")
+        event["queryStringParameters"]["limit"] = "0"
+        err = event_to_command(event)                
+        assert isinstance(err, Response)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "error": "INVALID_LIMIT",
+            "message": '"0" is an invalid limit value. Expected an integer value greater than 0.'
+        })
+
+
+
+
+
+
+
+
+
+
+
+
     
     def test_assign_global_index(self):
         event = self.load_event("AssignGlobalIndex")

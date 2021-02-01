@@ -1,6 +1,6 @@
 /events?checkpoint=? endpoint
 
-Logging
+Add logging where needed
 
 Add dead letter queues for async tasks + alerts
 

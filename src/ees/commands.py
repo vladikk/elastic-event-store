@@ -28,6 +28,12 @@ FetchGlobalChangesets = namedtuple(
     'FetchGlobalChangesets',
     ['checkpoint',
      'limit'])
+    
+FetchGlobalEvents = namedtuple(
+    'FetchGlobalEvents',
+    ['checkpoint',
+     'event_in_checkpoint',
+     'limit'])
 
 AssignGlobalIndexes = namedtuple(
     'AssignGlobalIndexes', ['changesets'])

@@ -626,6 +626,161 @@
         "body": null,
         "isBase64Encoded": false
     },
+    "GlobalEvents": {
+        "resource": "/events",
+        "path": "/events",
+        "httpMethod": "GET",
+        "headers": {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8,he;q=0.7,ru;q=0.6",
+            "cache-control": "max-age=0",
+            "CloudFront-Forwarded-Proto": "https",
+            "CloudFront-Is-Desktop-Viewer": "true",
+            "CloudFront-Is-Mobile-Viewer": "false",
+            "CloudFront-Is-SmartTV-Viewer": "false",
+            "CloudFront-Is-Tablet-Viewer": "false",
+            "CloudFront-Viewer-Country": "IL",
+            "Host": "varta1icqe.execute-api.us-east-1.amazonaws.com",
+            "sec-ch-ua": "\"Chromium\";v=\"88\", \"Google Chrome\";v=\"88\", \";Not A Brand\";v=\"99\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-fetch-dest": "document",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-site": "none",
+            "sec-fetch-user": "?1",
+            "upgrade-insecure-requests": "1",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36",
+            "Via": "2.0 93a53b2e958fc95f0ea2869862c37e58.cloudfront.net (CloudFront)",
+            "X-Amz-Cf-Id": "GCxa_knyfy4m50_U60PgK93uqFzRPTjocpGCR_5m1TSltAL-c-1c1Q==",
+            "X-Amzn-Trace-Id": "Root=1-6017d00f-15062c722a883a612f60c1cb",
+            "X-Forwarded-For": "79.178.12.16, 130.176.1.140",
+            "X-Forwarded-Port": "443",
+            "X-Forwarded-Proto": "https"
+        },
+        "multiValueHeaders": {
+            "Accept": [
+                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+            ],
+            "Accept-Encoding": [
+                "gzip, deflate, br"
+            ],
+            "Accept-Language": [
+                "en-GB,en-US;q=0.9,en;q=0.8,he;q=0.7,ru;q=0.6"
+            ],
+            "cache-control": [
+                "max-age=0"
+            ],
+            "CloudFront-Forwarded-Proto": [
+                "https"
+            ],
+            "CloudFront-Is-Desktop-Viewer": [
+                "true"
+            ],
+            "CloudFront-Is-Mobile-Viewer": [
+                "false"
+            ],
+            "CloudFront-Is-SmartTV-Viewer": [
+                "false"
+            ],
+            "CloudFront-Is-Tablet-Viewer": [
+                "false"
+            ],
+            "CloudFront-Viewer-Country": [
+                "IL"
+            ],
+            "Host": [
+                "varta1icqe.execute-api.us-east-1.amazonaws.com"
+            ],
+            "sec-ch-ua": [
+                "\"Chromium\";v=\"88\", \"Google Chrome\";v=\"88\", \";Not A Brand\";v=\"99\""
+            ],
+            "sec-ch-ua-mobile": [
+                "?0"
+            ],
+            "sec-fetch-dest": [
+                "document"
+            ],
+            "sec-fetch-mode": [
+                "navigate"
+            ],
+            "sec-fetch-site": [
+                "none"
+            ],
+            "sec-fetch-user": [
+                "?1"
+            ],
+            "upgrade-insecure-requests": [
+                "1"
+            ],
+            "User-Agent": [
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36"
+            ],
+            "Via": [
+                "2.0 93a53b2e958fc95f0ea2869862c37e58.cloudfront.net (CloudFront)"
+            ],
+            "X-Amz-Cf-Id": [
+                "GCxa_knyfy4m50_U60PgK93uqFzRPTjocpGCR_5m1TSltAL-c-1c1Q=="
+            ],
+            "X-Amzn-Trace-Id": [
+                "Root=1-6017d00f-15062c722a883a612f60c1cb"
+            ],
+            "X-Forwarded-For": [
+                "79.178.12.16, 130.176.1.140"
+            ],
+            "X-Forwarded-Port": [
+                "443"
+            ],
+            "X-Forwarded-Proto": [
+                "https"
+            ]
+        },
+        "queryStringParameters": {
+            "checkpoint": "44.2",
+            "limit": "120"
+        },
+        "multiValueQueryStringParameters": {
+            "checkpoint": [
+                "44.2"
+            ],
+            "limit": [
+                "120"
+            ]
+        },
+        "pathParameters": null,
+        "stageVariables": null,
+        "requestContext": {
+            "resourceId": "cw7vp2",
+            "resourcePath": "/events",
+            "httpMethod": "GET",
+            "extendedRequestId": "aD1ygHNToAMFjcw=",
+            "requestTime": "01/Feb/2021:09:55:27 +0000",
+            "path": "/Prod/changesets",
+            "accountId": "139683429663",
+            "protocol": "HTTP/1.1",
+            "stage": "Prod",
+            "domainPrefix": "varta1icqe",
+            "requestTimeEpoch": 1612173327956,
+            "requestId": "eb5ba836-e3d4-440b-a044-ee51dbeb58e2",
+            "identity": {
+                "cognitoIdentityPoolId": null,
+                "accountId": null,
+                "cognitoIdentityId": null,
+                "caller": null,
+                "sourceIp": "79.178.12.16",
+                "principalOrgId": null,
+                "accessKey": null,
+                "cognitoAuthenticationType": null,
+                "cognitoAuthenticationProvider": null,
+                "userArn": null,
+                "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36",
+                "user": null
+            },
+            "domainName": "varta1icqe.execute-api.us-east-1.amazonaws.com",
+            "apiId": "varta1icqe"
+        },
+        "body": null,
+        "isBase64Encoded": false
+    },
     "Indexer": {
         "Records": [
             {
