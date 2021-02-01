@@ -36,3 +36,8 @@ def test_invalid_endpoint(mocker):
     cmd = "something-else"
     handler = app.route_request(cmd)
     assert isinstance(handler, InvalidEndpointHandler)
+
+def test_assign_global_indexes(mocker):
+    cmd = AssignGlobalIndexes([])
+    handler = app.route_request(cmd)    
+    assert isinstance(handler, GlobalIndexer)

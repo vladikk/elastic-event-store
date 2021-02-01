@@ -1,11 +1,32 @@
 import json
 from ees.model import Response
 from ees.commands import *
+from ees.app import DynamoDB
 
 def event_to_command(event, context={}):
+    if "requestContext" in event.keys():
+        return parse_api_gateway_event(event, context)
+    if "Records" in event.keys():
+        return parse_dynamodb_event(event, context)
+
+def parse_api_gateway_event(event, context):
     request_path = event["requestContext"]["resourcePath"].lower()
     parser = parsers[request_path]
     return parser(event, context)
+
+def parse_dynamodb_event(event, context):
+    changesets = []
+    for e in event["Records"]:
+        keys = e["dynamodb"]["Keys"]
+        stream_id = keys["stream_id"]["S"]
+        changeset_id = int(keys["changeset_id"]["N"])
+        if stream_id != DynamoDB.global_counter_key and e['eventName'] == "INSERT":
+            changesets.append({
+                "stream_id": stream_id,
+                "changeset_id": changeset_id,
+            })
+    return AssignGlobalIndexes(changesets)
+
 
 def parse_version_request(event, context):
     return Version()

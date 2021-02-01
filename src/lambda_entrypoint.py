@@ -35,15 +35,8 @@ def render(response, pretty_print):
     }
 
 def indexer(event, context):
-    print("capture incoming event")
-    print(json.dumps(event))
-    print("///capture incoming event")
-    for e in event["Records"]:
-        keys = e["dynamodb"]["Keys"]
-        stream_id = keys["stream_id"]["S"]
-        changeset_id = int(keys["changeset_id"]["N"])
-        if stream_id != DynamoDB.global_counter_key and e['eventName'] == "INSERT":
-            print(f"Executing global indexer for {stream_id}/{changeset_id}")
-            db = DynamoDB(events_table=os.getenv('EventStoreTable'))
-            handler = GlobalIndexer(db)
-            handler.execute(stream_id, changeset_id)
+    logger.info(f"Processing incoming event: {event}")
+    parsed_event = event_to_command(event, context)
+    logger.debug(f"Event was parsed to: {parsed_event}")
+    handler = route_request(parsed_event)
+    handler.execute(parsed_event)

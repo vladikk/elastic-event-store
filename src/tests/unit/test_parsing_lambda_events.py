@@ -320,5 +320,14 @@ class TestParsingLambdaEvents(TestCase):
             "message": '"0" is an invalid limit value. Expected an integer value greater than 0.'
         })
     
+    def test_assign_global_index(self):
+        event = self.load_event("AssignGlobalIndex")
+        cmd = event_to_command(event)
+        assert isinstance(cmd, AssignGlobalIndexes)
+        self.assertListEqual(cmd.changesets, [
+            { "stream_id": "99038933-e620-444d-9033-4128254f0cbd", "changeset_id": 2 },
+            { "stream_id": "206bc1ed-8e67-4a64-a596-8b32c0c20a97", "changeset_id": 1 }
+        ])
+    
     def load_event(self, name):
         return self.sample_events[name]

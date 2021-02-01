@@ -21,8 +21,12 @@ class GlobalIndexer:
     def __init__(self, db):
         self.db = db
         self.checkpoint_calc = CheckpointCalc()
+    
+    def execute(self, cmd):
+        for c in cmd.changesets:
+            self.assign_global_index(c["stream_id"], c["changeset_id"])
 
-    def execute(self, stream_id, changeset_id):
+    def assign_global_index(self, stream_id, changeset_id):
         logger.info(f"Assign global index to {stream_id}/{changeset_id}")
         g_ind = self.db.get_global_index_value(stream_id, changeset_id)
         if g_ind.page != None and g_ind.page_item != None:
@@ -49,7 +53,7 @@ class GlobalIndexer:
         if changeset_id > 1:
             prev_changeset_id = changeset_id - 1
             logger.debug(f"First have to ensure that the prev changeset has a global index({stream_id}/{prev_changeset_id})")
-            self.execute(stream_id, prev_changeset_id)
+            self.assign_global_index(stream_id, prev_changeset_id)
     
     def ensure_index_committed(self, index):
         if not index.prev_stream_id:

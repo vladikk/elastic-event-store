@@ -1,4 +1,6 @@
 from collections import namedtuple
+from os import name
+from typing import NamedTuple
 
 Version = namedtuple('Version', [])
 
@@ -25,3 +27,6 @@ FetchGlobalChangesets = namedtuple(
     'FetchGlobalChangesets',
     ['checkpoint',
      'limit'])
+
+AssignGlobalIndexes = namedtuple(
+    'AssignGlobalIndexes', ['changesets'])
