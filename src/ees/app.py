@@ -5,6 +5,7 @@ from ees.handlers.invalid import InvalidEndpointHandler
 from ees.handlers.changesets import FetchChangesetsHandler
 from ees.handlers.events import FetchEventsHandler
 from ees.handlers.global_changesets import FetchGlobalChangesetsHandler
+from ees.handlers.global_events import FetchGlobalEventsHandler
 from ees.handlers.global_indexer import GlobalIndexer
 from ees.infrastructure.dynamodb import DynamoDB
 from ees.commands import *
@@ -16,8 +17,9 @@ def route_request(cmd):
     commit = CommitHandler(db)
     version = VersionHandler()
     changesets = FetchChangesetsHandler(db)
-    events = FetchEventsHandler(db)
+    events = FetchEventsHandler(db)    
     global_changesets = FetchGlobalChangesetsHandler(db)
+    global_events = FetchGlobalEventsHandler(db)
     invalid = InvalidEndpointHandler()
     global_indexer = GlobalIndexer(db)
 
@@ -35,6 +37,9 @@ def route_request(cmd):
     
     if isinstance(cmd, FetchGlobalChangesets):
         return global_changesets
+    
+    if isinstance(cmd, FetchGlobalEvents):
+        return global_events
     
     if isinstance(cmd, AssignGlobalIndexes):
         return global_indexer
