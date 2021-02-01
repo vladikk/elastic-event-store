@@ -140,7 +140,7 @@ def invalid_expected_changeset_id(stream_id, expected_last_changeset_id):
     return Response(
         http_status=400,
         body={
-            "stream-id": stream_id,
+            "stream_id": stream_id,
             "error": "INVALID_EXPECTED_CHANGESET_ID",
             "message": f'The specified expected changeset id("{expected_last_changeset_id}") is invalid. Expected a positive integer.'
         })

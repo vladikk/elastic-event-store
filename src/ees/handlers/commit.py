@@ -26,15 +26,24 @@ class CommitHandler:
         return Response(
             http_status=200,
             body={
-                "stream-id": commit.stream_id,
-                "changeset-id": commit.changeset_id
+                "stream_id": commit.stream_id,
+                "changeset_id": commit.changeset_id
             }) 
     
     def concurrency_exception(self, stream_id, expected_last_changeset):
+        forthcoming_changesets = self.db.fetch_stream_changesets(
+            stream_id,
+            from_changeset=expected_last_changeset + 1)
+        forthcoming_changesets = [{
+                "changeset_id": c.changeset_id,
+                "events": c.events,
+                "metadata": c.metadata
+            } for c in forthcoming_changesets]
         return Response(
             http_status=409,
             body={
-                "stream-id": stream_id,
+                "stream_id": stream_id,
                 "error": "OPTIMISTIC_CONCURRENCY_EXCEPTION",
+                "forthcoming_changesets": forthcoming_changesets,
                 "message": f'The expected last changeset ({expected_last_changeset}) is outdated, review the changeset(s) appended after it.'
             })

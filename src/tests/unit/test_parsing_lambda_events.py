@@ -58,7 +58,7 @@ class TestParsingLambdaEvents(TestCase):
         assert isinstance(err, Response)        
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
-            "stream-id": "7ef3c378-8c97-49fe-97ba-f5afe719ea1c",
+            "stream_id": "7ef3c378-8c97-49fe-97ba-f5afe719ea1c",
             "error": "INVALID_EXPECTED_CHANGESET_ID",
             "message": f'The specified expected changeset id("test") is invalid. Expected a positive integer.'
         })
@@ -72,7 +72,7 @@ class TestParsingLambdaEvents(TestCase):
         assert isinstance(err, Response)        
         assert err.http_status == 400
         self.assertDictEqual(err.body, {
-            "stream-id": "7ef3c378-8c97-49fe-97ba-f5afe719ea1c",
+            "stream_id": "7ef3c378-8c97-49fe-97ba-f5afe719ea1c",
             "error": "INVALID_EXPECTED_CHANGESET_ID",
             "message": f'The specified expected changeset id("-1") is invalid. Expected a positive integer.'
         })

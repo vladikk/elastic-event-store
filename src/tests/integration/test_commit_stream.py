@@ -22,7 +22,7 @@ class TestCommittingChangesets(TestCase):
             events=self.api.some_events
         )
         
-        self.assertDictEqual(response.json(), {"stream-id": stream_id, "changeset-id": 1})
+        self.assertDictEqual(response.json(), {"stream_id": stream_id, "changeset_id": 1})
     
     def test_append_to_existing_stream(self):
         stream_id = str(uuid.uuid4())
@@ -41,7 +41,7 @@ class TestCommittingChangesets(TestCase):
             events=self.api.some_events
         )
 
-        self.assertDictEqual(response.json(), {"stream-id": stream_id, "changeset-id": 2})
+        self.assertDictEqual(response.json(), {"stream_id": stream_id, "changeset_id": 2})
     
     # When appending to an existing stream, but the expected version is already overwritten
     def test_concurrency_exception(self):
@@ -69,10 +69,18 @@ class TestCommittingChangesets(TestCase):
         )
 
         assert response.status_code == 409
+        self.maxDiff = None
         self.assertDictEqual(response.json(), {
-            "stream-id": stream_id,
+            "stream_id": stream_id,
             "error": "OPTIMISTIC_CONCURRENCY_EXCEPTION",
-            "message": "The expected last changeset (1) is outdated, review the changeset(s) appended after it."
+            "message": "The expected last changeset (1) is outdated, review the changeset(s) appended after it.",
+            "forthcoming_changesets": [
+                {
+                    "changeset_id": 2,
+                    "events": self.api.some_events,
+                    "metadata": self.api.some_metadata
+                }
+            ]
         })
     
     def test_append_with_invalid_expected_changeset_id(self):
@@ -87,7 +95,7 @@ class TestCommittingChangesets(TestCase):
 
         assert response.status_code == 400
         self.assertDictEqual(response.json(), {
-            "stream-id": stream_id,
+            "stream_id": stream_id,
             "error": "INVALID_EXPECTED_CHANGESET_ID",
             "message": 'The specified expected changeset id("-1") is invalid. Expected a positive integer.'
         })
@@ -104,7 +112,7 @@ class TestCommittingChangesets(TestCase):
         
         assert response.status_code == 400
         self.assertDictEqual(response.json(), {
-            "stream-id": stream_id,
+            "stream_id": stream_id,
             "error": "INVALID_EXPECTED_CHANGESET_ID",
             "message": 'The specified expected changeset id("test") is invalid. Expected a positive integer.'
         })
