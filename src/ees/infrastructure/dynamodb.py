@@ -39,10 +39,14 @@ class DynamoDB:
             else:
                 raise e
         
-    def fetch_last_commit(self, stream_id):
+    def fetch_last_commit(self, stream_id, meta_only=False):
+        projection = 'stream_id,changeset_id,events,metadata,first_event_id,last_event_id'
+        if meta_only:
+            projection = 'stream_id,changeset_id,first_event_id,last_event_id'
+
         response = self.dynamodb_ll.query(
             TableName=self.events_table,
-            Select='ALL_ATTRIBUTES',
+            ProjectionExpression=projection,
             Limit=1,
             ScanIndexForward=False,
             KeyConditions={
@@ -247,16 +251,21 @@ class DynamoDB:
     def parse_commit(self, record):
         stream_id = record["stream_id"]["S"]
         changeset_id = int(record["changeset_id"]["N"])
-        events_json = record["events"]["S"]
-        events = json.loads(events_json)
-        metadata_json = record["metadata"]["S"]
-        metadata = json.loads(metadata_json)
         first_event_id = int(record["first_event_id"]["N"])
         last_event_id = int(record["last_event_id"]["N"])
+
+        events = None
+        if "events" in record.keys():
+            events_json = record["events"]["S"]
+            events = json.loads(events_json)
+
+        metadata = None
+        if "metadata" in record.keys():
+            metadata_json = record["metadata"]["S"]
+            metadata = json.loads(metadata_json)
         
         page = None
         page_item = None
-        
         if "page" in record.keys():
             page = int(record["page"]["N"])
             page_item = int(record["page_item"]["N"])

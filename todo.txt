@@ -3,8 +3,6 @@
 Publish committed changesets
 Publish committed events
 
-Optimize querying metadata of a stream's last commit
-
 Logging
 
 EES Analysis: Calculate statistics using CQRS
