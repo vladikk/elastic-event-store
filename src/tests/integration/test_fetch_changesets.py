@@ -160,7 +160,7 @@ class TestFetchingChangesets(TestCase):
         self.assertDictEqual(response.json(), {
             "stream_id": stream_id,
             "error": "INVALID_CHANGESET_FILTERING_PARAMS",
-            "message": 'The filtering params(from_changeset, to_changeset) have to be integer values'
+            "message": 'The filtering params(from, to) have to be positive integer values'
         })
     
     def test_invalid_querying_params3(self):
@@ -172,7 +172,7 @@ class TestFetchingChangesets(TestCase):
         self.assertDictEqual(response.json(), {
             "stream_id": stream_id,
             "error": "INVALID_CHANGESET_FILTERING_PARAMS",
-            "message": 'The filtering params(from_changeset, to_changeset) have to be integer values'
+            "message": 'The filtering params(from, to) have to be positive integer values'
         })
     
     def test_no_stream_id(self):

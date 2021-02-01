@@ -1,11 +1,10 @@
-import json
+from ees.model import Response
 
 
-class InvalidEndpoint:
+class InvalidEndpointHandler:
     def execute(self, event, context):
-        return {
-            "statusCode": 404,
-            "body": json.dumps({
+        return Response(
+            http_status=404,
+            body={
                 "message": "Invalid endpoint"
-            }),
-        }
+            })

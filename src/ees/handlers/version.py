@@ -1,11 +1,10 @@
 import json
+from ees.model import Response
 
-
-class Version:
-    def execute(self, event, context):
-        return {
-            "statusCode": 200,
-            "body": json.dumps({
+class VersionHandler:
+    def execute(self, cmd):
+        return Response(
+            http_status=200,
+            body={
                 "version": "0.0.1"
-            }),
-        }
+            })

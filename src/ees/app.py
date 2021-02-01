@@ -1,34 +1,37 @@
 import os
-from ees.handlers.version import Version
-from ees.handlers.commit import Commit
-from ees.handlers.invalid import InvalidEndpoint
-from ees.handlers.changesets import FetchChangesets
-from ees.handlers.events import FetchEvents
-from ees.handlers.global_changesets import FetchGlobalChangesets
+from ees.handlers.version import VersionHandler
+from ees.handlers.commit import CommitHandler
+from ees.handlers.invalid import InvalidEndpointHandler
+from ees.handlers.changesets import FetchChangesetsHandler
+from ees.handlers.events import FetchEventsHandler
+from ees.handlers.global_changesets import FetchGlobalChangesetsHandler
 from ees.dynamodb import DynamoDB
-
+from ees.commands import *
 
 db = DynamoDB(events_table=os.getenv('EventStoreTable'))
 
 
-def route_request(event, context):
-    commit = Commit(db)
-    version = Version()
-    changesets = FetchChangesets(db)
-    events = FetchEvents(db)
-    global_changesets = FetchGlobalChangesets(db)
+def route_request(cmd):
+    commit = CommitHandler(db)
+    version = VersionHandler()
+    changesets = FetchChangesetsHandler(db)
+    events = FetchEventsHandler(db)
+    global_changesets = FetchGlobalChangesetsHandler(db)
+    invalid = InvalidEndpointHandler()
 
-    handlers = {
-        "/version": version,
-        "/streams/{stream_id}": commit,
-        "/streams/{stream_id}/changesets": changesets,
-        "/streams/{stream_id}/events": events,
-        "/changesets": global_changesets
-    }
+    if isinstance(cmd, Version):
+        return version
+
+    if isinstance(cmd, Commit):
+        return commit
     
-    path = event["requestContext"]["resourcePath"].lower()
+    if isinstance(cmd, FetchStreamChangesets):
+        return changesets
 
-    if path in handlers.keys():
-        return handlers[path]
-    else:
-        return InvalidEndpoint()
+    if isinstance(cmd, FetchStreamEvents):
+        return events
+    
+    if isinstance(cmd, FetchGlobalChangesets):
+        return global_changesets
+    
+    return invalid
