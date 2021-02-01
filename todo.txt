@@ -13,4 +13,4 @@ On concurrency error - return the new changesets
 
 Logging
 
-EES Analysis: Calculated statistics using CQRS
+EES Analysis: Calculate statistics using CQRS
