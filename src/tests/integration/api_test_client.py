@@ -45,11 +45,11 @@ class ApiTestClient():
 
         self.api_endpoint = api_outputs[0]["OutputValue"]
     
-    def commit(self, stream_id, changeset_id, events, metadata):
+    def commit(self, stream_id, last_changeset_id, events, metadata):
         try:
-            expected = int(changeset_id) - 1
+            expected = int(last_changeset_id)
         except ValueError:
-            expected = changeset_id
+            expected = last_changeset_id
 
         url = self.api_endpoint + f'streams/{stream_id}?expected_last_changeset={expected}'
         return requests.post(url, json={"events": events, "metadata": metadata})

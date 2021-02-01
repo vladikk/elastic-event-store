@@ -13,7 +13,7 @@ class TestFetchingChangesets(TestCase):
 
         self.api.commit(
             stream_id=stream_id,
-            changeset_id=1,
+            last_changeset_id=0,
             metadata=self.api.some_metadata,
             events=self.api.some_events
         )
@@ -36,14 +36,14 @@ class TestFetchingChangesets(TestCase):
 
         self.api.commit(
             stream_id=stream_id,
-            changeset_id=1,
+            last_changeset_id=0,
             metadata={ "metadata": "goes here" },
             events=[ { "type": "init" }, { "type": "update" } ]
         )
 
         self.api.commit(
             stream_id=stream_id,
-            changeset_id=2,
+            last_changeset_id=1,
             metadata={ "metadata": "goes here 2" },
             events=[ { "type": "update2" }, { "type": "delete" } ]
         )
@@ -66,14 +66,14 @@ class TestFetchingChangesets(TestCase):
 
         self.api.commit(
             stream_id=stream_id,
-            changeset_id=1,
+            last_changeset_id=0,
             metadata={ "metadata": "goes here" },
             events=[ { "type": "init" }, { "type": "update" } ]
         )
 
         self.api.commit(
             stream_id=stream_id,
-            changeset_id=1,
+            last_changeset_id=0,
             metadata={ "metadata": "goes here 2" },
             events=[ { "type": "update2" }, { "type": "delete" } ]
         )
@@ -96,28 +96,28 @@ class TestFetchingChangesets(TestCase):
 
         self.api.commit(
             stream_id=stream_id,
-            changeset_id=1,
+            last_changeset_id=0,
             metadata={ "metadata": "goes here" },
             events=[ { "type": "init" }, { "type": "update" } ]
         )
 
         self.api.commit(
             stream_id=stream_id,
-            changeset_id=2,
+            last_changeset_id=1,
             metadata={ "metadata": "goes here 2" },
             events=[ { "type": "update2" } ]
         )
 
         self.api.commit(
             stream_id=stream_id,
-            changeset_id=3,
+            last_changeset_id=2,
             metadata={ "metadata": "goes here 3" },
             events=[ { "type": "update3" } ]
         )
 
         self.api.commit(
             stream_id=stream_id,
-            changeset_id=4,
+            last_changeset_id=3,
             metadata={ "metadata": "goes here 4" },
             events=[ { "type": "update4" } ]
         )        
@@ -200,7 +200,7 @@ class TestFetchingChangesets(TestCase):
 
         self.api.commit(
             stream_id=stream_id,
-            changeset_id=1,
+            last_changeset_id=0,
             metadata=self.api.some_metadata,
             events=self.api.some_events
         )

@@ -17,7 +17,7 @@ class TestCommittingChangesets(TestCase):
 
         response = self.api.commit(
             stream_id=stream_id,
-            changeset_id=1,
+            last_changeset_id=0,
             metadata=self.api.some_metadata,
             events=self.api.some_events
         )
@@ -29,14 +29,14 @@ class TestCommittingChangesets(TestCase):
 
         self.api.commit(
             stream_id=stream_id,
-            changeset_id=1,
+            last_changeset_id=0,
             metadata=self.api.some_metadata,
             events=self.api.some_events
         )
 
         response = self.api.commit(
             stream_id=stream_id,
-            changeset_id=2,
+            last_changeset_id=1,
             metadata=self.api.some_metadata,
             events=self.api.some_events
         )
@@ -49,21 +49,21 @@ class TestCommittingChangesets(TestCase):
 
         self.api.commit(
             stream_id=stream_id,
-            changeset_id=1,
+            last_changeset_id=0,
             metadata=self.api.some_metadata,
             events=self.api.some_events
         )
 
         self.api.commit(
             stream_id=stream_id,
-            changeset_id=2,
+            last_changeset_id=1,
             metadata=self.api.some_metadata,
             events=self.api.some_events
         )
 
         response = self.api.commit(
             stream_id=stream_id,
-            changeset_id=2,
+            last_changeset_id=1,
             metadata=self.api.some_metadata,
             events=self.api.some_events
         )
@@ -88,7 +88,7 @@ class TestCommittingChangesets(TestCase):
 
         response = self.api.commit(
             stream_id=stream_id,
-            changeset_id=-1,
+            last_changeset_id=-1,
             metadata=self.api.some_metadata,
             events=self.api.some_events
         )
@@ -105,7 +105,7 @@ class TestCommittingChangesets(TestCase):
         
         response = self.api.commit(
             stream_id=stream_id,
-            changeset_id="test",
+            last_changeset_id="test",
             metadata=self.api.some_metadata,
             events=self.api.some_events
         )
