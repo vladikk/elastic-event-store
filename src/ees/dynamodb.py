@@ -134,7 +134,7 @@ class DynamoDB:
             return self.fetch_changesets_by_events_range(stream_id, from_event, to_event)
 
         if from_event:
-            index_name = 'LastEventNumber'
+            index_name = 'LastEventId'
             column = 'last_event_id'
             range_condition = {
                 'AttributeValueList': [
@@ -145,7 +145,7 @@ class DynamoDB:
                 'ComparisonOperator': 'GE'
             }
         elif to_event:
-            index_name = 'FirstEventNumber'
+            index_name = 'FirstEventId'
             column = 'first_event_id'
             range_condition = {
                 'AttributeValueList': [
@@ -187,7 +187,7 @@ class DynamoDB:
         response = self.dynamodb_ll.query(
             TableName=self.events_table,
             Select='ALL_ATTRIBUTES',
-            IndexName="FirstEventNumber",
+            IndexName="FirstEventId",
             ScanIndexForward=True,
             KeyConditions={
                 'stream_id': {
@@ -218,7 +218,7 @@ class DynamoDB:
         response = self.dynamodb_ll.query(
             TableName=self.events_table,
             Select='ALL_ATTRIBUTES',
-            IndexName='LastEventNumber',
+            IndexName='LastEventId',
             ScanIndexForward=True,
             Limit=1,
             KeyConditions={

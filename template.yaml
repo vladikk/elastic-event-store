@@ -51,7 +51,7 @@ Resources:
       - AttributeName: changeset_id
         KeyType: RANGE
       LocalSecondaryIndexes:
-      - IndexName: FirstEventNumber
+      - IndexName: FirstEventId
         KeySchema:
         - AttributeName: stream_id
           KeyType: HASH
@@ -59,7 +59,7 @@ Resources:
           KeyType: RANGE
         Projection:
           ProjectionType: ALL
-      - IndexName: LastEventNumber
+      - IndexName: LastEventId
         KeySchema:
         - AttributeName: stream_id
           KeyType: HASH
