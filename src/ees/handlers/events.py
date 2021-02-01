@@ -55,7 +55,7 @@ class FetchEvents:
             "body": json.dumps({
                 "stream_id": stream_id,
                 "events": events
-            }),
+            }, indent=4),
         }
     
     def invalid_filtering_values_type(self, stream_id):

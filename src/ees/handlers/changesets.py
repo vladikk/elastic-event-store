@@ -47,7 +47,7 @@ class FetchChangesets:
             "body": json.dumps({
                 "stream_id": stream_id,
                 "changesets": changesets
-            }),
+            }, indent=4),
         }
     
     def invalid_filtering_values_type(self, stream_id):

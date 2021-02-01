@@ -9,7 +9,7 @@ class FetchGlobalChangesets:
     def execute(self, event, context, default_limit=10):
         query_string = event.get("queryStringParameters") or { }
         checkpoint = int(query_string.get("checkpoint", 0))
-        limit = int(query_string.get("checkpoint", default_limit))
+        limit = int(query_string.get("limit", default_limit))
 
         changesets = self.db.fetch_global_changesets(checkpoint, limit)
 
@@ -33,7 +33,7 @@ class FetchGlobalChangesets:
                 "limit": limit,
                 "changesets": changesets,
                 "next_checkpoint": next_checkpoint
-            })
+            }, indent=4)
         }
     
     def invalid_filtering_values_type(self, stream_id):

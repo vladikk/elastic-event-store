@@ -13,6 +13,7 @@ Publish committed events
 Commit: change the parameter to expected_last_changeset?
 Commit: enable optimistic concurrency control using events (in addition to changesets)
 Modify commit - when no expected version is supplied, just append
+On concurrency error - return the new changesets
 
 Logging
 
