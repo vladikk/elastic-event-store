@@ -1,11 +1,9 @@
 /events?checkpoint=? endpoint
 
-Optimize querying metadata of a stream's last commit
-
 Publish committed changesets
 Publish committed events
 
-Modify commit - when no expected version is supplied, just append
+Optimize querying metadata of a stream's last commit
 
 Logging
 
