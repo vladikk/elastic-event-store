@@ -6,7 +6,7 @@ from ees.infrastructure.aws_lambda import event_to_command
 from ees.model import Response
 from ees.app import route_request
 from ees.handlers.global_indexer import GlobalIndexer
-from ees.dynamodb import DynamoDB
+from ees.infrastructure.dynamodb import DynamoDB
 
 
 logger = logging.getLogger("ees.entrypoint")

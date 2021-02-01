@@ -1,7 +1,7 @@
 import json
 from ees.model import Response
 from ees.commands import *
-from ees.app import DynamoDB
+from ees.infrastructure.dynamodb import DynamoDB
 
 def event_to_command(event, context={}):
     if "requestContext" in event.keys():

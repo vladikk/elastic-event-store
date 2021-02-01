@@ -6,7 +6,7 @@ from ees.handlers.changesets import FetchChangesetsHandler
 from ees.handlers.events import FetchEventsHandler
 from ees.handlers.global_changesets import FetchGlobalChangesetsHandler
 from ees.handlers.global_indexer import GlobalIndexer
-from ees.dynamodb import DynamoDB
+from ees.infrastructure.dynamodb import DynamoDB
 from ees.commands import *
 
 db = DynamoDB(events_table=os.getenv('EventStoreTable'))
