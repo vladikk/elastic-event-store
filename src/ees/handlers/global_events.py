@@ -30,7 +30,7 @@ class FetchGlobalEventsHandler:
 
         next_checkpoint = f"{cmd.checkpoint}.{cmd.event_in_checkpoint}"
         if events:
-            next_checkpoint = f"{last_checkpoint}.{last_event_in_checkpoint + 1}"
+            next_checkpoint = f"{last_checkpoint + 1}.0"
 
         return Response(
             http_status=200,
