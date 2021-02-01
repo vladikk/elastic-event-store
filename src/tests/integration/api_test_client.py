@@ -45,13 +45,23 @@ class ApiTestClient():
 
         self.api_endpoint = api_outputs[0]["OutputValue"]
     
-    def commit(self, stream_id, last_changeset_id, events, metadata):
-        try:
-            expected = int(last_changeset_id)
-        except ValueError:
-            expected = last_changeset_id
+    def commit(self, stream_id, events, metadata, last_changeset_id=None, last_event_id=None):
+        expected_last_changeset = ""
+        expected_last_event = ""
 
-        url = self.api_endpoint + f'streams/{stream_id}?expected_last_changeset={expected}'
+        if last_changeset_id is not None:
+            try:
+                expected_last_changeset = int(last_changeset_id)
+            except ValueError:
+                expected_last_changeset = last_changeset_id
+        
+        if last_event_id is not None:
+            try:
+                expected_last_event = int(last_event_id)
+            except ValueError:
+                expected_last_event = last_event_id
+
+        url = self.api_endpoint + f'streams/{stream_id}?expected_last_changeset={expected_last_changeset}&expected_last_event={expected_last_event}'
         return requests.post(url, json={"events": events, "metadata": metadata})
     
     def query_changesets(self, stream_id, from_changeset=None, to_changeset=None):

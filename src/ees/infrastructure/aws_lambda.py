@@ -37,19 +37,51 @@ def parse_commit_request(event, context):
     if not stream_id:
         return missing_stream_id()     
 
-    expected_last_changeset = query_string.get("expected_last_changeset", 0)
-    try:
-        expected_last_changeset = int(expected_last_changeset)
-    except ValueError:
-        return invalid_expected_changeset_id(stream_id, expected_last_changeset)
-    if expected_last_changeset < 0:
-        return invalid_expected_changeset_id(stream_id, expected_last_changeset)
+    expected_last_changeset = query_string.get("expected_last_changeset")
+    if expected_last_changeset is not None and expected_last_changeset != "":
+        try:
+            expected_last_changeset = int(expected_last_changeset)
+        except ValueError:
+            return invalid_expected_changeset_id(stream_id, expected_last_changeset)
+        if expected_last_changeset < 0:
+            return invalid_expected_changeset_id(stream_id, expected_last_changeset)
+    else:
+        expected_last_changeset = None
+    
+    expected_last_event = query_string.get("expected_last_event")
+    if expected_last_event is not None and expected_last_event != "":
+        try:
+            expected_last_event = int(expected_last_event)
+        except ValueError:
+            return invalid_expected_event_id(stream_id, expected_last_event)
+        if expected_last_event < 0:
+            return invalid_expected_event_id(stream_id, expected_last_event)
+    else:
+        expected_last_event = None
+
+    if expected_last_changeset is None and expected_last_event is None:
+        expected_last_changeset = 0
+    
+    if expected_last_changeset is not None and expected_last_event is not None:
+        return Response(
+            http_status=400,
+            body={
+                "stream_id": stream_id,
+                "error": "BOTH_EXPECTED_CHANGESET_AND_EVENT_ARE_SET",
+                "message": 'Cannot use both "last_changeset_id" and "last_event_id" for concurrency management. Specify only one value.'
+            })
 
     body = json.loads(event["body"])
     metadata = body["metadata"]
     events = body["events"]
     
-    return Commit(stream_id, expected_last_changeset, events, metadata)
+    return Commit(
+        stream_id=stream_id,
+        expected_last_changeset=expected_last_changeset,
+        expected_last_event=expected_last_event,
+        events=events,
+        metadata=metadata
+    )
 
 def parse_stream_changesets_request(event, context):
     query_string = event.get("queryStringParameters") or { }
@@ -143,6 +175,15 @@ def invalid_expected_changeset_id(stream_id, expected_last_changeset_id):
             "stream_id": stream_id,
             "error": "INVALID_EXPECTED_CHANGESET_ID",
             "message": f'The specified expected changeset id("{expected_last_changeset_id}") is invalid. Expected a positive integer.'
+        })
+
+def invalid_expected_event_id(stream_id, expected_last_event_id):
+    return Response(
+        http_status=400,
+        body={
+            "stream_id": stream_id,
+            "error": "INVALID_EXPECTED_EVENT_ID",
+            "message": f'The specified expected event id("{expected_last_event_id}") is invalid. Expected a positive integer.'
         })
 
 def invalid_filtering_values_type(stream_id, filter_type):

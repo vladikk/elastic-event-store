@@ -8,6 +8,7 @@ Commit = namedtuple(
     'Commit',
     ['stream_id',
      'expected_last_changeset',
+     'expected_last_event',
      'events',
      'metadata'])
 

@@ -13,7 +13,7 @@ def test_version(mocker):
     assert isinstance(handler, VersionHandler)
 
 def test_commit(mocker):
-    cmd = Commit("1", 2, [], [])
+    cmd = Commit("1", 2, None, [], [])
     handler = app.route_request(cmd)
     assert isinstance(handler, CommitHandler)
 

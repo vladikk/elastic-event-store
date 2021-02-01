@@ -76,6 +76,118 @@ class TestParsingLambdaEvents(TestCase):
             "error": "INVALID_EXPECTED_CHANGESET_ID",
             "message": f'The specified expected changeset id("-1") is invalid. Expected a positive integer.'
         })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def test_commit_with_both_expected_event_and_changeset(self):        
+        event = self.load_event("Commit")
+        event["queryStringParameters"]["expected_last_event"] = "0"
+        event["queryStringParameters"]["expected_last_changeset"] = "0"
+        err = event_to_command(event)
+        assert isinstance(err, Response)
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "stream_id": "7ef3c378-8c97-49fe-97ba-f5afe719ea1c",
+            "error": "BOTH_EXPECTED_CHANGESET_AND_EVENT_ARE_SET",
+            "message": 'Cannot use both "last_changeset_id" and "last_event_id" for concurrency management. Specify only one value.'
+        })
+
+
+    def test_commit_with_last_event_as_empty_string(self):        
+        event = self.load_event("Commit")
+        event["queryStringParameters"]["expected_last_event"] = ""
+        event["queryStringParameters"]["expected_last_changeset"] = ""
+        cmd = event_to_command(event)
+        assert isinstance(cmd, Commit)
+        assert cmd.stream_id == "7ef3c378-8c97-49fe-97ba-f5afe719ea1c"
+        assert cmd.expected_last_event == None
+        assert cmd.expected_last_changeset == 0
+
+    def test_commit_with_last_event(self):        
+        event = self.load_event("Commit")
+        del event["queryStringParameters"]["expected_last_changeset"]
+        event["queryStringParameters"]["expected_last_event"] = 7
+        cmd = event_to_command(event)
+        assert isinstance(cmd, Commit)
+        assert cmd.stream_id == "7ef3c378-8c97-49fe-97ba-f5afe719ea1c"
+        assert cmd.expected_last_event == 7
+        assert cmd.events == json.loads(event["body"])["events"]
+        assert cmd.metadata == json.loads(event["body"])["metadata"]
+    
+    def test_commit_with_invalid_expected_event(self):
+        event = self.load_event("Commit")
+        del event["queryStringParameters"]["expected_last_changeset"]
+        event["queryStringParameters"]["expected_last_event"] = "test"
+        
+        err = event_to_command(event)
+        
+        assert isinstance(err, Response)        
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "stream_id": "7ef3c378-8c97-49fe-97ba-f5afe719ea1c",
+            "error": "INVALID_EXPECTED_EVENT_ID",
+            "message": f'The specified expected event id("test") is invalid. Expected a positive integer.'
+        })
+    
+    def test_commit_with_negative_expected_changeset(self):
+        event = self.load_event("Commit")
+        del event["queryStringParameters"]["expected_last_changeset"]
+        event["queryStringParameters"]["expected_last_event"] = -1
+        
+        err = event_to_command(event)
+        
+        assert isinstance(err, Response)        
+        assert err.http_status == 400
+        self.assertDictEqual(err.body, {
+            "stream_id": "7ef3c378-8c97-49fe-97ba-f5afe719ea1c",
+            "error": "INVALID_EXPECTED_EVENT_ID",
+            "message": f'The specified expected event id("-1") is invalid. Expected a positive integer.'
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     def test_fetch_stream_changesets(self):
         event = self.load_event("StreamChangesets")
