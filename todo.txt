@@ -1,7 +1,7 @@
-/events?checkpoint=? endpoint
-
 Publish committed changesets
 Publish committed events
+
+/events?checkpoint=? endpoint
 
 Logging
 

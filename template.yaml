@@ -84,6 +84,20 @@ Resources:
         WriteCapacityUnits: !Ref WriteCapacityUnits
       StreamSpecification:
         StreamViewType: NEW_IMAGE
+  
+  ChangesetsTopic:
+    Type: AWS::SNS::Topic
+    Properties: 
+      ContentBasedDeduplication: True
+      TopicName: !Join [ '_', ['ees', 'changesets', !Ref Environment, !Ref InstanceName, '.fifo'] ]
+      FifoTopic: True
+  
+  EventsTopic:
+    Type: AWS::SNS::Topic
+    Properties: 
+      ContentBasedDeduplication: True
+      TopicName: !Join [ '_', ['ees', 'events', !Ref Environment, !Ref InstanceName, '.fifo'] ]
+      FifoTopic: True
 
   CommandHandlerFunction:
     Type: AWS::Serverless::Function
@@ -163,3 +177,9 @@ Outputs:
   ApiEndpoint:
     Description: "API Gateway endpoint URL for Prod stage"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  ChangesetsTopic:
+    Description: "SNS topic for subscribing to published changesets."
+    Value: !Ref ChangesetsTopic
+  EventsTopic:
+    Description: "SNS topic for subscribing to published events."
+    Value: !Ref EventsTopic
