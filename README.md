@@ -32,11 +32,11 @@ Not only we can derive the current state by sequentially applying the events, bu
 Finally, Event Dourcing is **not** event driven architecture:
 
 > "EventSourcing is not Event driven architecture."
-
+>
 > The former is about events _inside_ the app.
-
+>
 > The latter is about events _between_ (sub)systems
-
+>
 > ~ [@ylorph](https://twitter.com/ylorph/status/1295480789765955586)
 
 ## What is Event Store?
