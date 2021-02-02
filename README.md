@@ -237,13 +237,30 @@ Notice the "next_checkpoint" value. Use it for getting the next batch of changes
 
 ![Elastic Event Store: AWS Components](./docs/diagrams/aws-components.png)
 
-* The REST API is exposed by API Gateway
-* AWS Lambda functions host all the system's logic
-* DynamoDB is the main storage mechanism
-* SNS fifo topics are used for publishing newly committed changesets and events
-* SQS dead letter queues capture DynamoDB Streams events that were not processed successfully by the Lambda functions
+* The REST API is exposed by API Gateway.
+* AWS Lambda functions host all the system's logic.
+* DynamoDB is the main storage mechanism.
+* DynamoDB Streams trigger Lambda functions that are publishing the new changesets and assign the globally enumerable index.
+* SNS fifo topics are used for publishing newly committed changesets and events.
+* SQS dead letter queues capture DynamoDB Streams events that were not processed successfully by the Lambda functions.
 
 ## Data Model
+
+A partition in the events table represents a distinct stream of events: events that belong to a certain instance of a business entity. The partition's records are created for each transaction(commit) in the stream, and hold all the events that were committed in each individual transaction. Hence, the event store perisists many streams, a stream is composed of many changesets, and a changeset includes one or more events.
+
+The main DynamoDB table uses the following schema:
+
+| Column            | Type                  | Description            
+| ----------------- | --------------------- | ----------------------- 
+| stream_id         | Partition Key(String) | Stream ID
+| changeset_id      | Sort Key(Number)      | The ID of a commit in its parent stream
+| events            | JSON(String)          | The events that were committed in the transaction
+| metadata          | JSON(String)          | The changeset's metadata
+| timestamp         | String                | Time when the transaction was comitted
+| first_event_id    | LSI(Number)           | The ordinal number of the first event in the changeset, in the context of the whole stream
+| last_event_id     | LSI(Number)           | The ordinal number of the last event in the changeset, in the context of the whole stream
+| page              | GSI-Partition(Number) | A global secondary index used for enumerating cross-stream changesets
+| page_item         | GSI-Sort(Number)      |
 
 ## Ordering Guarantees
 
