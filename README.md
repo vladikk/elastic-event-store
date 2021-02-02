@@ -47,56 +47,56 @@ Using Elastic Event Store
 
 ```sh
 
-$ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111 \
-     --header 'Content-Type: application/json' \
-     --request POST \
-     --data @- <<BODY
-{
-    "metadata": {
-        "command": "do_something",
-        "issuedBy": "me"
-    },
-    "events": [
-        { "type": "init", "data": 1 },
-        { "type": "sell", "data": 20 },
-        { "type": "buy", "data": 5 }
-    ]
-}
-BODY
+    $ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111 \
+         --header 'Content-Type: application/json' \
+         --request POST \
+         --data @- <<BODY
+    {
+        "metadata": {
+            "command": "do_something",
+            "issuedBy": "me"
+        },
+        "events": [
+            { "type": "init", "data": 1 },
+            { "type": "sell", "data": 20 },
+            { "type": "buy", "data": 5 }
+        ]
+    }
+    BODY
 
-$ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-222 \
-     --header 'Content-Type: application/json' \
-     --request POST \
-     --data @- <<BODY
-{
-    "metadata": {
-        "command": "do_something",
-        "issuedBy": "me"
-    },
-    "events": [
-        { "type": "init", "data": 1 },
-        { "type": "sell", "data": 20 },
-        { "type": "buy", "data": 5 }
-    ]
-}
-BODY
+    $ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-222 \
+         --header 'Content-Type: application/json' \
+         --request POST \
+         --data @- <<BODY
+    {
+        "metadata": {
+            "command": "do_something",
+            "issuedBy": "me"
+        },
+        "events": [
+            { "type": "init", "data": 1 },
+            { "type": "sell", "data": 20 },
+            { "type": "buy", "data": 5 }
+        ]
+    }
+    BODY
 
-$ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111\?expected_last_changeset=1 \
-     --header 'Content-Type: application/json' \
-     --request POST \
-     --data @- <<BODY
-{
-    "metadata": {
-        "command": "do_something_else",
-        "issuedBy": "me"
-    },
-    "events": [
-        { "type": "buy", "data": 100 },
-        { "type": "buy", "data": 220 },
-        { "type": "sell", "data": 15 }
-    ]
-}
-BODY
+    $ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111\?expected_last_changeset=1 \
+         --header 'Content-Type: application/json' \
+         --request POST \
+         --data @- <<BODY
+    {
+        "metadata": {
+            "command": "do_something_else",
+            "issuedBy": "me"
+        },
+        "events": [
+            { "type": "buy", "data": 100 },
+            { "type": "buy", "data": 220 },
+            { "type": "sell", "data": 15 }
+        ]
+    }
+    BODY
 
 ```
 
