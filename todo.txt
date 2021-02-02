@@ -1,5 +1,3 @@
 Add logging where needed
 
-Add dead letter queues for async tasks + alerts
-
 EES Analysis: Calculate statistics using CQRS
