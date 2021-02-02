@@ -1,5 +1,7 @@
 # Elastic Event Store
 
+![Elastic Event Store: AWS Components](./docs/diagrams/aws-components.png)
+
 A serverless implementation of the storage mechanism for event sourcing-based systems.
 
 ## What is Event Sourcing?
