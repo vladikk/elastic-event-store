@@ -12,7 +12,7 @@ class TestParsingLambdaEvents(TestCase):
             self.sample_events = json.load(f)
         TestCase.__init__(self, x)
 
-    def test_something(self):
+    def test_publishing(self):
         event = self.load_event('AssignGlobalIndex')
         events_topic = Mock()
         changesets_topic = Mock()

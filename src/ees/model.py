@@ -30,6 +30,14 @@ Response = namedtuple(
     ['http_status',
      'body'])
 
+AnalysisState = namedtuple(
+    'AnalysisState',
+    ['total_streams',
+     'total_changesets',
+     'total_events',
+     'max_stream_length',
+     'version'])
+
 def make_initial_commit(stream_id, events, metadata={}):
     return CommitData(
         stream_id=stream_id,
