@@ -14,9 +14,9 @@ Traditionally, software systems operate on state-based data. In other words, bus
 | 2   | Krzysztof  | Accounting        |
 | 3   | Robyn      | Frontend          |
 
-In the above example, all we know about the data is its current state. *But how did it get to the current state?* - We don't know. All we know is entity's current state. The Event Sourcing pattern does answer this, and many other questions.
+In the above example, all we know about the data is its current state. *But how did it get to the current state?* - We don't know. All we know is the entity's current state. The Event Sourcing pattern does answer this and many other questions.
 
-The Event Sourcing pattern introduces the dimension of time into the modeling of business entities and their lifecycles. Instead of capturing an entity's current state, an event sourced system keep a transactional record of all events that have occured during an entity's lifecycle. For example:
+The Event Sourcing pattern introduces the dimension of time into the modeling of business entities and their lifecycles. Instead of capturing an entity's current state, an event-sourced system keep a transactional record of all events that have occurred during an entity's lifecycle. For example:
 
 ```
 { "id": 3, "type": "initialized", "name": "Robyn", "timestamp": "2021-01-05T13:15:30Z" }
@@ -25,17 +25,27 @@ The Event Sourcing pattern introduces the dimension of time into the modeling of
 
 ```
 
-Modeling and persisting the events captures what exactly happenned during an entity's lifecycle. The events are used as the system's **source of truth**. Hence the name of the pattern -- event sourcing.
+Modeling and persisting the events captures what exactly happened during an entity's lifecycle. The events are used as the system's **source of truth**. Hence the name of the pattern -- event sourcing.
 
-Not only we can derive the current state by sequentially applying the events, but the flexbile events-based model allows projecting different state models, optimized for different tasks.
+Not only we can derive the current state by sequentially applying the events, but the flexible events-based model allows projecting different state models that are optimized for different tasks.
 
-Finally, Event Dourcing is **not** event driven architecture:
+Finally, Event Sourcing is **not** Event-Driven Architecture(EDA):
 
 > EventSourcing is not Event driven architecture. The former is about events _inside_ the app. The latter is about events _between_ (sub)systems
 >
 > ~ [@ylorph](https://twitter.com/ylorph/status/1295480789765955586)
 
 ## What is Event Store?
+
+An event store is a storage mechanism optimized for event sourcing-based systems. An event store should provide the following functionality:
+
+1. Appending events to a stream (stream = events of a distinct entity).
+2. Read events from a stream.
+3. Concurrency management to identify collisions when two processes are appending to the same stream simultaneously.
+4. Allow enumerating events across all streams in the store, e.g., for generating CQRS projections.
+5. Pushing newly committed events to the interested subscribers.
+
+All of the above functions are supported by the Elastic Event Store.
 
 ## Getting Started
 
@@ -238,6 +248,6 @@ Notice the "next_checkpoint" value. Use it for getting the next batch of changes
 Since DynomoDB is used as the storage mechanism, its limitations apply to Elastic Event Store:
 
 1. The maximum item size in DynamoDB, and hence the maximum changeset size, is 400 KB.
-2. The maximum size of a DynamoDB item collection is 10GB, hence this is the maximum size of a single stream.
+2. The maximum size of a DynamoDB item collection is 10GB. Hence, 10GB is the maximum size of a single stream.
 
-Finally, as with all serverless solutions, beyond a certain scale it can be more cost effective to use a self managed solution.
+Finally, as with all serverless solutions, beyond a certain scale it can be more cost-effective to use a self-managed solution.
