@@ -40,64 +40,62 @@ A serverless implementation of the storage mechanism for event sourcing-based sy
 
 Pay attention to the values of ReadCapacityUnits and WriteCapacityUnits. Low values limit the event store's, too high values increase the cost.
 
-Using Elastic Event Store
-~~~~~~~~~~~~~~~~~~~~~~~~~
+### Using Elastic Event Store
 
 1. Submit a few changesets
 
+
 ```sh
+$ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111 \
+     --header 'Content-Type: application/json' \
+     --request POST \
+     --data @- <<BODY
+{
+    "metadata": {
+        "command": "do_something",
+        "issuedBy": "me"
+    },
+    "events": [
+        { "type": "init", "data": 1 },
+        { "type": "sell", "data": 20 },
+        { "type": "buy", "data": 5 }
+    ]
+}
+BODY
 
-    $ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111 \
-         --header 'Content-Type: application/json' \
-         --request POST \
-         --data @- <<BODY
-    {
-        "metadata": {
-            "command": "do_something",
-            "issuedBy": "me"
-        },
-        "events": [
-            { "type": "init", "data": 1 },
-            { "type": "sell", "data": 20 },
-            { "type": "buy", "data": 5 }
-        ]
-    }
-    BODY
+$ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-222 \
+     --header 'Content-Type: application/json' \
+     --request POST \
+     --data @- <<BODY
+{
+    "metadata": {
+        "command": "do_something",
+        "issuedBy": "me"
+    },
+    "events": [
+        { "type": "init", "data": 1 },
+        { "type": "sell", "data": 20 },
+        { "type": "buy", "data": 5 }
+    ]
+}
+BODY
 
-    $ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-222 \
-         --header 'Content-Type: application/json' \
-         --request POST \
-         --data @- <<BODY
-    {
-        "metadata": {
-            "command": "do_something",
-            "issuedBy": "me"
-        },
-        "events": [
-            { "type": "init", "data": 1 },
-            { "type": "sell", "data": 20 },
-            { "type": "buy", "data": 5 }
-        ]
-    }
-    BODY
-
-    $ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111\?expected_last_changeset=1 \
-         --header 'Content-Type: application/json' \
-         --request POST \
-         --data @- <<BODY
-    {
-        "metadata": {
-            "command": "do_something_else",
-            "issuedBy": "me"
-        },
-        "events": [
-            { "type": "buy", "data": 100 },
-            { "type": "buy", "data": 220 },
-            { "type": "sell", "data": 15 }
-        ]
-    }
-    BODY
-
+$ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111\?expected_last_changeset=1 \
+     --header 'Content-Type: application/json' \
+     --request POST \
+     --data @- <<BODY
+{
+    "metadata": {
+        "command": "do_something_else",
+        "issuedBy": "me"
+    },
+    "events": [
+        { "type": "buy", "data": 100 },
+        { "type": "buy", "data": 220 },
+        { "type": "sell", "data": 15 }
+    ]
+}
+BODY
 ```
 
 2. Fetch changesets belonging to one of the streams:
