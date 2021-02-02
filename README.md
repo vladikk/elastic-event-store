@@ -45,7 +45,7 @@ An event store is a storage mechanism optimized for event sourcing-based systems
 4. Allow enumerating events across all streams in the store, e.g., for generating CQRS projections.
 5. Pushing newly committed events to the interested subscribers.
 
-All of the above functions are supported by the Elastic Event Store.
+All of the above functions are supported by the Elastic Event Store. Let's see how you can spin up an instance and start event *sourcing* in no time.
 
 ## Getting Started
 
