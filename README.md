@@ -208,7 +208,7 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams\?pp=true
     "statistics_version": 3
 }
 ```
-Note: the statistics endpoint's data is project asynchronously at 1 minute interval.
+Note: the statistics endpoint's data is project asynchronously at a one minute interval.
 
 ## Push Subscriptions
 
