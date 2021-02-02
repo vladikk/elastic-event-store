@@ -178,8 +178,12 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/changesets\?chec
         {
             "stream_id": "aaa-111111",
             "changeset_id": 1,
-            "events": [],
-            "metadata": [],
+            "events": [
+                ...
+            ],
+            "metadata": [
+                ...
+            ],
             "checkpoint": 3
         }
         ....
