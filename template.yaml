@@ -122,6 +122,11 @@ Resources:
           Properties:
             Path: /version
             Method: get
+        Stats:
+          Type: Api
+          Properties:
+            Path: /streams
+            Method: get
         Commit:
           Type: Api
           Properties:

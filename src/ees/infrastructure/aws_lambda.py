@@ -38,6 +38,9 @@ def parse_dynamodb_event(event, context):
 def parse_version_request(event, context):
     return Version()
 
+def parse_stats_request(event, context):
+    return Stats()
+
 def parse_commit_request(event, context):
     query_string = event.get("queryStringParameters") or {}
     stream_id = event["pathParameters"].get("stream_id")
@@ -247,6 +250,7 @@ def parse_dynamodb_new_records(event, context):
 
 parsers = {
     "/version": parse_version_request,
+    "/streams": parse_stats_request,
     "/streams/{stream_id}": parse_commit_request,
     "/streams/{stream_id}/changesets": parse_stream_changesets_request,
     "/streams/{stream_id}/events": parse_stream_events_request,

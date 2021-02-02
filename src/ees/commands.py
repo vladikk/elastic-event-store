@@ -4,6 +4,8 @@ from typing import NamedTuple
 
 Version = namedtuple('Version', [])
 
+Stats = namedtuple('Stats', [])
+
 Commit = namedtuple(
     'Commit',
     ['stream_id',

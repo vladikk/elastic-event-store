@@ -6,6 +6,7 @@ from ees.handlers.changesets import FetchChangesetsHandler
 from ees.handlers.events import FetchEventsHandler
 from ees.handlers.global_changesets import FetchGlobalChangesetsHandler
 from ees.handlers.global_indexer import GlobalIndexer
+from ees.handlers.stats import StatsHandler
 from ees.infrastructure.dynamodb import DynamoDB
 from ees.commands import *
 
@@ -16,6 +17,7 @@ db = DynamoDB(events_table=os.getenv('EventStoreTable'),
 def route_request(cmd):
     commit = CommitHandler(db)
     version = VersionHandler()
+    stats = StatsHandler(db)
     changesets = FetchChangesetsHandler(db)
     events = FetchEventsHandler(db)    
     global_changesets = FetchGlobalChangesetsHandler(db)
@@ -24,6 +26,9 @@ def route_request(cmd):
 
     if isinstance(cmd, Version):
         return version
+    
+    if isinstance(cmd, Stats):
+        return stats
 
     if isinstance(cmd, Commit):
         return commit
