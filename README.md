@@ -6,6 +6,36 @@ A serverless implementation of the storage mechanism for event sourcing-based sy
 
 ## What is Event Sourcing?
 
+Traditionally, software systems operate on state-based data. In other words, business entities and concepts are represented as a snapshot of their *current* state. E.g.:
+
+| Id  | Name       | Team              |
+| --- | ---------- | ----------------- |
+| 1   | Gillian    | Administration    |
+| 2   | Krzysztof  | Accounting        |
+| 3   | Robyn      | Frontend          |
+
+In the above example, all we know about the data is its current state. *But how did it get to the current state?* - We don't know. All we know is entity's current state. The Event Sourcing pattern does answer this, and many other questions.
+
+The Event Sourcing pattern introduces the dimension of time into the modeling of business entities and their lifecycles. Instead of capturing an entity's current state, an event sourced system keep a transactional record of all events that have occured during an entity's lifecycle. For example:
+
+```
+{ "id": 3, "type": "initialized", "name": "Robyn", "timestamp": "2021-01-05T13:15:30Z" }
+{ "id": 3, "type": "assigned", "team": "Frontend", "timestamp": "2021-01-05T16:15:30Z" }
+{ "id": 3, "type": "promoted", "position": "team-leader", "timestamp": "2021-01-22T16:15:30Z" }
+
+```
+
+Modeling and persisting the events captures what exactly happenned during an entity's lifecycle. The events are used as the system's **source of truth**. Hence the name of the pattern -- event sourcing.
+
+Not only we can derive the current state by sequentially applying the events, but the flexbile events-based model allows projecting different state models, optimized for different tasks.
+
+Finally, Event Dourcing is **not** event driven architecture:
+
+> "EventSourcing is not Event driven architecture."
+> The former is about events _inside_ the app.
+> The latter is about events _between_ (sub)systems
+> [@ylorph](https://twitter.com/ylorph/status/1295480789765955586)
+
 ## What is Event Store?
 
 ## Getting Started
