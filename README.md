@@ -14,12 +14,12 @@ A serverless implementation of the storage mechanism for event sourcing-based sy
 
 2. Clone the repository:
 
-.. code-block:: sh
+```sh
 
     $ git clone https://github.com/doitintl/elastic-event-store.git
     $ cd elastic-event-store
 
-.. code-block:: sh
+```
 
 3. Build and deploy a new instance:
 
