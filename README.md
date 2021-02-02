@@ -17,3 +17,5 @@ A serverless implementation of the storage mechanism for event sourcing-based sy
 ## Data Model
 
 ## Ordering Guarantees
+
+## Limitations

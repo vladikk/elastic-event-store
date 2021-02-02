@@ -481,3 +481,51 @@ class DynamoDB:
                 break
 
         return result
+    
+    def fetch_global_events(self, checkpoint, event_in_checkpoint, limit):
+        def fetch_batch(page, since_item, limit):
+            response = self.dynamodb_ll.query(
+                TableName=self.events_table,
+                Select='ALL_ATTRIBUTES',
+                IndexName='EmumerationIndex',
+                ScanIndexForward=True,
+                Limit=limit,
+                KeyConditions={
+                    'page': {
+                        'AttributeValueList': [
+                            {
+                                'N': str(page)
+                            },
+                        ],
+                        'ComparisonOperator': 'EQ'
+                    },
+                    'page_item': {
+                        'AttributeValueList': [
+                            {
+                                'N': str(since_item)
+                            }
+                        ],
+                        'ComparisonOperator': 'GE'
+                    }
+                }
+            )
+            return [DynamoDB.parse_commit(r) for r in response["Items"] if r["stream_id"]["S"] != self.global_counter_key]
+
+        (page, page_item) = self.checkpoint_calc.to_page_item(checkpoint)
+
+        changesets_left = limit
+        last_batch = None
+        result = []
+        while True:
+            last_batch = fetch_batch(page, page_item, changesets_left)
+            if len(last_batch) > 0:
+                result.extend(last_batch)
+                (page, page_item) = self.checkpoint_calc.next_page_and_item(page, page_item)
+                changesets_left = changesets_left - len(last_batch)
+            else:
+                break
+
+            if changesets_left <= 0:
+                break
+
+        return result

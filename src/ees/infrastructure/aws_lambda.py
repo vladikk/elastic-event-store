@@ -167,41 +167,6 @@ def parse_global_changesets_request(event, context):
     
     return FetchGlobalChangesets(checkpoint, limit)
 
-def parse_global_events_request(event, context):
-    query_string = event.get("queryStringParameters") or { }
-    checkpoint_string = query_string.get("checkpoint", "0.0")
-    limit = query_string.get("limit")
-
-    checkpoint_parts = checkpoint_string.split('.')
-    if len(checkpoint_parts) != 2:
-        return invalid_events_checkpoint_value(checkpoint_string)
-    
-    checkpoint = 0
-    try:
-        checkpoint = int(checkpoint_parts[0])
-    except ValueError:
-        return invalid_events_checkpoint_value(checkpoint_string)
-    
-    event_in_checkpoint = 0
-    try:
-        event_in_checkpoint = int(checkpoint_parts[1])
-    except ValueError:
-        return invalid_events_checkpoint_value(checkpoint_string)
-
-    if checkpoint < 0 or event_in_checkpoint < 0:
-        return invalid_events_checkpoint_value(checkpoint_string)
-
-    if limit:
-        try:
-            limit = int(limit)
-        except ValueError:
-            return invalid_limit_value(limit)
-    
-    if limit is not None and limit < 1:
-        return invalid_limit_value(limit)
-    
-    return FetchGlobalEvents(checkpoint, event_in_checkpoint, limit)
-
 def invalid_expected_changeset_id(stream_id, expected_last_changeset_id):
     return Response(
         http_status=400,
@@ -277,6 +242,5 @@ parsers = {
     "/streams/{stream_id}": parse_commit_request,
     "/streams/{stream_id}/changesets": parse_stream_changesets_request,
     "/streams/{stream_id}/events": parse_stream_events_request,
-    "/changesets": parse_global_changesets_request,
-    "/events": parse_global_events_request
+    "/changesets": parse_global_changesets_request
 }

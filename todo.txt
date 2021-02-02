@@ -1,5 +1,3 @@
-Global events enumeration - optimize db query
-
 Add logging where needed
 
 Add dead letter queues for async tasks + alerts
