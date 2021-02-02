@@ -163,7 +163,7 @@ The CloudFormation stack included two SNS topics you can use to get notification
 1. ees_changesets_XXX_XXX_.fifo - for subscribing to new changesets
 2. ees_events_XXX_XXX_.fifo - for subscribing to individual events
 
-## Pull/Catchup Subscriptions
+## Pull(Catchup) Subscriptions
 
 You can enumerate the changesets globally (across multiple streams) using the "changesets" endpoint:
 
