@@ -109,10 +109,13 @@ Resources:
       Environment:
         Variables:
           EventStoreTable: !Ref EventStoreTable
+          AnalysisTable: !Ref AnalysisTable
       Policies:
         - AWSLambdaDynamoDBExecutionRole
         - DynamoDBCrudPolicy:
             TableName: !Ref EventStoreTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref AnalysisTable
       Events:
         Version:
           Type: Api
@@ -155,10 +158,13 @@ Resources:
       Environment:
         Variables:
           EventStoreTable: !Ref EventStoreTable
+          AnalysisTable: !Ref AnalysisTable
       Policies:
         - AWSLambdaDynamoDBExecutionRole
         - DynamoDBCrudPolicy:
             TableName: !Ref EventStoreTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref AnalysisTable
       Events:
         Stream:
           Type: DynamoDB
@@ -190,6 +196,7 @@ Resources:
       Environment:
         Variables:
           EventStoreTable: !Ref EventStoreTable
+          AnalysisTable: !Ref AnalysisTable
           ChangesetsTopic: !Ref ChangesetsTopic
           EventsTopic: !Ref EventsTopic
       Policies:
@@ -233,6 +240,29 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 3
         WriteCapacityUnits: 1
+  
+  AnalysisProjectorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src
+      Handler: lambda_entrypoint.analysis_projector
+      Runtime: python3.8
+      Timeout: 600
+      Environment:
+        Variables:
+          EventStoreTable: !Ref EventStoreTable
+          AnalysisTable: !Ref AnalysisTable
+      Policies:
+        - AWSLambdaDynamoDBExecutionRole
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EventStoreTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref AnalysisTable
+      Events:
+        Chron:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 minute)
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

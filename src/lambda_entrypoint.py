@@ -2,8 +2,11 @@ import json
 import os
 import logging
 from ees.app import route_request
+from ees.handlers.analysis_projector import AnalysisProjector
+from ees.handlers.global_changesets import FetchGlobalChangesetsHandler
 from ees.handlers.publisher import Publisher
 from ees.infrastructure.aws_lambda import event_to_command, parse_dynamodb_new_records
+from ees.infrastructure.dynamodb import DynamoDB
 from ees.infrastructure.sns import SNS
 from ees.model import Response
 from ees.app import route_request
@@ -50,4 +53,11 @@ def publisher(event, context):
     p = Publisher(changesets_topic, events_topic)
     p.publish(changesets)
 
+def analysis_projector(event, context):
+    events_table = os.getenv('EventStoreTable')
+    analysis_table = os.getenv('AnalysisTable')
+    db = DynamoDB(events_table, analysis_table)
+    global_changesets_handler = FetchGlobalChangesetsHandler(db)
+    projector = AnalysisProjector(db, global_changesets_handler)
+    projector.execute()
     

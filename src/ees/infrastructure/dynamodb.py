@@ -3,7 +3,7 @@ import botocore
 from datetime import datetime
 import json
 import logging
-from ees.model import CommitData, ConcurrencyException, GlobalCounter, GlobalIndex, CheckpointCalc
+from ees.model import CommitData, ConcurrencyException, GlobalCounter, GlobalIndex, CheckpointCalc, AnalysisState
 
 logger = logging.getLogger("ees.infrastructure.dynamodb")
 
@@ -11,8 +11,9 @@ class DynamoDB:
     global_counter_key = '!!!RESERVED:GLOBAL-COUNTER!!!'
     global_counter_range = 0
 
-    def __init__(self, events_table):
+    def __init__(self, events_table, analysis_table):
         self.events_table = events_table
+        self.analysis_table = analysis_table
         self.dynamodb_ll = boto3.client('dynamodb') 
         self.checkpoint_calc = CheckpointCalc()
     
@@ -534,3 +535,68 @@ class DynamoDB:
                 break
 
         return result
+    
+    def get_analysis_state(self):
+        projection = 'projection_id,proj_state,version'
+
+        response = self.dynamodb_ll.query(
+            TableName=self.analysis_table,
+            ProjectionExpression=projection,
+            Limit=1,
+            ScanIndexForward=False,
+            KeyConditions={
+                'projection_id': {
+                    'AttributeValueList': [
+                        {
+                            'S': "analysis_state"
+                        },
+                    ],
+                    'ComparisonOperator': 'EQ'
+                }
+            }
+        )
+        if response["Count"] == 0:
+            return None
+
+        data = json.loads(response["Items"][0]["proj_state"]["S"])
+        return AnalysisState(
+            total_streams=data["total_streams"],
+            total_changesets=data["total_changesets"],
+            total_events=data["total_events"],
+            max_stream_length=data["max_stream_length"],
+            version=int(response["Items"][0]["version"]["N"])
+        )
+
+    def set_analysis_state(self, state, expected_version):
+        state_value = {
+            "total_streams": state.total_streams,
+            "total_changesets": state.total_changesets,
+            "total_events": state.total_events,
+            "max_stream_length": state.max_stream_length,
+            "version": state.version
+        }
+
+        item = {
+            'projection_id': { "S": "analysis_state" },
+            'proj_state': { "S": json.dumps(state_value) },
+            'version': { "N": str(state.version) }
+        }
+
+        condition = {
+            'version': { "Value": { "N": str(expected_version) } }
+        }
+        if not expected_version:
+            condition = {
+                'projection_id': { "Exists": False }
+            }
+
+        try:
+            self.dynamodb_ll.put_item(
+                TableName=self.analysis_table, Item=item, Expected=condition
+            )
+        except botocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                logger.debug(f"ConditionalCheckFailedException for analysis model, expected version {expected_version}")
+                raise ConcurrencyException("analysis_model", expected_version)
+            else:
+                raise e

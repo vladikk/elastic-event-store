@@ -9,7 +9,8 @@ from ees.handlers.global_indexer import GlobalIndexer
 from ees.infrastructure.dynamodb import DynamoDB
 from ees.commands import *
 
-db = DynamoDB(events_table=os.getenv('EventStoreTable'))
+db = DynamoDB(events_table=os.getenv('EventStoreTable'),
+              analysis_table=os.getenv('AnalysisTable'))
 
 
 def route_request(cmd):

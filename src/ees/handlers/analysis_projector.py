@@ -57,9 +57,4 @@ class AnalysisProjector(object):
             version=new_version
         ), prev_state.version)
             
-
-
-
-
-
-        logger.info(f"Finished publishing.")
+        logger.info(f"Finished projecting new state.")
