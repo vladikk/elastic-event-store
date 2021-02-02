@@ -237,6 +237,12 @@ Notice the "next_checkpoint" value. Use it for getting the next batch of changes
 
 ![Elastic Event Store: AWS Components](./docs/diagrams/aws-components.png)
 
+* The REST API is exposed by API Gateway
+* AWS Lambda functions host all the system's logic
+* DynamoDB is the main storage mechanism
+* SNS fifo topics are used for publishing newly committed changesets and events
+* SQS dead letter queues capture DynamoDB Streams events that were not processed successfully by the Lambda functions
+
 ## Data Model
 
 ## Ordering Guarantees
