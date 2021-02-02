@@ -23,7 +23,7 @@ A serverless implementation of the storage mechanism for event sourcing-based sy
 
 3. Build and deploy a new instance:
 
-.. code-block:: sh
+```sh
 
     $ sam build
     ...
@@ -36,7 +36,7 @@ A serverless implementation of the storage mechanism for event sourcing-based sy
     Value         https://XXXXXXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/
     ------------------------------------------------------------------------------------
 
-.. code-block:: sh
+```
 
 Pay attention to the values of ReadCapacityUnits and WriteCapacityUnits. Low values limit the event store's, too high values increase the cost.
 
@@ -45,7 +45,7 @@ Using Elastic Event Store
 
 1. Submit a few changesets
 
-.. code-block:: sh
+```sh
 
 $ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111 \
      --header 'Content-Type: application/json' \
@@ -98,11 +98,11 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aa
 }
 BODY
 
-.. code-block:: sh
+```
 
 2. Fetch changesets belonging to one of the streams:
 
-.. code-block:: sh
+```sh
 $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111/changesets\?pp=true
 
 {
@@ -125,11 +125,11 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-a
         ...
     ]
 }       
-.. code-block:: sh
+```
 
 You can also fetch the events directly
 
-.. code-block:: sh
+```sh
 $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111/events\?pp=true
 
 {
@@ -152,11 +152,11 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-a
         }
     ]
 }   
-.. code-block:: sh
+```
 
 3. Enumerate the changesets in the event store globally (across multiple streams)
 
-.. code-block:: sh
+```sh
 $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111/events\?pp=true
 
 {
@@ -175,7 +175,7 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-a
     ],
     "next_checkpoint": 7
 }
-.. code-block:: sh
+```
 
 ## Push Subscriptions
 
