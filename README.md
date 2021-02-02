@@ -200,4 +200,15 @@ Notice the "next_checkpoint" value. Use it for getting the next batch of changes
 
 ## Ordering Guarantees
 
+1. The order of changesets and events in a stream is preserved and is strongly consistent.
+
+2. The order of changesets across all the streams is not guaranteed to be exactly the same as the order in which the streams were updated. That said, the inter-stream order is repeatable. I.e., when calling the global changesets endpoint ("/changesets"), the changesets are always returned in the same order.
+
 ## Limitations
+
+Since DynomoDB is used as the storage mechanism, its limitations apply to Elastic Event Store:
+
+1. The maximum item size in DynamoDB, and hence the maximum changeset size, is 400 KB.
+2. The maximum size of a DynamoDB item collection is 10GB, hence this is the maximum size of a single stream.
+
+Finally, as with all serverless solutions, beyond a certain scale it can be more cost effective to use a self managed solution.
