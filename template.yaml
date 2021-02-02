@@ -170,10 +170,15 @@ Resources:
             Enabled: true
             ParallelizationFactor: 1
             MaximumRetryAttempts: 1000
-            #DestinationConfig:
-            #  OnFailure:
-            #    Type: SQS
-            #    Destination: !GetAtt MySqsQueue.Arn
+            DestinationConfig:
+              OnFailure:
+                Type: SQS
+                Destination: !GetAtt GlobalIndexerDLQ.Arn
+  GlobalIndexerDLQ:
+    Type: AWS::SQS::Queue
+    Properties: 
+      MessageRetentionPeriod: 1209600
+      QueueName: !Join [ '_', ['ees', 'indexer_dead_letter_queue', !Ref Environment, !Ref InstanceName] ]
 
   PublisherFunction:
     Type: AWS::Serverless::Function
@@ -204,10 +209,16 @@ Resources:
             Enabled: true
             ParallelizationFactor: 1
             MaximumRetryAttempts: 1000
-            #DestinationConfig:
-            #  OnFailure:
-            #    Type: SQS
-            #    Destination: !GetAtt MySqsQueue.Arn
+            DestinationConfig:
+              OnFailure:
+                Type: SQS
+                Destination: !GetAtt PublisherIndexerDLQ.Arn
+  
+  PublisherIndexerDLQ:
+    Type: AWS::SQS::Queue
+    Properties: 
+      MessageRetentionPeriod: 1209600
+      QueueName: !Join [ '_', ['ees', 'publisher_dead_letter_queue', !Ref Environment, !Ref InstanceName] ]
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
