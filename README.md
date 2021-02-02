@@ -129,7 +129,7 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-a
 }       
 ```
 
-You can also fetch the events directly
+Or you can also fetch the events directly:
 
 ```sh
 $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111/events\?pp=true
@@ -159,7 +159,7 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-a
 #### 3. Enumerate the changesets in the event store globally (across multiple streams)
 
 ```sh
-$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111/events\?pp=true
+$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/changesets\?checkpoint=0\&pp=true
 
 {
     "checkpoint": 0,
@@ -179,7 +179,14 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-a
 }
 ```
 
+Notice the "next_checkpoint" value. Use it for getting the next batch of changesets.
+
 ## Push Subscriptions
+
+The CloudFormation stack included two SNS topics you can use to get notifications about newly submitted changesets or events:
+
+1. ees_changesets_XXX_XXX_.fifo - for subscribing to new changesets
+2. ees_events_XXX_XXX_.fifo - for subscribing to individual events
 
 ## Pull/Catchup Subscriptions
 
