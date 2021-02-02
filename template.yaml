@@ -219,6 +219,20 @@ Resources:
     Properties: 
       MessageRetentionPeriod: 1209600
       QueueName: !Join [ '_', ['ees', 'publisher_dead_letter_queue', !Ref Environment, !Ref InstanceName] ]
+  
+  AnalysisTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Join [ '_', ['ees', 'analysis', !Ref Environment, !Ref InstanceName] ]
+      AttributeDefinitions:
+      - AttributeName: projection_id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: projection_id
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 3
+        WriteCapacityUnits: 1
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
