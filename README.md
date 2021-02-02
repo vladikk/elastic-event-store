@@ -42,7 +42,7 @@ Pay attention to the values of ReadCapacityUnits and WriteCapacityUnits. Low val
 
 ### Using Elastic Event Store
 
-1. Submit a few changesets
+#### 1. Submit a few changesets
 
 
 ```sh
@@ -62,7 +62,9 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aa
     ]
 }
 BODY
+```
 
+```sh
 $ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-222 \
      --header 'Content-Type: application/json' \
      --request POST \
@@ -79,7 +81,9 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aa
     ]
 }
 BODY
+```
 
+```sh
 $ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111\?expected_last_changeset=1 \
      --header 'Content-Type: application/json' \
      --request POST \
