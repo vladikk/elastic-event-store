@@ -7,13 +7,8 @@ from ees.infrastructure.aws_lambda import event_to_command, parse_dynamodb_new_r
 from ees.infrastructure.sns import SNS
 from ees.model import Response
 from ees.app import route_request
-from ees.handlers.global_indexer import GlobalIndexer
-from ees.infrastructure.dynamodb import DynamoDB
-
 
 logger = logging.getLogger("ees.entrypoint")
-logger.setLevel(logging.DEBUG)
-
 
 def request_handler(event, context):
     logger.info(f"Processing incoming event: {event}")

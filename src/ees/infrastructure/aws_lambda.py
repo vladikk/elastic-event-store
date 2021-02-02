@@ -1,16 +1,24 @@
 import json
+import logging
 from ees.model import Response
 from ees.commands import *
 from ees.infrastructure.dynamodb import DynamoDB
 
+logger = logging.getLogger("ees.infrastructure.aws_lambda")
+
 def event_to_command(event, context={}):
+    logger.info(f"Parsing incoming event: {event}")
+    cmd = None
     if "requestContext" in event.keys():
-        return parse_api_gateway_event(event, context)
-    if "Records" in event.keys():
-        return parse_dynamodb_event(event, context)
+        cmd = parse_api_gateway_event(event, context)
+    elif "Records" in event.keys():
+        cmd= parse_dynamodb_event(event, context)
+    logger.info(f"Resulting command/result: {cmd}")
+    return cmd
 
 def parse_api_gateway_event(event, context):
     request_path = event["requestContext"]["resourcePath"].lower()
+    logger.debug(f"API Gateway path: {request_path}")
     parser = parsers[request_path]
     return parser(event, context)
 

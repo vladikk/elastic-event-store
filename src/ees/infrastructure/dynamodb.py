@@ -2,7 +2,10 @@ import boto3
 import botocore
 from datetime import datetime
 import json
+import logging
 from ees.model import CommitData, ConcurrencyException, GlobalCounter, GlobalIndex, CheckpointCalc
+
+logger = logging.getLogger("ees.infrastructure.dynamodb")
 
 class DynamoDB:
     global_counter_key = '!!!RESERVED:GLOBAL-COUNTER!!!'
@@ -35,6 +38,7 @@ class DynamoDB:
             )
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                logger.debug(f"ConditionalCheckFailedException for {commit.stream_id}/{commit.changeset_id}")
                 raise ConcurrencyException(commit.stream_id, commit.changeset_id)
             else:
                 raise e
@@ -250,6 +254,7 @@ class DynamoDB:
 
     @classmethod
     def parse_commit(cls, record):
+        logger.debug(f"Parsing DynamoDB record: {record}")
         stream_id = record["stream_id"]["S"]
         changeset_id = int(record["changeset_id"]["N"])
         first_event_id = int(record["first_event_id"]["N"])
