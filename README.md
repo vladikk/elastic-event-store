@@ -102,7 +102,7 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aa
 BODY
 ```
 
-2. Fetch changesets belonging to one of the streams:
+#### 2. Fetch changesets belonging to one of the streams:
 
 ```sh
 $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111/changesets\?pp=true
@@ -156,7 +156,7 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-a
 }   
 ```
 
-3. Enumerate the changesets in the event store globally (across multiple streams)
+#### 3. Enumerate the changesets in the event store globally (across multiple streams)
 
 ```sh
 $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111/events\?pp=true
