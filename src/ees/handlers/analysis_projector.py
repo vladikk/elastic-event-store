@@ -15,14 +15,7 @@ class AnalysisProjector(object):
     def execute(self):
         logger.info(f"Analysis projection strated.")
         prev_state = self.db.get_analysis_state()
-        if not prev_state:
-            prev_state = AnalysisState(
-                total_streams=0,
-                total_changesets=0,
-                total_events=0,
-                max_stream_length=0,
-                version=0
-            )
+
         new_total_streams = prev_state.total_streams
         new_total_changesets = prev_state.total_changesets
         new_total_events = prev_state.total_events

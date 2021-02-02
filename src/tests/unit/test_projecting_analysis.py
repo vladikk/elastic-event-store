@@ -62,10 +62,13 @@ class TestProjectingAnalysisModel(TestCase):
         global_changesets_endpoint = Mock()
         global_changesets_endpoint.execute.side_effect = global_changesets_return_values
         
-        dynamo_db.get_analysis_state.return_value = None
-
-        cmd = FetchGlobalChangesets(0, 10)
-        #global_changesets_endpoint.execute(cmd).return_value = 
+        dynamo_db.get_analysis_state.return_value = AnalysisState(
+            total_streams=0,
+            total_changesets=0,
+            total_events=0,
+            max_stream_length=0,
+            version=0
+        )
 
         p = AnalysisProjector(dynamo_db, global_changesets_endpoint)
         p.query_limit = 10

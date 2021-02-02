@@ -195,6 +195,21 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-a
 }   
 ```
 
+Finally, let's see the instance's statistics:
+
+```sh
+$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams\?pp=true
+
+{
+    "total_streams": 2,
+    "total_changesets": 4,
+    "total_events": 12,
+    "max_stream_length": 2,
+    "statistics_version": 3
+}
+```
+Note: the statistics endpoint's data is project asynchronously at 1 minute interval.
+
 ## Push Subscriptions
 
 The CloudFormation stack included two SNS topics you can use to get notifications about newly submitted changesets or events:

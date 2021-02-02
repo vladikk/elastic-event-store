@@ -537,35 +537,71 @@ class DynamoDB:
         return result
     
     def get_analysis_state(self):
-        projection = 'projection_id,proj_state,version'
+        def fetch_state():
+            projection = 'projection_id,proj_state,version'
 
-        response = self.dynamodb_ll.query(
-            TableName=self.analysis_table,
-            ProjectionExpression=projection,
-            Limit=1,
-            ScanIndexForward=False,
-            KeyConditions={
-                'projection_id': {
-                    'AttributeValueList': [
-                        {
-                            'S': "analysis_state"
-                        },
-                    ],
-                    'ComparisonOperator': 'EQ'
+            response = self.dynamodb_ll.query(
+                TableName=self.analysis_table,
+                ProjectionExpression=projection,
+                Limit=1,
+                ScanIndexForward=False,
+                KeyConditions={
+                    'projection_id': {
+                        'AttributeValueList': [
+                            {
+                                'S': "analysis_state"
+                            },
+                        ],
+                        'ComparisonOperator': 'EQ'
+                    }
                 }
-            }
-        )
-        if response["Count"] == 0:
-            return None
+            )
+            if response["Count"] == 0:
+                return None
 
-        data = json.loads(response["Items"][0]["proj_state"]["S"])
-        return AnalysisState(
-            total_streams=data["total_streams"],
-            total_changesets=data["total_changesets"],
-            total_events=data["total_events"],
-            max_stream_length=data["max_stream_length"],
-            version=int(response["Items"][0]["version"]["N"])
-        )
+            data = json.loads(response["Items"][0]["proj_state"]["S"])
+            return AnalysisState(
+                total_streams=data["total_streams"],
+                total_changesets=data["total_changesets"],
+                total_events=data["total_events"],
+                max_stream_length=data["max_stream_length"],
+                version=int(response["Items"][0]["version"]["N"])
+            )
+        result = fetch_state()
+        if not result:
+            self.init_analysis_state()
+            result = fetch_state()
+        return result        
+    
+    def init_analysis_state(self):
+        state_value = {
+            "total_streams": 0,
+            "total_changesets": 0,
+            "total_events": 0,
+            "max_stream_length": 0,
+            "version": 0
+        }
+
+        item = {
+            'projection_id': { "S": "analysis_state" },
+            'proj_state': { "S": json.dumps(state_value) },
+            'version': { "N": str(0) }
+        }
+
+        condition = {
+            'projection_id': { "Exists": False }
+        }
+
+        try:
+            self.dynamodb_ll.put_item(
+                TableName=self.analysis_table, Item=item, Expected=condition
+            )
+        except botocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                # means it already exists, no nead to init
+                return
+            else:
+                raise e
 
     def set_analysis_state(self, state, expected_version):
         state_value = {
@@ -585,10 +621,6 @@ class DynamoDB:
         condition = {
             'version': { "Value": { "N": str(expected_version) } }
         }
-        if not expected_version:
-            condition = {
-                'projection_id': { "Exists": False }
-            }
 
         try:
             self.dynamodb_ll.put_item(
