@@ -235,6 +235,8 @@ Notice the "next_checkpoint" value. Use it for getting the next batch of changes
 
 ## Architecture
 
+![Elastic Event Store: AWS Components](./docs/diagrams/aws-components.png)
+
 ## Data Model
 
 ## Ordering Guarantees
