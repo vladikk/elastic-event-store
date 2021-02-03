@@ -1,5 +1,4 @@
 * Readme.md
-  How to test
   How committing works
   How global enumeration works
 * API Keys
