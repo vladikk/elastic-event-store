@@ -20,6 +20,7 @@ A serverless implementation of the storage mechanism for event sourcing-based sy
 - [Limitations](#Limitations)
 
 <a name="WhatIsEventSourcing"/>
+
 ## What is Event Sourcing?
 
 Traditionally, software systems operate on state-based data. In other words, business entities and concepts are represented as a snapshot of their *current* state. E.g.:
@@ -52,6 +53,7 @@ Finally, Event Sourcing is **not** Event-Driven Architecture(EDA):
 > ~ [@ylorph](https://twitter.com/ylorph/status/1295480789765955586)
 
 <a name="WhatIsEventStore"/>
+
 ## What is Event Store?
 
 An event store is a storage mechanism optimized for event sourcing-based systems. An event store should provide the following functionality:
@@ -65,9 +67,11 @@ An event store is a storage mechanism optimized for event sourcing-based systems
 All of the above functions are supported by the Elastic Event Store. Let's see how you can spin up an instance and start event *sourcing* in no time.
 
 <a name="GettingStarted"/>
+
 ## Getting Started
 
 <a name="Installing"/>
+
 ### Installing Elastic Event Store
 
 1. Install [AWS Serverless Application Model(SAM) CLI] (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) and configure your [AWS credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html).
@@ -101,6 +105,7 @@ All of the above functions are supported by the Elastic Event Store. Let's see h
 Pay attention to the values of ReadCapacityUnits and WriteCapacityUnits. Low values limit the event store's, too high values increase the cost.
 
 <a name="Using"/>
+
 ### Using Elastic Event Store
 
 #### 1. Submit a few changesets
@@ -238,6 +243,7 @@ $ curl $EES_URL/streams
 Note: the statistics endpoint's data is project asynchronously at a one minute interval.
 
 <a name="PushSubscriptions"/>
+
 ## Push Subscriptions
 
 The CloudFormation stack included two SNS topics you can use to get notifications about newly submitted changesets or events:
@@ -246,6 +252,7 @@ The CloudFormation stack included two SNS topics you can use to get notification
 2. ees_events_XXX_XXX_.fifo - for subscribing to individual events
 
 <a name="PullSubscriptions"/>
+
 ## Pull(Catchup) Subscriptions
 
 You can enumerate the changesets globally (across multiple streams) using the "changesets" endpoint:
@@ -278,6 +285,7 @@ $ curl $EES_URL/changesets\?checkpoint=0
 Notice the "next_checkpoint" value. Use it for getting the next batch of changesets.
 
 <a name="Arhictecture"/>
+
 ## Architecture
 
 ![Elastic Event Store: AWS Components](./docs/diagrams/aws-components.png)
@@ -290,6 +298,7 @@ Notice the "next_checkpoint" value. Use it for getting the next batch of changes
 * SQS dead letter queues capture DynamoDB Streams events that were not processed successfully by the Lambda functions.
 
 <a name="DataModel"/>
+
 ## Data Model
 
 A partition in the events table represents a distinct stream of events: events that belong to a certain instance of a business entity. The partition's records are created for each transaction(commit) in the stream, and hold all the events that were committed in each individual transaction. Hence, the event store perisists many streams, a stream is composed of many changesets, and a changeset includes one or more events.
@@ -309,6 +318,7 @@ The main DynamoDB table uses the following schema:
 | page_item         | GSI-Sort(Number)      |
 
 <a name="OrderingGuarantees"/>
+
 ## Ordering Guarantees
 
 1. The order of changesets and events in a stream is preserved and is strongly consistent.
@@ -316,6 +326,7 @@ The main DynamoDB table uses the following schema:
 2. The order of changesets across all the streams is not guaranteed to be exactly the same as the order in which the streams were updated. That said, the inter-stream order is repeatable. I.e., when calling the global changesets endpoint ("/changesets"), the changesets are always returned in the same order.
 
 <a name="Testing"/>
+
 ## Testing
 
 1. Populate the "SAM_ARTIFACTS_BUCKET" environment variable with the name of the S3 bucket used for storing AWS SAM artifacts:
