@@ -14,10 +14,8 @@ from ees.app import route_request
 logger = logging.getLogger("ees.entrypoint")
 
 def request_handler(event, context):
-    logger.info(f"Processing incoming event: {event}")
-    query_string = event.get("queryStringParameters") or { }
-    pretty_print = query_string.get("pp")
-
+    logger.info(f"Processing incoming event: {event}")    
+    pretty_print = True
     parsed_event = event_to_command(event, context)
     logger.debug(f"Event was parsed to: {parsed_event}")
     if isinstance(parsed_event, Response):

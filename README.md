@@ -144,7 +144,7 @@ BODY
 #### 2. Fetch changesets belonging to one of the streams:
 
 ```sh
-$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111/changesets\?pp=true
+$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111/changesets
 
 {
     "stream_id": "stream-aaa-111",
@@ -171,7 +171,7 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-a
 Or you can also fetch the events directly:
 
 ```sh
-$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111/events\?pp=true
+$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111/events
 
 {
     "stream_id": "stream-aaa-111",
@@ -198,7 +198,7 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-a
 Finally, let's see the instance's statistics:
 
 ```sh
-$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams\?pp=true
+$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams
 
 {
     "total_streams": 2,
@@ -222,7 +222,7 @@ The CloudFormation stack included two SNS topics you can use to get notification
 You can enumerate the changesets globally (across multiple streams) using the "changesets" endpoint:
 
 ```sh
-$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/changesets\?checkpoint=0\&pp=true
+$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/changesets\?checkpoint=0
 
 {
     "checkpoint": 0,
