@@ -1,6 +1,8 @@
 * Readme.md
   How to test
+  How committing works
+  How global enumeration works
 * API Keys
 * Commit
-  Make metadata a not required field
+  Make metadata an optional value
   Proper response on invalid JSON

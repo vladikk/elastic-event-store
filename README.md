@@ -126,6 +126,7 @@ $ curl $EES_URL/streams/stream-aaa-222 \
 BODY
 ```
 
+Notice that when appending a commit to an existing stream, you have to specify the expected last changeset of that stream:
 ```sh
 $ curl $EES_URL/streams/stream-aaa-111\?expected_last_changeset=1 \
      --header 'Content-Type: application/json' \
