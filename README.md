@@ -126,7 +126,7 @@ $ curl $EES_URL/streams/stream-aaa-222 \
 BODY
 ```
 
-The Elastic Event Store is opinioned about concurrency control, and the opinion is that concurrency control is mandatory. Hence, when committing to an existing stream, you have to specify the expected last changeset of that stream:
+The Elastic Event Store is opinioned about concurrency control: it is mandatory. Hence, when committing to an existing stream, you have to specify the expected last changeset of that stream:
 ```sh
 $ curl $EES_URL/streams/stream-aaa-111\?expected_last_changeset=1 \
      --header 'Content-Type: application/json' \
@@ -287,6 +287,30 @@ The main DynamoDB table uses the following schema:
 1. The order of changesets and events in a stream is preserved and is strongly consistent.
 
 2. The order of changesets across all the streams is not guaranteed to be exactly the same as the order in which the streams were updated. That said, the inter-stream order is repeatable. I.e., when calling the global changesets endpoint ("/changesets"), the changesets are always returned in the same order.
+
+## Testing
+
+1. Populate the "SAM_ARTIFACTS_BUCKET" environment variable with the name of the S3 bucket used for storing AWS SAM artifacts:
+
+```sh
+$ SAM_ARTIFACTS_BUCKET=xxxxxxxxxxxxxxx
+```
+
+2. Initialize the testing environment stack:
+
+```sh
+$ ./deploy-test-env.sh
+```
+
+3. Run unit tests:
+```sh
+$ ./run-unit-tests.sh
+```
+
+4. Run unit and integration tests:
+```sh
+$ ./run-all-tests.sh
+```
 
 ## Limitations
 
