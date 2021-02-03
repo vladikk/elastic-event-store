@@ -341,6 +341,7 @@ $ ./run-all-tests.sh
 ```
 
 <a name="Limitations"/>
+
 ## Limitations
 
 Since DynomoDB is used as the storage mechanism, its limitations apply to Elastic Event Store:
