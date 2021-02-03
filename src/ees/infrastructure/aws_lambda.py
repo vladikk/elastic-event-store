@@ -82,7 +82,7 @@ def parse_commit_request(event, context):
             })
 
     body = json.loads(event["body"])
-    metadata = body["metadata"]
+    metadata = body.get("metadata", { })
     events = body["events"]
     
     return Commit(

@@ -239,3 +239,14 @@ class TestCommittingChangesets(TestCase):
             "error": "INVALID_EXPECTED_EVENT_ID",
             "message": 'The specified expected event id("test") is invalid. Expected a positive integer.'
         })
+    
+    def test_append_without_any_metadata(self):
+        stream_id = str(uuid.uuid4())
+
+        response = self.api.commit(
+            stream_id=stream_id,
+            last_changeset_id=0,
+            events=self.api.some_events
+        )
+        
+        self.assertDictEqual(response.json(), {"stream_id": stream_id, "changeset_id": 1})

@@ -45,7 +45,7 @@ class ApiTestClient():
 
         self.api_endpoint = api_outputs[0]["OutputValue"]
     
-    def commit(self, stream_id, events, metadata, last_changeset_id=None, last_event_id=None):
+    def commit(self, stream_id, events=None, metadata=None, last_changeset_id=None, last_event_id=None):
         expected_last_changeset = ""
         expected_last_event = ""
 
@@ -62,7 +62,14 @@ class ApiTestClient():
                 expected_last_event = last_event_id
 
         url = self.api_endpoint + f'streams/{stream_id}?expected_last_changeset={expected_last_changeset}&expected_last_event={expected_last_event}'
-        return requests.post(url, json={"events": events, "metadata": metadata})
+        
+        payload = { }
+        if events:
+            payload["events"] = events
+        if metadata:
+            payload["metadata"] = metadata
+
+        return requests.post(url, json=payload)
     
     def query_changesets(self, stream_id, from_changeset=None, to_changeset=None):
         url = self.api_endpoint + f'streams/{stream_id}/changesets?&from={from_changeset or ""}&to={to_changeset or ""}'

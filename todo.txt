@@ -3,6 +3,5 @@
   How global enumeration works
 * API Keys
 * Commit
-  Make metadata an optional value
   Proper response on invalid JSON
   Ensure no gaps possible in changesets numbering

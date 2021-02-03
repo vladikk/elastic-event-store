@@ -141,6 +141,18 @@ class TestParsingLambdaEvents(TestCase):
             "error": "INVALID_EXPECTED_EVENT_ID",
             "message": f'The specified expected event id("-1") is invalid. Expected a positive integer.'
         })
+    
+    def test_commit_without_metadata(self):
+        event = self.load_event("Commit")
+        body = json.loads(event["body"])
+        del body["metadata"]
+        event["body"] = json.dumps(body)
+        cmd = event_to_command(event)
+        assert isinstance(cmd, Commit)
+        assert cmd.stream_id == "7ef3c378-8c97-49fe-97ba-f5afe719ea1c"
+        assert cmd.expected_last_changeset == 7
+        assert cmd.events == json.loads(event["body"])["events"]
+        assert cmd.metadata == { }
 
     def test_fetch_stream_changesets(self):
         event = self.load_event("StreamChangesets")
