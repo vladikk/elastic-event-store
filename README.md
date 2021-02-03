@@ -294,6 +294,8 @@ $ curl $EES_URL/changesets\?checkpoint=0
 
 Notice the "next_checkpoint" value. Use it for getting the next batch of changesets.
 
+This endpoint is crucial for generating CQRS projections. If you look in the source code, that's how the analysis model is generated -- by periodically getting the next batch of changesets and applying in them to the analysis model's state. The analysis data can be wiped off at any time, and it will be regenerated from scratch during the next iteration.
+
 <a name="Arhictecture"/>
 
 ## Architecture
