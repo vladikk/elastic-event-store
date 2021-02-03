@@ -102,7 +102,7 @@ All of the above functions are supported by the Elastic Event Store. Let's see h
 
 ```
 
-Pay attention to the values of ReadCapacityUnits and WriteCapacityUnits. Low values limit the event store's, too high values increase the cost.
+Pay attention to the values of ReadCapacityUnits and WriteCapacityUnits. Low values limit the event store's throughput, too high values increase the cost.
 
 Verify the enstallation by calling the "version" endpoint:
 
