@@ -126,7 +126,7 @@ $ curl $EES_URL/streams/stream-aaa-222 \
 BODY
 ```
 
-Notice that when appending a commit to an existing stream, you have to specify the expected last changeset of that stream:
+The Elastic Event Store is opinioned about concurrency control, and the opinion is that concurrency control is mandatory. Hence, when committing to an existing stream, you have to specify the expected last changeset of that stream:
 ```sh
 $ curl $EES_URL/streams/stream-aaa-111\?expected_last_changeset=1 \
      --header 'Content-Type: application/json' \
