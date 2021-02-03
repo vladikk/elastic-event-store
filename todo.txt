@@ -1,4 +1,6 @@
-* readme
-  how to test
-
+* Readme.md
+  How to test
 * API Keys
+* Commit
+  Make metadata a not required field
+  Proper response on invalid JSON
