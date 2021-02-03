@@ -83,9 +83,13 @@ Pay attention to the values of ReadCapacityUnits and WriteCapacityUnits. Low val
 
 #### 1. Submit a few changesets
 
+Store the endpoint url you've received in the previous step (ApiEndpoint):
+```sh
+EES_URL=https://XXXXXXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod
+```
 
 ```sh
-$ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111 \
+$ curl $EES_URL/streams/stream-aaa-111 \
      --header 'Content-Type: application/json' \
      --request POST \
      --data @- <<BODY
@@ -104,7 +108,7 @@ BODY
 ```
 
 ```sh
-$ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-222 \
+$ curl $EES_URL/streams/stream-aaa-222 \
      --header 'Content-Type: application/json' \
      --request POST \
      --data @- <<BODY
@@ -123,7 +127,7 @@ BODY
 ```
 
 ```sh
-$ curl https://XXXXXXXX.execute-api.XXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111\?expected_last_changeset=1 \
+$ curl $EES_URL/streams/stream-aaa-111\?expected_last_changeset=1 \
      --header 'Content-Type: application/json' \
      --request POST \
      --data @- <<BODY
@@ -144,7 +148,7 @@ BODY
 #### 2. Fetch changesets belonging to one of the streams:
 
 ```sh
-$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111/changesets
+$ curl $EES_URL/streams/stream-aaa-111/changesets
 
 {
     "stream_id": "stream-aaa-111",
@@ -171,7 +175,7 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-a
 Or you can also fetch the events directly:
 
 ```sh
-$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-aaa-111/events
+$ curl $EES_URL/streams/stream-aaa-111/events
 
 {
     "stream_id": "stream-aaa-111",
@@ -198,7 +202,7 @@ $ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams/stream-a
 Finally, let's see the instance's statistics:
 
 ```sh
-$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/streams
+$ curl $EES_URL/streams
 
 {
     "total_streams": 2,
@@ -222,7 +226,7 @@ The CloudFormation stack included two SNS topics you can use to get notification
 You can enumerate the changesets globally (across multiple streams) using the "changesets" endpoint:
 
 ```sh
-$ curl https://XXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/changesets\?checkpoint=0
+$ curl $EES_URL/changesets\?checkpoint=0
 
 {
     "checkpoint": 0,
