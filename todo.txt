@@ -3,4 +3,4 @@
   How global enumeration works
 * API Keys
 * Commit
-  Proper response on invalid JSON
+  Proper response an invalid JSON
