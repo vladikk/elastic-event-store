@@ -4,4 +4,3 @@
 * API Keys
 * Commit
   Proper response on invalid JSON
-  Ensure no gaps possible in changesets numbering

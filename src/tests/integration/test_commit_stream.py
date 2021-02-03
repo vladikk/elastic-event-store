@@ -250,3 +250,51 @@ class TestCommittingChangesets(TestCase):
         )
         
         self.assertDictEqual(response.json(), {"stream_id": stream_id, "changeset_id": 1})
+    
+    def test_append_test_skipping_a_changeset(self):
+        stream_id = str(uuid.uuid4())
+
+        self.api.commit(
+            stream_id=stream_id,
+            last_changeset_id=0,
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
+        )
+
+        response = self.api.commit(
+            stream_id=stream_id,
+            last_changeset_id=2,
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
+        )
+
+        assert response.status_code == 400
+        self.assertDictEqual(response.json(), {
+            "stream_id": stream_id,
+            "error": "INVALID_EXPECTED_CHANGESET_ID",
+            "message": f'The specified expected changeset(2) doesn\'t exist. The "{stream_id}" stream\'s most recent changeset is 1.'
+        })
+    
+    def test_append_test_skipping_an_event(self):
+        stream_id = str(uuid.uuid4())
+
+        self.api.commit(
+            stream_id=stream_id,
+            last_event_id=0,
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
+        )
+
+        response = self.api.commit(
+            stream_id=stream_id,
+            last_event_id=3,
+            metadata=self.api.some_metadata,
+            events=self.api.some_events
+        )
+
+        assert response.status_code == 400
+        self.assertDictEqual(response.json(), {
+            "stream_id": stream_id,
+            "error": "INVALID_EXPECTED_CHANGESET_ID",
+            "message": f'The specified expected event(3) doesn\'t exist. The "{stream_id}" stream\'s most recent event is 2.'
+        })

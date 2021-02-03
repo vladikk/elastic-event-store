@@ -18,12 +18,20 @@ class CommitHandler:
         else:
             prev_commit = self.db.fetch_last_commit(cmd.stream_id)
             if cmd.expected_last_changeset and \
-               prev_commit.changeset_id != cmd.expected_last_changeset:
+               prev_commit.changeset_id > cmd.expected_last_changeset:
+               return self.concurrency_exception(cmd.stream_id, cmd.expected_last_changeset, cmd.expected_last_event)
+            
+            if cmd.expected_last_changeset and \
+               prev_commit.changeset_id < cmd.expected_last_changeset:
+               return self.missing_expected_changeset_exception(cmd.stream_id, 'changeset', cmd.expected_last_changeset, prev_commit.changeset_id)
+            
+            if cmd.expected_last_event and \
+               prev_commit.last_event_id > cmd.expected_last_event:
                return self.concurrency_exception(cmd.stream_id, cmd.expected_last_changeset, cmd.expected_last_event)
             
             if cmd.expected_last_event and \
-               prev_commit.last_event_id != cmd.expected_last_event:
-               return self.concurrency_exception(cmd.stream_id, cmd.expected_last_changeset, cmd.expected_last_event)
+               prev_commit.last_event_id < cmd.expected_last_event:
+               return self.missing_expected_changeset_exception(cmd.stream_id, 'event', cmd.expected_last_event, prev_commit.last_event_id)
         
             commit = make_next_commit(prev_commit, cmd.events, cmd.metadata)
 
@@ -71,4 +79,13 @@ class CommitHandler:
                 "error": "OPTIMISTIC_CONCURRENCY_EXCEPTION",
                 "forthcoming_changesets": forthcoming_changesets,
                 "message": f'The expected last {lock_by} ({lock_value}) is outdated, review the {lock_by}(s) appended after it.'
+            })
+    
+    def missing_expected_changeset_exception(self, stream_id, lock_type, last_changeset, last_known):
+        return Response(
+            http_status=400,
+            body={
+                "stream_id": stream_id,
+                "error": "INVALID_EXPECTED_CHANGESET_ID",
+                "message": f'The specified expected {lock_type}({last_changeset}) doesn\'t exist. The "{stream_id}" stream\'s most recent {lock_type} is {last_known}.'
             })
