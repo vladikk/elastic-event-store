@@ -4,14 +4,6 @@ Description: >
   Elastic Event Store
 
 Parameters:
-  Environment:
-    Description: Environment Name
-    Type: String
-    Default: dev
-  InstanceName:
-    Description: Instance Name
-    Type: String
-    Default: eventstore
   ReadCapacityUnits:
     Description: Provisioned read throughput
     Type: Number
@@ -31,7 +23,7 @@ Resources:
   EventStoreTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join [ '_', ['ees', 'db', !Ref Environment, !Ref InstanceName] ]
+      TableName: !Join [ '_', ['ees', 'db', !Ref AWS::StackName] ]
       AttributeDefinitions:
       - AttributeName: stream_id
         AttributeType: S
@@ -89,14 +81,14 @@ Resources:
     Type: AWS::SNS::Topic
     Properties: 
       ContentBasedDeduplication: True
-      TopicName: !Join [ '_', ['ees', 'changesets', !Ref Environment, !Ref InstanceName, '.fifo'] ]
+      TopicName: !Join [ '_', ['ees', 'changesets', !Ref AWS::StackName, '.fifo'] ]
       FifoTopic: True
   
   EventsTopic:
     Type: AWS::SNS::Topic
     Properties: 
       ContentBasedDeduplication: True
-      TopicName: !Join [ '_', ['ees', 'events', !Ref Environment, !Ref InstanceName, '.fifo'] ]
+      TopicName: !Join [ '_', ['ees', 'events', !Ref AWS::StackName, '.fifo'] ]
       FifoTopic: True
 
   CommandHandlerFunction:
@@ -189,7 +181,7 @@ Resources:
     Type: AWS::SQS::Queue
     Properties: 
       MessageRetentionPeriod: 1209600
-      QueueName: !Join [ '_', ['ees', 'indexer_dead_letter_queue', !Ref Environment, !Ref InstanceName] ]
+      QueueName: !Join [ '_', ['ees', 'indexer_dead_letter_queue', !Ref AWS::StackName] ]
 
   PublisherFunction:
     Type: AWS::Serverless::Function
@@ -230,12 +222,12 @@ Resources:
     Type: AWS::SQS::Queue
     Properties: 
       MessageRetentionPeriod: 1209600
-      QueueName: !Join [ '_', ['ees', 'publisher_dead_letter_queue', !Ref Environment, !Ref InstanceName] ]
+      QueueName: !Join [ '_', ['ees', 'publisher_dead_letter_queue', !Ref AWS::StackName] ]
   
   AnalysisTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join [ '_', ['ees', 'analysis', !Ref Environment, !Ref InstanceName] ]
+      TableName: !Join [ '_', ['ees', 'analysis', !Ref AWS::StackName] ]
       AttributeDefinitions:
       - AttributeName: projection_id
         AttributeType: S
