@@ -9,8 +9,8 @@ A fully serverless storage for event sourcing-based systems.
 - [What is Event Sourcing?](#WhatIsEventSourcing)
 - [What is Event Store?](#WhatIsEventStore)
 - [Getting Started](#GettingStarted)
-  * [Installing Elastic Event Store](#Installing)
-  * [Using Elastic Event Store](#Using)
+  * [Installing](#Installing)
+  * [Using](#Using)
 - [Push Subscriptions](#PushSubscriptions)
 - [Pull Subscriptions](#PullSubscriptions)
 - [Arhictecture](#Arhictecture)
@@ -72,7 +72,7 @@ All of the above functions are supported by the Elastic Event Store. Let's see h
 
 <a name="Installing"/>
 
-### Installing Elastic Event Store
+### Installing
 
 1. Install [AWS Serverless Application Model(SAM) CLI] (https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) and configure your [AWS credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html).
 
@@ -104,9 +104,19 @@ All of the above functions are supported by the Elastic Event Store. Let's see h
 
 Pay attention to the values of ReadCapacityUnits and WriteCapacityUnits. Low values limit the event store's, too high values increase the cost.
 
+Confirm the enstallation by calling the "version" endpoint:
+
+```sh
+$ curl https://XXXXXXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/version
+
+{
+    "version": "0.0.1"
+}
+```
+
 <a name="Using"/>
 
-### Using Elastic Event Store
+### Using
 
 #### 1. Submit a few changesets
 
