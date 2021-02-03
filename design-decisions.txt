@@ -1,0 +1,8 @@
+2021/02/02 13:09
+Decided to ditch the global events endpoints as it's too cumbersome and ineffective. A brain-friendly design requires a dedicated global-secondary index, first need to ensure that it's really worth the effort (and costs).
+
+2021/01/30 18:06
+Fetching a subset of a stream's events is done by issuing two queries - to get the first mathiching changesets, and, if needed, forthcoming changesets as a separate query on a different local secondary index.
+
+2021/01/29 22:29
+The events belonging to a changeset are represented as a map, where key is the event's ordinal number in the stream and the value is the event itself. The reason is that DynamoDB's "set" type doesn't preserve order, hence a map is used instead.

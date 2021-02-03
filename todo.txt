@@ -5,4 +5,4 @@
 * Commit
   Make metadata an optional value
   Proper response on invalid JSON
-  Ensure no gaps in changesets numbering
+  Ensure no gaps possible in changesets numbering
