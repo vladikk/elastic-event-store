@@ -1,7 +1,0 @@
-* Readme.md
-  How committing works
-  How global enumeration works
-* API Keys
-* Private API Gateway support
-* Commit
-  Proper response an invalid JSON
