@@ -2,7 +2,7 @@ name: run-unit-tests
 on: [push]
 jobs:
   run-unit-tests:
-    runs-on: ubuntu-latest:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.8
