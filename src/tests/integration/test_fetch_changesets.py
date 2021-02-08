@@ -6,7 +6,11 @@ from tests.integration.api_test_client import ApiTestClient
 
 @pytest.mark.slow
 class TestFetchingChangesets(TestCase):
-    api = ApiTestClient()
+    api = None
+
+    def setUp(self) -> None:
+        self.api = self.api or ApiTestClient()
+        return super().setUp()
 
     def test_fetch_changesets(self):
         stream_id = str(uuid.uuid4())

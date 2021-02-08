@@ -1,7 +1,6 @@
 import boto3
 import os
 import requests
-from unittest import TestCase
 
 
 class ApiTestClient():

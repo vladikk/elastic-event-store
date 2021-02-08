@@ -6,7 +6,11 @@ from tests.integration.api_test_client import ApiTestClient
 
 @pytest.mark.slow
 class TestCommittingChangesets(TestCase):
-    api = ApiTestClient()
+    api = None
+
+    def setUp(self) -> None:
+        self.api = self.api or ApiTestClient()
+        return super().setUp()
 
     def test_version(self):
         response = self.api.version()
