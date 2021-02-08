@@ -13,7 +13,7 @@ def test_initial_commit_factory(mocker):
     assert commit.stream_id == stream_id
     assert commit.changeset_id == 1
     assert commit.metadata == "the changeset's metadata"    
-    assert commit.events[0] == "event1"
+    assert commit.events[0] == "event11"
     assert commit.events[1] == "event2"
     assert commit.events[2] == "event3"
     assert commit.first_event_id == 1
