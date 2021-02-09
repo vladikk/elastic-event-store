@@ -1,5 +1,7 @@
 name: run-integration-tests
-on: [push]
+on:
+  push:
+    branches: [ main ]
 jobs:
   run-integration-tests:
     env:
@@ -36,6 +38,9 @@ jobs:
             --region=${{ secrets.AWS_REGION }} \
             --no-confirm-changeset \
             --capabilities="CAPABILITY_IAM"
-      - name: Test with pytest
+      - name: Run integration tests
         run: |
           pytest
+      - name: Delete Test Environment
+        run: |
+          aws cloudformation delete-stack --stack-name $AWS_SAM_STACK_NAME
