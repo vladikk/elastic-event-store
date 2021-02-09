@@ -5,4 +5,4 @@ sam deploy \
     --region=us-east-1 \
     --no-confirm-changeset \
     --capabilities="CAPABILITY_IAM" \
-    --parameter-overrides="ReadCapacityUnits=1 WriteCapacityUnits=1"
+    --parameter-overrides=""

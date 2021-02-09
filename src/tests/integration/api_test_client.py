@@ -42,7 +42,7 @@ class ApiTestClient():
         if not api_outputs:
             raise Exception(f"Cannot find output ApiEndpoint in stack {sam_stack_name}")
 
-        self.api_endpoint = api_outputs[0]["OutputValue"]
+        self.api_endpoint = api_outputs[0]["OutputValue"] + '/'
     
     def commit(self, stream_id, events=None, metadata=None, last_changeset_id=None, last_event_id=None):
         expected_last_changeset = ""

@@ -3,27 +3,12 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   Elastic Event Store
 
-Parameters:
-  ReadCapacityUnits:
-    Description: Provisioned read throughput
-    Type: Number
-    Default: '1'
-    MinValue: '1'
-    MaxValue: '10000'
-    ConstraintDescription: must be between 1 and 10000
-  WriteCapacityUnits:
-    Description: Provisioned write throughput
-    Type: Number
-    Default: '1'
-    MinValue: '1'
-    MaxValue: '10000'
-    ConstraintDescription: must be between 1 and 10000
-
 Resources:
   EventStoreTable:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: !Join [ '_', ['ees', 'db', !Ref AWS::StackName] ]
+      BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
       - AttributeName: stream_id
         AttributeType: S
@@ -68,12 +53,6 @@ Resources:
           KeyType: RANGE
         Projection:
           ProjectionType: ALL
-        ProvisionedThroughput:
-          ReadCapacityUnits: !Ref ReadCapacityUnits
-          WriteCapacityUnits: !Ref WriteCapacityUnits
-      ProvisionedThroughput:
-        ReadCapacityUnits: !Ref ReadCapacityUnits
-        WriteCapacityUnits: !Ref WriteCapacityUnits
       StreamSpecification:
         StreamViewType: NEW_IMAGE
   
@@ -234,9 +213,7 @@ Resources:
       KeySchema:
       - AttributeName: projection_id
         KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 3
-        WriteCapacityUnits: 1
+      BillingMode: PAY_PER_REQUEST
   
   AnalysisProjectorFunction:
     Type: AWS::Serverless::Function
