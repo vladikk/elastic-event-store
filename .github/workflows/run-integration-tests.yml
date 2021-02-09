@@ -31,7 +31,7 @@ jobs:
       - name: SAM Deploy Test Environment
         run: |
           sam deploy \
-            --s3-bucket=${{ secrets.SAM_ARTIFACTS_BUCKET }} \
+            --s3-bucket=${{ secrets.AWS_SAM_ARTIFACTS_BUCKET }} \
             --stack-name=$AWS_SAM_STACK_NAME \
             --region=${{ secrets.AWS_REGION }} \
             --no-confirm-changeset \
