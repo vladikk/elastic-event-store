@@ -2,6 +2,8 @@ name: run-integration-tests
 on: [push]
 jobs:
   run-integration-tests:
+    env:
+      AWS_SAM_STACK_NAME: ees-ci-integration-tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,6 +22,20 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+      - name: SAM Validate
+        run: |
+          sam validate
+      - name: SAM Build
+        run: |
+          sam build
+      - name: SAM Deploy Test Environment
+        run: |
+          sam deploy \
+            --s3-bucket=${{ secrets.SAM_ARTIFACTS_BUCKET }} \
+            --stack-name=$AWS_SAM_STACK_NAME \
+            --region=${{ secrets.AWS_REGION }} \
+            --no-confirm-changeset \
+            --capabilities="CAPABILITY_IAM"
       - name: Test with pytest
         run: |
-          ./run-unit-tests.sh
+          pytest
