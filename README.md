@@ -13,7 +13,7 @@ A fully serverless storage for event sourcing-based systems.
   * [Using](#Using)
 - [Push Subscriptions](#PushSubscriptions)
 - [Pull Subscriptions](#PullSubscriptions)
-- [Arhictecture](#Arhictecture)
+- [Archictecture](#Archictecture)
 - [Data Model](#DataModel)
 - [Ordering Guarantees](#OrderingGuarantees)
 - [Testing](#Testing)
@@ -56,7 +56,7 @@ Finally, Event Sourcing is **not** Event-Driven Architecture(EDA):
 
 ## What is Event Store?
 
-An event store is a storage mechanism optimized for event sourcing-based systems. An event store should provide the following functionality:
+An event store is a storage mechanism optimized for event-sourcing-based systems. An event store should provide the following functionality:
 
 1. Appending events to a stream (stream = events of a distinct entity).
 2. Read events from a stream.
@@ -118,7 +118,7 @@ $ curl https://XXXXXXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/version
 
 #### 1. Submit a few changesets
 
-Store the endpoint url you've received in the previous step (ApiEndpoint):
+Store the endpoint URL you've received in the previous step (ApiEndpoint):
 ```sh
 EES_URL=https://XXXXXXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod
 ```
@@ -248,7 +248,7 @@ $ curl $EES_URL/streams
     "statistics_version": 3
 }
 ```
-Note: the statistics endpoint's data is project asynchronously at a one minute interval.
+Note: the statistics endpoint's data is projected asynchronously at a one-minute interval.
 
 <a name="PushSubscriptions"/>
 
@@ -304,14 +304,14 @@ This endpoint is crucial for generating CQRS projections. If you look in the sou
 * AWS Lambda functions host all the system's logic.
 * DynamoDB is the main storage mechanism.
 * DynamoDB Streams trigger Lambda functions that are publishing the new changesets and assign the globally enumerable index.
-* SNS fifo topics are used for publishing newly committed changesets and events.
+* SNS FIFO topics are used for publishing newly committed changesets and events.
 * SQS dead letter queues capture DynamoDB Streams events that were not processed successfully by the Lambda functions.
 
 <a name="DataModel"/>
 
 ## Data Model
 
-A partition in the events table represents a distinct stream of events: events that belong to a certain instance of a business entity. The partition's records are created for each transaction(commit) in the stream, and hold all the events that were committed in each individual transaction. Hence, the event store perisists many streams, a stream is composed of many changesets, and a changeset includes one or more events.
+A partition in the events table represents a distinct stream of events: events that belong to a certain instance of a business entity. The partition's records are created for each transaction(commit) in the stream, and hold all the events that were committed in each transaction. Hence, the event store persists in many streams, a stream is composed of many changesets, and a changeset includes one or more events.
 
 The main DynamoDB table uses the following schema:
 
@@ -370,4 +370,4 @@ Since DynomoDB is used as the storage mechanism, its limitations apply to Elasti
 1. The maximum item size in DynamoDB, and hence the maximum changeset size, is 400 KB.
 2. The maximum size of a DynamoDB item collection is 10GB. Hence, 10GB is the maximum size of a single stream.
 
-Finally, as with all serverless solutions, beyond a certain scale it can be more cost-effective to use a self-managed solution.
+Finally, as with all serverless solutions, beyond a certain scale, it can be more cost-effective to use a self-managed solution.
