@@ -13,7 +13,7 @@ A fully serverless storage for event sourcing-based systems.
   * [Using](#Using)
 - [Push Subscriptions](#PushSubscriptions)
 - [Pull Subscriptions](#PullSubscriptions)
-- [Archictecture](#Archictecture)
+- [Architecture](#Architecture)
 - [Data Model](#DataModel)
 - [Ordering Guarantees](#OrderingGuarantees)
 - [Testing](#Testing)
@@ -31,40 +31,38 @@ Traditionally, software systems operate on state-based data. In other words, bus
 | 2   | Krzysztof  | Accounting        |
 | 3   | Robyn      | Frontend          |
 
-In the above example, all we know about the data is its current state. *But how did it get to the current state?* - We don't know. All we know is the entity's current state. The Event Sourcing pattern does answer this and many other questions.
+In the above example, all we know about the data is its current state. *But how did it get to the current state?* — We don't know. The Event Sourcing pattern answers this and many other questions.
 
-The Event Sourcing pattern introduces the dimension of time into the modeling of business entities and their lifecycles. Instead of capturing an entity's current state, an event-sourced system keep a transactional record of all events that have occurred during an entity's lifecycle. For example:
+Event Sourcing introduces the dimension of time into the modeling of business entities and their lifecycles. Instead of capturing an entity's current state, an event-sourced system keeps a transactional record of all events that have occurred during an entity's lifecycle. For example:
 
 ```
 { "id": 3, "type": "initialized", "name": "Robyn", "timestamp": "2021-01-05T13:15:30Z" }
 { "id": 3, "type": "assigned", "team": "Frontend", "timestamp": "2021-01-05T16:15:30Z" }
 { "id": 3, "type": "promoted", "position": "team-leader", "timestamp": "2021-01-22T16:15:30Z" }
-
 ```
 
-Modeling and persisting the events captures what exactly happened during an entity's lifecycle. The events are used as the system's **source of truth**. Hence the name of the pattern -- event sourcing.
+By modeling and persisting events, we capture exactly what happened during an entity's lifecycle. Events become the system's **source of truth**. Hence the name: event sourcing.
 
-Not only we can derive the current state by sequentially applying the events, but the flexible events-based model allows projecting different state models that are optimized for different tasks.
+Not only can we derive the current state by sequentially applying events, but the flexible event-based model also allows projecting different state models optimized for different tasks.
 
-Finally, Event Sourcing is **not** Event-Driven Architecture(EDA):
+Finally, Event Sourcing is **not** Event-Driven Architecture (EDA):
 
-> EventSourcing is not Event driven architecture. The former is about events _inside_ the app. The latter is about events _between_ (sub)systems
->
+> EventSourcing is not Event driven architecture. The former is about events _inside_ the app. The latter is about events _between_ (sub)systems  
 > ~ [@ylorph](https://twitter.com/ylorph/status/1295480789765955586)
 
 <a name="WhatIsEventStore"/>
 
 ## What is Event Store?
 
-An event store is a storage mechanism optimized for event-sourcing-based systems. An event store should provide the following functionality:
+An event store is a storage mechanism optimized for event-sourcing-based systems. It should provide the following functionality:
 
-1. Appending events to a stream (stream = events of a distinct entity).
+1. Append events to a stream (stream = events of a distinct entity).
 2. Read events from a stream.
-3. Concurrency management to identify collisions when two processes are appending to the same stream simultaneously.
-4. Allow enumerating events across all streams in the store, e.g., for generating CQRS projections.
-5. Pushing newly committed events to the interested subscribers.
+3. Concurrency management to detect collisions when multiple processes write to the same stream.
+4. Enumerate events across all streams (e.g., for CQRS projections).
+5. Push newly committed events to interested subscribers.
 
-All of the above functions are supported by the Elastic Event Store. Let's see how you can spin up an instance and start event *sourcing* in no time.
+All of the above functions are supported by the Elastic Event Store.
 
 <a name="GettingStarted"/>
 
@@ -74,42 +72,31 @@ All of the above functions are supported by the Elastic Event Store. Let's see h
 
 ### Installing
 
-1. Install [AWS Serverless Application Model(SAM) CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) and configure your [AWS credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html).
+1. Install [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) and configure your [AWS credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html).
 
 2. Clone the repository:
 
 ```sh
-
-    $ git clone https://github.com/doitintl/elastic-event-store.git
-    $ cd elastic-event-store
-
+git clone https://github.com/doitintl/elastic-event-store.git
+cd elastic-event-store
 ```
 
 3. Build and deploy a new instance:
 
 ```sh
+sam build
+# ... Build Succeeded
 
-    $ sam build
-    ...
-    Build Succeeded
-
-    $ sam deploy --guided
-    ...
-    Key           ApiEndpoint                                                                        
-    Description   API Gateway endpoint URL for Prod stage                                      
-    Value         https://XXXXXXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/
-    ------------------------------------------------------------------------------------
-
+sam deploy --guided
+# ...
+# ApiEndpoint: https://XXXXXXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/
 ```
 
-Verify the installation by calling the "version" endpoint:
+Verify installation:
 
 ```sh
-$ curl https://XXXXXXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/version
-
-{
-    "version": "0.0.1"
-}
+curl https://XXXXXXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/version
+# { "version": "0.0.1" }
 ```
 
 <a name="Using"/>
@@ -118,15 +105,14 @@ $ curl https://XXXXXXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod/version
 
 #### 1. Submit a few changesets
 
-Store the endpoint URL you've received in the previous step (ApiEndpoint):
 ```sh
 EES_URL=https://XXXXXXXXXXXX.execute-api.XXXXXXXX.amazonaws.com/Prod
 ```
 
 ```sh
-$ curl $EES_URL/streams/stream-aaa-111 \
-     --header 'Content-Type: application/json' \
-     --request POST \
+curl $EES_URL/streams/stream-aaa-111 \
+     -H 'Content-Type: application/json' \
+     -X POST \
      --data @- <<BODY
 {
     "metadata": {
@@ -142,30 +128,12 @@ $ curl $EES_URL/streams/stream-aaa-111 \
 BODY
 ```
 
-```sh
-$ curl $EES_URL/streams/stream-aaa-222 \
-     --header 'Content-Type: application/json' \
-     --request POST \
-     --data @- <<BODY
-{
-    "metadata": {
-        "command": "do_something",
-        "issuedBy": "me"
-    },
-    "events": [
-        { "type": "init", "data": 1 },
-        { "type": "sell", "data": 20 },
-        { "type": "buy", "data": 5 }
-    ]
-}
-BODY
-```
+The Elastic Event Store is opinionated about concurrency control: it is mandatory. When committing to an existing stream, you must specify the expected last changeset:
 
-The Elastic Event Store is opinioned about concurrency control: it is mandatory. Hence, when committing to an existing stream, you have to specify the expected last changeset of that stream:
 ```sh
-$ curl $EES_URL/streams/stream-aaa-111\?expected_last_changeset=1 \
-     --header 'Content-Type: application/json' \
-     --request POST \
+curl "$EES_URL/streams/stream-aaa-111?expected_last_changeset=1" \
+     -H 'Content-Type: application/json' \
+     -X POST \
      --data @- <<BODY
 {
     "metadata": {
@@ -181,193 +149,122 @@ $ curl $EES_URL/streams/stream-aaa-111\?expected_last_changeset=1 \
 BODY
 ```
 
-#### 2. Fetch changesets belonging to one of the streams:
+#### 2. Fetch changesets:
 
 ```sh
-$ curl $EES_URL/streams/stream-aaa-111/changesets
-
-{
-    "stream_id": "stream-aaa-111",
-    "changesets": [
-        {
-            "changeset_id": 1,
-            "events": [
-                {
-                    "type": "init",
-                    "data": 1
-                },
-                ...
-            ],
-            "metadata": {
-                "command": "do_something",
-                "issuedBy": "me"
-            }
-        },
-        ...
-    ]
-}       
+curl $EES_URL/streams/stream-aaa-111/changesets
 ```
 
-Or you can also fetch the events directly:
+#### 3. Fetch events:
 
 ```sh
-$ curl $EES_URL/streams/stream-aaa-111/events
-
-{
-    "stream_id": "stream-aaa-111",
-    "events": [
-        {
-            "id": 1,
-            "data": {
-                "type": "init",
-                "data": 1
-            }
-        },
-        ...
-        {
-            "id": 6,
-            "data": {
-                "type": "sell",
-                "data": 15
-            }
-        }
-    ]
-}   
+curl $EES_URL/streams/stream-aaa-111/events
 ```
 
-Finally, let's see the instance's statistics:
+#### 4. Fetch statistics:
 
 ```sh
-$ curl $EES_URL/streams
-
-{
-    "total_streams": 2,
-    "total_changesets": 4,
-    "total_events": 12,
-    "max_stream_length": 2,
-    "statistics_version": 3
-}
+curl $EES_URL/streams
 ```
-Note: the statistics endpoint's data is projected asynchronously at a one-minute interval.
+
+> Note: Statistics are updated asynchronously every minute.
 
 <a name="PushSubscriptions"/>
 
 ## Push Subscriptions
 
-The CloudFormation stack included two SNS topics you can use to get notifications about newly submitted changesets or events:
+The CloudFormation stack includes two SNS FIFO topics:
 
-1. ees_changesets_XXX_XXX_.fifo - for subscribing to new changesets
-2. ees_events_XXX_XXX_.fifo - for subscribing to individual events
+1. `ees_changesets_XXX_XXX_.fifo` — for new changesets
+2. `ees_events_XXX_XXX_.fifo` — for individual events
 
 <a name="PullSubscriptions"/>
 
-## Pull(Catchup) Subscriptions
+## Pull (Catchup) Subscriptions
 
-You can enumerate the changesets globally (across multiple streams) using the "changesets" endpoint:
+To enumerate global changesets:
 
 ```sh
-$ curl $EES_URL/changesets\?checkpoint=0
-
-{
-    "checkpoint": 0,
-    "limit": 10,
-    "changesets": [
-        ...
-        {
-            "stream_id": "aaa-111111",
-            "changeset_id": 1,
-            "events": [
-                ...
-            ],
-            "metadata": [
-                ...
-            ],
-            "checkpoint": 3
-        }
-        ....
-    ],
-    "next_checkpoint": 7
-}
+curl "$EES_URL/changesets?checkpoint=0"
 ```
 
-Notice the "next_checkpoint" value. Use it for getting the next batch of changesets.
+Use the `next_checkpoint` value to fetch the next batch. This endpoint is critical for CQRS projections and state rebuilds.
 
-This endpoint is crucial for generating CQRS projections. If you look in the source code, that's how the analysis model is generated -- by periodically getting the next batch of changesets and applying in them to the analysis model's state. The analysis data can be wiped off at any time, and it will be regenerated from scratch during the next iteration.
-
-<a name="Arhictecture"/>
+<a name="Architecture"/>
 
 ## Architecture
 
 ![Elastic Event Store: AWS Components](./docs/diagrams/aws-components.png)
 
-* The REST API is exposed by API Gateway.
-* AWS Lambda functions host all the system's logic.
-* DynamoDB is the main storage mechanism.
-* DynamoDB Streams trigger Lambda functions that are publishing the new changesets and assign the globally enumerable index.
-* SNS FIFO topics are used for publishing newly committed changesets and events.
-* SQS dead letter queues capture DynamoDB Streams events that were not processed successfully by the Lambda functions.
+- REST API exposed via API Gateway
+- System logic in AWS Lambda
+- Events stored in DynamoDB
+- DynamoDB Streams trigger Lambdas for global indexing and publishing
+- SNS FIFO topics for push subscriptions
+- SQS DLQs for failed stream processing
 
 <a name="DataModel"/>
 
 ## Data Model
 
-A partition in the events table represents a distinct stream of events: events that belong to a certain instance of a business entity. The partition's records are created for each transaction(commit) in the stream, and hold all the events that were committed in each transaction. Hence, the event store persists in many streams, a stream is composed of many changesets, and a changeset includes one or more events.
+Each partition in the events table represents a stream — i.e., a business entity's event history.
 
-The main DynamoDB table uses the following schema:
+Main DynamoDB schema:
 
-| Column            | Type                  | Description            
-| ----------------- | --------------------- | ----------------------- 
-| stream_id         | Partition Key(String) | Stream ID
-| changeset_id      | Sort Key(Number)      | The ID of a commit in its parent stream
-| events            | JSON(String)          | The events that were committed in the transaction
-| metadata          | JSON(String)          | The changeset's metadata
-| timestamp         | String                | Time when the transaction was comitted
-| first_event_id    | LSI(Number)           | The ordinal number of the first event in the changeset, in the context of the whole stream
-| last_event_id     | LSI(Number)           | The ordinal number of the last event in the changeset, in the context of the whole stream
-| page              | GSI-Partition(Number) | A global secondary index used for enumerating cross-stream changesets
-| page_item         | GSI-Sort(Number)      |
+| Column            | Type                  | Description |
+| ----------------- | --------------------- | ----------- |
+| stream_id         | Partition Key (String) | Stream ID |
+| changeset_id      | Sort Key (Number)     | Commit ID in stream |
+| events            | JSON (String)         | Committed events |
+| metadata          | JSON (String)         | Changeset metadata |
+| timestamp         | String                | Commit timestamp |
+| first_event_id    | LSI (Number)          | First event ID in stream |
+| last_event_id     | LSI (Number)          | Last event ID in stream |
+| page              | GSI Partition (Number) | For global ordering |
+| page_item         | GSI Sort (Number)     | Index within global page |
 
 <a name="OrderingGuarantees"/>
 
 ## Ordering Guarantees
 
-1. The order of changesets and events in a stream is preserved and is strongly consistent.
-
-2. The order of changesets across all the streams is not guaranteed to be exactly the same as the order in which the streams were updated. That said, the inter-stream order is repeatable. I.e., when calling the global changesets endpoint ("/changesets"), the changesets are always returned in the same order.
+1. **Intra-stream order** is preserved and strongly consistent.
+2. **Inter-stream order** is not guaranteed but is repeatable — global enumeration always yields the same result.
 
 <a name="Testing"/>
 
 ## Testing
 
-1. Populate the "SAM_ARTIFACTS_BUCKET" environment variable with the name of the S3 bucket used for storing AWS SAM artifacts:
+1. Set the `SAM_ARTIFACTS_BUCKET` environment variable:
 
 ```sh
-$ SAM_ARTIFACTS_BUCKET=xxxxxxxxxxxxxxx
+export SAM_ARTIFACTS_BUCKET=your-bucket-name
 ```
 
-2. Initialize the testing environment stack:
+2. Deploy the test environment:
 
 ```sh
-$ ./deploy-test-env.sh
+./deploy-test-env.sh
 ```
 
 3. Run unit tests:
+
 ```sh
-$ ./run-unit-tests.sh
+./run-unit-tests.sh
 ```
 
 4. Run unit and integration tests:
+
 ```sh
-$ ./run-all-tests.sh
+./run-all-tests.sh
 ```
 
 <a name="Limitations"/>
 
 ## Limitations
 
-Since DynomoDB is used as the storage mechanism, its limitations apply to Elastic Event Store:
+Because DynamoDB is used:
 
-1. The maximum item size in DynamoDB, and hence the maximum changeset size, is 400 KB.
-2. The maximum size of a DynamoDB item collection is 10GB. Hence, 10GB is the maximum size of a single stream.
+1. Maximum item (changeset) size: 400 KB
+2. Maximum item collection (stream) size: 10 GB
 
-Finally, as with all serverless solutions, beyond a certain scale, it can be more cost-effective to use a self-managed solution.
+As with all serverless solutions, at high scale, a self-managed deployment may be more cost-effective.
